@@ -1,0 +1,207 @@
+#### Informations
+
+A VERIFIER
+
+La cartographie des forêts en Province Nord reproduit les zones où la végétation est supérieure à 5 mètres (hors plantations sylvicoles, savanes et formations d’espèces végétales envahissantes). Cette couche possède une échelle de 1 : 3 000e, qui permet une meilleure précision et une meilleure connaissance de la couche arborée de la Province Nord, afin de compléter l’analyse concernant la strate arborée issue du MOS 2014 (partie A METTRE A JOUR). Cette carte a été réalisée en octobre 2019 par photo-interprétation., à partir d’ortho-photos datant de 2007 à 2012. Ainsi, cette couche recense 321 017 ha de forêt contre 334 196 ha pour la strate arborée en Province Nord issue du MOS 2014. Cette différence peut s’expliquer par l’échelle de travail (1 : 3 000e) qui est plus précise sur la cartographie des forêts de la Province Nord que celle du MOS 2014, dont sont issues les strates de végétation (de l’ordre de 1 : 12 000e). La méthode d’acquisition des données de strates du MOS 2014 utilise une approche semi-automatisée21 tandis que l’étape par photo-interprétation des forêts peut apporter plus de précision en fonction des connaissances des experts sur la thématique, mais peut aussi induire des biais selon le photo-interprète. De plus, les deux couches d’information n’ont pas été réalisées sur la même chronique de données avec des ortho-photos entre 2007 à 2012 pour les forêts de la Province Nord alors que du traitement a été effectué sur des images satellites de SPOT 6 à une résolution 1,5 mètre pour le MOS 2014. La strate arborée du MOS 2014 peut quant à elle comprendre d’autres formations telles que les plantations sylvicoles ou encore certaines formations d’espèces invasives. A noter que les forêts forment des ensembles de couvert végétal, plus ou moins homogène en fonction de leur richesse spécifique. Ici, les espèces ne sont pas digitalisées.
+
+```{python}
+#| echo: false
+#| output: true
+#| warning: false
+#| label: carte foret pr nord et zb
+
+figureName = "fig-zb-foret_PN"
+
+viz_map_nc = carte_impact_zb_bdenv(
+    data_carto=nc_,
+    data_feux=data_feux,
+    data_env=data_foret_PN,
+    cadre=bb_PN,
+    color='#8B0000',
+    color_env='#2e8b57',
+    title=f"Carte de l’impact des surfaces brûlées sur les forêts de la Province Nord en {Annee}",
+    tolerance=2000,
+    textlegende='test',
+    nb_strat=1,
+    level_strate=None,
+    pos_legend=8000,
+    label_legend='Surfaces brûlées',
+    label_legend_env='Forêts de la Province Nord',
+    texte_sources='Province Nord / OEIL / Copernicus'
+
+)
+
+export_output(viz_map_nc,figureName)
+
+```
+
+::: {#fig-zb-foret_PN}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-zb-foret_PN
+#| fig-cap: "Carte de l’impact des surfaces brûlées sur les forêts de la Province Nord en {Annee}"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::
+
+```{python}
+#| echo: false
+#| output: true
+#| warning: false
+#| label: carte mos arboree et zb
+
+figureName = "fig-zb-mos_arboree_PN"
+
+viz_map_nc = carte_impact_zb_bdenv(
+    data_carto=nc_,
+    data_feux=data_feux,
+    data_env=data_foret_strate_arboree,
+    cadre=bb_PN,
+    color='#8B0000',
+    color_env='#9acd32',
+    title=f"Carte de l’impact des surfaces brûlées sur la strate arborée de la Province Nord en {Annee}",
+    tolerance=2000,
+    textlegende='test',
+    nb_strat=1,
+    level_strate=None,
+    pos_legend=8000,
+    label_legend='Strate arborée de la Province Nord',
+    label_legend_env='Strate arborée de la Province Nord',
+    texte_sources='Gouvernement de la Nouvelle-Calédonie / OEIL / Copernicus'
+)
+
+export_output(viz_map_nc,figureName)
+
+```
+
+::: {#fig-zb-mos_arboree_PN}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-zb-mos_arboree_PN
+#| fig-cap: "Carte de l’impact des surfaces brûlées sur les forêts de la Province Nord en {Annee}"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::
+
+#### Résultats
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab echelon province nord zone de forets
+
+figureName = "fig-tab-stats-forets-nord-province"
+
+table_province = tableau_statistiques(
+    data=data_foret_pr_nord,
+    level_them=None,
+    label_them=None,
+    groupby=['upper_libelle'],
+    annee=Annee,
+    type_zone='province',
+    columns=['upper_libelle','sup_total_theme','superficie_ha','indicateur_3'],
+    label_col=['Territoire concerné','Superficie totale (ha)','Surface brûlée (ha)','Part de la superficie impactée par les surfaces brûlées (%)'],
+    title= f"Résultats à l'échelon de la Province Nord pour les zones de foêts en {Annee}",
+    filtre='superficie_ha',
+    hauteurtab=100
+)
+#export_output(pie_chart,figureName)
+table_province
+
+```
+
+::: {#fig-tab-stats-forets-nord-province}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-tab-stats-forets-nord-province
+#| fig-cap: "Résultat à l'échelon de la Province Nord pour les zones de forêts"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: diagramme comparaison sb nouvellement impacte echelon foret province nord
+
+import plotly.graph_objects as go
+
+figureName = "diag-zb-new-mos2014"
+
+data = data_foret_pr_nord_impact.read()
+data_filtered = data[(data['annee_1'] == 2017) & (data['annee_2'] == Annee) & (data['type_spatial'] == 'ZEE')]    
+
+labels = ['Nouvelle superficie impactée', 'Superficie déjà Impactée']
+values = [data_filtered['ratio_nouvel_impact'].sum(), data_filtered['ratio_deja_impact'].sum()]
+
+fig = go.Figure(data=[go.Pie(labels=labels, values=values,marker_colors=['#d62728','#ff7f0e'])])
+#export_output(pie_chart,figureName)
+
+fig
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab echelon communal zone de forets en pr nord
+
+figureName = "fig-tab-stats-forets-nord-commune"
+
+table_province = tableau_statistiques(
+    data=data_foret_pr_nord,
+    level_them=None,
+    label_them=None,
+    groupby='upper_libelle',
+    annee=Annee,
+    type_zone='commune',
+    columns=['upper_libelle','sup_total_theme','superficie_ha','indicateur_3'],
+    label_col=['Territoire concerné','Superficie (ha)','Surface brûlée (ha)','Part de la superficie impactée par les surfaces brûlées (%)'],
+    title= f"Répartition de l’impact des surfaces brûlées (Sentinel 2) sur les zones forestières de la Province Nord par commune pour l’année {Annee}",
+    filtre='superficie_ha',
+    hauteurtab=100
+)
+#export_output(table_province,figureName)
+table_province
+
+```
+
+::: {#fig-tab-stats-forets-nord-commune}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-tab-stats-forets-nord-commune
+#| fig-cap: "Résultat à l'échelon communal pour les zones de forêts de la Province Nord"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::

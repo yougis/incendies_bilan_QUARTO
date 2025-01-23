@@ -1,0 +1,247 @@
+### Informations
+
+Pour l’étude de l’impact des surfaces brûlées sur les surfaces agricoles, les productions agricoles « REALISE » ou « EN PROJET » de la couche de données « PARCELLES » d’AGRIBASE fournie par la Province Sud, datant de 2014 à 2020, ont été utilisées. Certaines classes de la couche AGRIBASE, jugées non pertinentes pour notre étude, ont été retirées de la couche agricole combinée tel que : Apiculture, Aquaculture eau douce, Aquaculture marine, Chasse de loisir, Non renseigné, Sans production, Urbain. La couche d’AGRIBASE a ensuite été combinée à celle du MOS 2014, dont les terres agricoles et pastorales ont été extraites. La couche de parcelles d’Agribase ne tient compte des zones agricoles qui ne sont pas déclarées, une agriculture dite « informelle » et n’ayant potentiellement pas d’activité rémunératrice. Concernant la couche du MOS 2014, les superficies agricoles inférieures à 1 hectare ne sont pas comptabilisées liées aux limites de la donnée. Les données obtenues ont été reclassées selon trois types : « ELEVAGE », « CULTURE » ou « SYLVICULTURE ». Pour éviter les superpositions de certaines zones agricoles entre les deux jeux de données, une opération de fusion géométrique a été réalisée. 
+
+Il est utile de rappeler que certains feux peuvent être liés à certaines pratiques agricoles pour l’entretien des cultures.   
+Le tableau ci-dessous présente les résultats de ce classement réalisé en interne :
+
+
+::: {#fig-tab-production-agricole}
+| Origines | Productions                              | Classes considérées pour l’étude |
+|----------|------------------------------------------|----------------------------------|
+|          | Aviculture                               |                                  |
+|          | Bassecour                                |                                  |
+|          | Bovin                                    |             Elevage              |
+|          | Equin                                    |                                  |
+|          | Petits ruminants                         |                                  |
+|          | Porcin                                   |                                  |
+|          |------------------------------------------|----------------------------------|
+|          | Autres grande cultures                   |                                  |
+|AGRIBASE  | Céréales et oléagineux                   |                                  |
+|          | Cultures fourragères                     |                                  |
+|          | Cultures vivrières                       |                                  |
+|          | Horticulture et pépinière                |            Culture               |
+|          | Maraichage                               |                                  |
+|          | Plantes aromatiques et médicales         |                                  |
+|          | SCV (Semis direct sous Couvert Végétal)  |                                  |
+|          |------------------------------------------|----------------------------------|
+|          | Sylviculture                             |          Sylviculture            |
+|----------|------------------------------------------|----------------------------------|
+|          | Terres pastorales aménagées structurées  |                                  |
+|          | Terres pastorales aménagées structurées -|                                  |
+|          | prairies                                 |             Elevage              |
+|          |------------------------------------------|----------------------------------|
+| MOS 2014 | Terres arables                           |                                  |
+|          | Terres arables et cultures permanentes   |            Culture               |
+|          | Vergers et petits fruits                 |                                  |
+|          |------------------------------------------|----------------------------------|
+|          | Plantation d'arbres - sylviculture       |           Sylviculture           |
+:::
+
+Ainsi, la couche finale combinée a été croisée avec celle des zones brûlées, afin d’obtenir la part des surfaces agricoles touchées par les surfaces brûlées pour chaque commune. A partir de ces données, la part de surfaces agricoles impactées par les incendies à l’échelle de la Nouvelle-Calédonie a été estimée à 6,8%.  
+La Figure A METTRE A JOUR montre la répartition des superficies agricoles par grande productions agricoles (culture, élevage et sylviculture), dont 81% sont affectées à l’élevage (102 494 hectares).
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: diagramme repartition surface agricole
+
+import plotly.graph_objects as go
+
+figureName = "diag-agricole"
+
+data = agriculture.read()
+data_filtered = data.loc[:, data.columns != 'geometry']
+data_grouped = data_filtered.groupby('classes').sum().reset_index()
+
+labels = data_grouped['classes']
+values = data_grouped['surface_ha']
+
+fig = go.Figure(data=[go.Pie(labels=labels, values=values, marker_colors=['#d62728','#ff7f0e'])])
+
+#export_output(pie_chart,figureName)
+
+fig
+
+```
+
+Ces résultats sont à considérer avec précaution. En effet, la quantité d’information et les dates de mise à jour sur la couche de données combinée ne sont pas les mêmes dans les trois provinces de Nouvelle-Calédonie.
+
+### Résultats
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: carte repartition surface agricole et zb
+
+figureName = "fig-carte-impact-sb-surfaces-agricoles"
+
+viz_map_nc = carte_impact_zb_bdenv(
+    data_carto=nc_,
+    data_feux=data_feux,
+    data_env=agriculture,
+    cadre=bb_,
+    color='#8B0000',
+    color_env=['#14a02b','#cb861d','#8ae015'],
+    title=f"Carte de l'impact des surfaces brûlées sur les zones agricoles en {Annee}",
+    tolerance=2000,
+    textlegende='test',
+    nb_strat=3,
+    level_strate='classes',
+    pos_legend=35000,
+    label_legend='Zones brûlées',
+    label_legend_env="Périmètres de protection des eaux",
+    texte_sources='Gouvernement de la Nouvelle-Calédonie / OEIL / Copernicus'
+
+)
+
+export_output(viz_map_nc,figureName)
+
+```
+
+::: {#fig-carte-impact-sb-surfaces-agricoles}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-carte-impact-sb-surfaces-agricoles
+#| fig-cap: "Carte de répartition des zones agricoles en Nouvelle-Calédonie et des zones brûlées (Sentinel 2)"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::
+
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab impact zb sur zone agricole par annee
+
+figureName = "fig-tab-stats-agricole-annees"
+table_province = tableau_statistiques(
+    data=data_agricole,
+    level_them='classes',
+    label_them=None,
+    groupby=['upper_libelle','annee','classes'],
+    annee=None,
+    type_zone='ZEE',
+    columns=['annee','classes','superficie_ha','nb_indic','indicateur_3'],
+    label_col=['Année','Classe agricole','Surface brûlée (ha)','Nombre de surfaces brûlées','Part de la superficie impactés par les surfaces brûlées'],
+    title= f"Résultats des surfaces brûlées entre 2017 et {Annee} pour les surfaces agricoles de Nouvelle-Calédonie",
+    filtre='superficie_ha',
+    hauteurtab=500
+)
+#export_output(pie_chart,figureName)
+table_province
+
+```
+
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-diag_agricole_impact
+ 
+import plotly.graph_objects as go
+
+figureName = "diag-zb-new-agricole"
+
+data = data_agricole_impact.read()
+data_filtered = data[(data['annee_1'] == 2017) & (data['annee_2'] == Annee) & (data['type_spatial'] == 'ZEE')]    
+
+labels = ['Nouvelle superficie impactée', 'Superficie déjà Impactée']
+values = [data_filtered['ratio_nouvel_impact'].sum(), data_filtered['ratio_deja_impact'].sum()]
+
+fig = go.Figure(data=[go.Pie(labels=labels, values=values,marker_colors=['#d62728','#ff7f0e'])])
+#export_output(pie_chart,figureName)
+
+fig
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab impact zb sur zones agricoles echelon provincial
+
+figureName = "fig-tab-stats-agricole-annees"
+table_province = tableau_statistiques(
+    data=data_agricole,
+    level_them='classes',
+    label_them=None,
+    groupby=['upper_libelle','classes'],
+    annee=Annee,
+    type_zone='province',
+    columns=['upper_libelle','classes','sup_total_theme','superficie_ha','nb_theme_indic','indicateur_3'],
+    label_col=['Territoire concerné','Classe agricole','Superficie (ha)','Surface brûlée (ha)','Nombre de surfaces brûlées impactant les zones agricoles','Part de la superficie impactés par les surfaces brûlées'],
+    title= f"Résultats des surfaces brûlées à l'échelon provincial des zones agricoles pour l’année {Annee}",
+    filtre='superficie_ha',
+    hauteurtab=500
+)
+#export_output(pie_chart,figureName)
+table_province
+
+```
+
+::: {#fig-tab-stats-surfaces-agricoles-province}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-tab-stats-surfaces-agricoles-province
+#| fig-cap: "Résultats sur l'impact des zones brûlées (Sentinel 2) sur les zones agricoles par province"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab impact zb sur zones agricoles echelon communal
+
+figureName = "fig-tab-stats-surfaces-agricoles-commune"
+
+table_province = tableau_statistiques(
+    data=data_agricole,
+    level_them=None,
+    label_them=None,
+    groupby=['upper_libelle'],
+    annee=Annee,
+    type_zone='commune',
+    columns=['upper_libelle','sup_total_theme','superficie_ha','indicateur_3'],
+    label_col=['Territoire concerné','Superficie (ha)','Surface brûlée (ha)','Part de la superficie impactés par les surfaces brûlées'],
+    title= f"Résultats des surfaces brûlées à l'échelon communal des zones agricoles pour l’année {Annee}",
+    filtre='superficie_ha',
+    hauteurtab=500
+)
+#export_output(pie_chart,figureName)
+table_province
+
+```
+
+::: {#fig-tab-stats-surfaces-agricoles-commune}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-tab-stats-surfaces-agricoles-commune
+#| fig-cap: "Répartition des impacts sur les zones agricoles par commune"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::

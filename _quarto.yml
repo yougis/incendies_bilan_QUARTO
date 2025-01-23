@@ -1,0 +1,83 @@
+project:
+  type: book
+
+book:
+  title: "Analyse spatiale de l’impact environnemental des incendies de {{< var Annee >}} sur la Nouvelle-Calédonie"
+  subtitle : ""
+  author: 
+   - name: "Hugo Roussaffa"
+     affiliations:
+      - name: OEIL - Observatoire de l'environnement en Nouvelle-Calédonie 
+        address: 12 rue Tourville
+        city: Nouméa
+        postal-code: 98800
+   - name: "J-F. N’Guyen Van Soc"
+     affiliations:
+      - name: OEIL - Observatoire de l'environnement en Nouvelle-Calédonie 
+        address: 12 rue Tourville
+        city: Nouméa
+        postal-code: 98800
+   - name: "Hélène Patel"
+     affiliations: UNC
+  publisher: "Observatoire de l'environnement en Nouvelle-Calédonie - OEIL"
+  favicon: cover.png
+  image: cover.png
+  cover-image: cover.png
+  license: "CC BY-NC"
+  sharing: [linkedin]
+  date: "20/12/2023"
+  version : "v1.0"
+  chapters:
+    - index.qmd
+    - 2_partenaires.qmd
+    - 3_intro.qmd
+    - 4_summary.qmd
+    - 5_glossaire.qmd
+    - 6_datasources-catalogue.qmd
+    - 7_etude_.qmd
+    - 8_etude_caracterisation.qmd
+
+logo: "img/OEIL_logo.png" #logo de l'oeil
+image_font_1: "img/feux1.jpg" #image de fond numéro 1
+image_font_2: "img/feux2.png" #image 2 supérieure
+logo_partenaire: not used #logo partenaire
+
+license: "CC BY"
+crossref:
+  chapters: true
+  appendix-title: "Annexe"
+  appendix-delim: ":"
+execute:
+  echo: false
+  warning: false
+  error: false
+
+bibliography: references.bib
+comments:
+  hypothesis: true
+format:
+  html:
+    theme: cosmo
+    toc: true
+    fig-width: 8
+    fig-height: 6
+    css: styles.css
+  pdf:
+    fig-width: 8
+    fig-height: 6
+    fig-pos: 'H'
+    number-sections: true
+    keep_tex: false
+    include-in-header: 
+      - "in-header.tex"
+    fontsize: 11pt
+    mainfont: Calibri
+    template-partials: 
+      - "before-body.tex"
+
+  docx:
+    reference-doc: custom-reference.docx
+    toc: true
+    toc-depth: 2
+    number-sections: true
+    highlight-style: github

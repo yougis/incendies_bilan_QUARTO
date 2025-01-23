@@ -1,0 +1,71 @@
+#### Informations
+
+La connaissance de la répartition des incendies sur les différents substrats que composent la Nouvelle-Calédonie est un paramètre important pour comprendre l’évolution des différents biotopes environnants. En effet, selon les caractéristiques géologiques du milieu, l’impact des feux pourra avoir des incidences variées aussi bien sur la reconstitution de la végétation post-incendie que sur les caractéristiques des sols. Il convient donc d’avoir un aperçu de la répartition des incendies sur les différents substrats majoritaires présents dans l’archipel afin de mieux cerner les enjeux et risques.  
+
+Les roches ultramafiques sont très présentes en Nouvelle-Calédonie, elles occupent près du tiers de l’archipel et leurs caractéristiques minéralogiques procurent aux sols des propriétés édaphiques particulières, permettant d’une végétation spécifique8. En effet, ces sols marqués par une faible fertilité et une concentration importante en métaux (manganèse, fer, chrome, nickel ou encore cobalt) leurs confèrent une flore quasiment entièrement endémique, à 96,7%46. L’habilité de ces espèces à s’établir sur ce type de sol repose sur divers prérequis physiologiques tels que l’hyperaccumulation d’éléments métalliques, la sclérophyllie ou encore les symbioses racinaires. Ainsi, les difficultés l’adaptation aux sols ultramafiques constituent une barrière contre les plantes néophytes, protégeant la Nouvelle-Calédonie de l’introduction de certaines espèces allochtones incapables de s’adapter9. Par ailleurs, ces sols sont caractérisés par des phénomènes érosifs très importants en raison des paramètres naturels (topographie, altération des substrats, régime des pluies, …) mais aussi anthropiques tels que les feux de brousse, l’exploitation minière du Nickel. Les forêts sur sol ultramafique sont l’un des écosystèmes les plus riches, autant que celles sur sol acide, bien plus que celles sur sol calcaire et couvrent actuellement 1 200 km² du territoire12. En effet, dès lors que la végétation est altérée, les sols développés sur ce type de roches sont très sensibles à l’érosion notamment à l’érosion par ruissellement10. De plus, les forêts sur substrat ultramafique est soumise de manière plus importante à la pression minière et ne couvrent que 28% des sols miniers.  
+
+Les terrains volcano-sédimentaires et autres types de substrats géologiques ne présentent quant à eux pas les mêmes caractéristiques que les sols. En effet, leurs caractéristiques minéralogiques fondamentalement différentes des roches ultramafiques engendrent un taux d’endémisme beaucoup moins important11. Les propriétés édaphiques de ces sols permettent une revégétalisation plus facile compte tenu notamment de concentrations faibles voire nulles en métaux. Ainsi, les impacts environnementaux engendrés à la suite d’un incendie sur sol volcano-sédimentaire peuvent présenter moins d’effets délétères.  
+
+A noter que la persistance de la signature spectrale des incendies va aussi être influencée par le type de sol. En effet, sur les sols ultramafiques la persistance du signal s’étend sur plusieurs mois due à la difficulté de reprise de la végétation. A contrario, les sols volcano-sédimentaires favorisent une repousse rapide de la végétation. De ce fait, la persistance du signal sur substrat volcano-sédimentaire est beaucoup moins importante puisque la végétation réduira le temps de visibilité des traces d’incendies par les capteurs des satellites12. 
+
+#### Résultats   
+
+```{python}
+#| echo: false
+#| output: true
+#| label: fig-zb-substrat-nc
+#| warning: false
+
+figureName = "fig-zb-substrat-nc"
+
+viz_map_nc = carte_impact_zb_bdenv(
+    data_carto=nc_,
+    data_feux=data_feux,
+    data_env=data_geol_ref,
+    cadre=bb_,
+    color_env='#99d76f',
+    title= " ",
+    tolerance=2000,
+    textlegende='test',
+    source='DIMENC / OEIL / Copernicus'
+)
+
+title=f"Carte de la répartition des surfaces brûlées {Annee} selon le type de substrat"
+
+export_output(viz_map_nc,figureName)
+```
+
+```{python}
+display(Markdown(f"[![{title}]({export_file_path}{figureName}.png){{#fig-zb-substrat-nc}}]({export_file_path}{figureName}.html)"))
+```
+
+{{< include etude_caracterisation/0_methode/tab_stats.qmd >}}
+
+```{python}
+#| echo: false
+#| output: true
+#| label: tbl-stats-feux-substrat-nc
+#| warning: false
+
+figureName = "tbl-stats-feux-substrat-nc"
+table_nc = tableau_statistiques(
+    data=data_geol,
+    level_them='substrat',
+    label_them=None,
+    groupby='upper_libelle',
+    annee=Annee,
+    type_zone='ZEE',
+    columns=['substrat','sup_total_theme','superficie_ha','nb_theme_indic','indicateur_3'],
+    label_col=['Substrat géologique','Superficie (ha)','Surface brûlée (ha)','Nombre de surfaces brûlées','Part de la superficie impactée par les surfaces brûlées (%)'],
+    title= " ",
+    filtre='superficie_ha',
+    hauteurtab=35
+)
+title= f"Statistique des incendies sur les différents types de substrats pour l'année {Annee}"
+
+export_output_plotly(table_nc,figureName)
+```
+
+```{python}
+display(Markdown(f"[![{title}]({export_file_path}{figureName}.png){{#tbl-stats-feux-substrat-nc}}]({export_file_path}{figureName}.html)"))
+```

@@ -1,0 +1,101 @@
+
+```{python}
+#| echo: false
+#| output: true
+#| warning: false
+#| label: methode zb sur bdenvironnement avec datashader mais perte de l'hovertool feux
+#| error: false
+
+def carte_impact_zb_bdenv(data_carto, data_feux, data_env, cadre, color_env, title, tolerance, textlegende,source):
+    bb = cadre.read().to_crs(3857)
+    data_feux = data_feux.read().to_crs(3857)
+    data_feux = data_feux[data_feux['annee'] == 2020]
+
+    data_carto = data_carto.read().to_crs(3857)
+    data_env = data_env.read().to_crs(3857)
+
+    # Calcul de la superficie
+    data_feux['area'] = data_feux.geometry.area / 10000
+    total_area_feux = data_feux['area'].sum()
+
+    data_env['area'] = data_env.geometry.area
+    data_env = data_env[data_env['substrat'] != 'Autre']
+    data_env_dissolved = data_env.dissolve(by='substrat', aggfunc='sum').reset_index()
+    percentage_area_burned = (total_area_feux / data_env_dissolved['area']) * 100
+
+    # Création des éléments de la carte
+    bb_overlay = hv.Polygons(bb).opts(alpha=0.0)
+    overlay = hv.Polygons(data_carto, vdims=['libelle']).opts(
+        fill_color='#d9d9d9',
+        cmap=['#d9d9d9'],
+        line_color='white')
+
+    palette = ['#ffd700', '#e6e6fa', '#9acd32', '#ffc0cb', '#2e8b57']
+    polygons = hv.Polygons(data_env_dissolved, vdims='substrat').opts(
+        cmap=palette,
+        color='substrat',
+        line_color=None,
+        tools=['hover'],
+        width=400,
+        height=400,
+        colorbar=True,
+        colorbar_opts={'title': 'Type de Substrat'})
+
+    rasterized_feux = hd.rasterize(hv.Polygons(data_feux, vdims=['area']), width=500, height=500).opts(
+        cmap=['#8B0000'],
+        alpha=1)
+
+    lon, lat = 163.3, -22.4
+    transformer = Transformer.from_crs("EPSG:4326", "EPSG:3857", always_xy=True)
+    x, y = transformer.transform(lon, lat)
+
+    # Ajouter les annotations pour la superficie totale des zones brûlées et le pourcentage
+    text_area = f"Superficie des zones brûlées: {total_area_feux:.0f} ha"
+    text_percentage = percentage_area_burned.apply(lambda x: f"Part de la superficie brûlée: {x:.2f}%")  
+
+    annotation_area = hv.Text(x - 50000, y + 45000, text_area, halign='left', valign='top', fontsize=8)
+
+    # Annotations (supprimer ou adapter ces fonctions si nécessaire)
+    annotation_sources = update_source(x, y, source)
+    annotation_realisation = update_realisation(x, y, 'OEIL')
+
+    # Créer la légende
+    legend_x, legend_y = x - 50000, y + 140000
+    rect_width, rect_height = 30000, 10000
+    legend_text_feux = hv.Text(legend_x + 108000, legend_y + 3800, 'Zones brûlées', halign='right', valign='center', fontsize=8)
+    legend_feux = hv.Rectangles([(legend_x, legend_y, legend_x + rect_width, legend_y + rect_height)]).opts(
+        fill_color='#8B0000',
+        line_color='white')
+
+    legend_items = [legend_feux, legend_text_feux]
+    for i, (substrat, color) in enumerate(zip(data_env_dissolved['substrat'], palette)):
+        legend_y -= rect_height + 5000
+        legend_items.append(hv.Text(legend_x + 40000, legend_y + 3800, substrat, halign='left', valign='center', fontsize=8))
+        legend_items.append(hv.Rectangles([(legend_x, legend_y, legend_x + rect_width, legend_y + rect_height)]).opts(
+            fill_color=color,
+            line_color='white'))
+
+    # Création de la carte finale
+    map_zb_env = tiled_basemap_dark.opts() * \
+        texte_echelle * \
+        echelle_barre * \
+        fleche_nord * \
+        annotation_sources * \
+        annotation_realisation * \
+        annotation_area * \
+        bb_overlay * \
+        overlay * \
+        polygons * \
+        rasterized_feux * \
+        legend_feux * \
+        legend_text_feux *\
+        hv.Overlay(legend_items)
+
+    viz_map_zb_env = map_zb_env.opts(
+        title=title,
+        toolbar=None,
+        width=700,
+        height=500)
+
+    return viz_map_zb_env
+```

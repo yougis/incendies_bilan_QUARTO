@@ -1,0 +1,27 @@
+# Partenaires {.unnumbered }
+
+
+::: {layout-nrow=2 .column-body-outset}
+
+![](./ressources/logos/AFD.png){width=100}
+![agence biodiv](./ressources/logos/ANCB.png){width=100}
+![](./ressources/logos/Endemia_CARRE.png){width=100}
+![](./ressources/logos/IAC.jpg){width=100}
+![](./ressources/logos/ifrecor.jpg){width=100}
+![](./ressources/logos/Ifremer.png){width=100}
+![](./ressources/logos/IRD_160.jpg){width=100}
+![](./ressources/logos/IUCN_Red_List.png){width=100}
+![](./ressources/logos/KBA.png){width=100}
+![](./ressources/logos/LOGO DSCGR.jpg){width=100}
+![](./ressources/logos/LOGO GOUV 300dpi.jpg){width=100}
+![](./ressources/logos/METEO_France_MFBLEU-RVB.jpg){width=100}
+![](./ressources/logos/nasa_fond_blanc.jpg){width=100}
+![](./ressources/logos/OFB.jpg){width=100}
+![](./ressources/logos/Province Nord.png){width=100}
+![](./ressources/logos/province_sud.png){width=100}
+![](./ressources/logos/UNC_160.jpg){width=100}
+![](./ressources/logos/UNEP_WCMC.PNG){width=100}
+![](./ressources/logos/wwf_panda_logo.jpg){width=100}
+![](./ressources/logos/Zonéco_NC.jpg){width=100}
+![](./ressources/logos/OEIL.png){width=100}
+:::

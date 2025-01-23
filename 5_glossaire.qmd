@@ -1,0 +1,15 @@
+# Glossaire {.unnumbered}
+
+
+
+| Terme                   | Définition                                                                                                    |
+|-------------------------|---------------------------------------------------------------------------------------------------------------|
+| Biomasse                | Matière organique d'origine végétale (microalgues incluses), animale, bactérienne ou fongique, utilisable comme source d'énergie (bioénergies).             |
+| Chaine de traitement    | Succession des opérations effectuées sur les données à l’aide de scripts et outils développés avec un ou plusieurs produits en sortie.                |
+| Couche                  | Fichier contenant les données spatiales en ayant les informations attributaires / tabulaires.                 |
+| Discrétisation          | Méthode permettant de découper en classe une série de variables quantitatives ou qualitatives.                |
+| Héliophile              | Organisme ayant d’importants besoins en lumière (soleil) pour se développer.                                    |
+| Photo-interprétation    | Interprétation et vérification à partir de photographies aériennes ou d’images satellitales.                  |
+| Pyrophile               | Plante ou végétation se développant sur un substrat ayant subi un incendie.                                    |
+| Raster                  | L’information est traitée sous forme de valeur numérique et correspond souvent à une image géoréférencée.      |
+| Signature spectrale     | Émission électromagnétique caractéristique d'un objet en fonction de la longueur d'onde.                      | 

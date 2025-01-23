@@ -1,0 +1,101 @@
+
+```{python}
+#| echo: false
+#| output: true
+#| warning: false
+#| label: methode zb sur bdenvironnement avec datashader mais perte de l'hovertool feux
+
+def carte_impact_zb_bdenv(data_carto, data_feux, data_env, cadre, color, color_env, title, tolerance, textlegende,nb_strat,level_strate,pos_legend,label_legend,label_legend_env,texte_sources):
+    
+    if data_feux == 'data_feux':
+        data_feux = data_feux.read().to_crs(3857)
+        data_feux = data_feux[data_feux['annee'] == Annee]
+    else:
+        data_feux = data_feux.read().to_crs(3857)
+
+    bb = cadre.read().to_crs(3857)
+
+    data_carto = data_carto.read().to_crs(3857)
+    data_env = data_env.read().to_crs(3857)
+
+    # Calcul de la superficie
+    data_feux['area'] = data_feux.geometry.area / 10000
+    total_area_feux = data_feux['area'].sum()
+
+    if level_strate is None:
+        data_env['area'] = data_env.geometry.area
+    else:
+        #data_env = data_env[data_env[level_strate] != 'Autre']
+        data_env = data_env.dissolve(by=level_strate, aggfunc='sum').reset_index()
+        data_env['area'] = data_env.geometry.area
+        print(data_env)
+        
+    # Création des éléments de la carte
+    bb_overlay = hv.Polygons(bb).opts(alpha=0.0)
+    overlay = hv.Polygons(data_carto, vdims=['libelle']).opts(
+        fill_color='#d9d9d9',
+        cmap=['#d9d9d9'],
+        line_color='white',
+        fill_alpha=0)
+
+    if nb_strat>1:
+        polygons = hv.Polygons(data_env, vdims=['area']).opts(
+            cmap=color_env,
+            color=level_strate,
+            line_color=None,
+            tools=['hover'],
+            width=400,
+            height=400,
+            colorbar=False,
+            colorbar_opts={'title': 'Type de Substrat'})    
+    else:
+        polygons = hv.Polygons(data_env, vdims=['area']).opts(
+            cmap=[color_env],
+            line_color=None,
+            tools=['hover'],
+            width=400,
+            height=400,
+            colorbar=False)
+
+    rasterized_feux = hd.rasterize(hv.Polygons(data_feux, vdims=['area']), width=1000 , height=1000).opts(
+        cmap=[color],
+        alpha=1)
+    
+    if cadre == bb_PN:
+        annotation_area,legend_text_feux,legend_items,legend_feux,texte_echelle,echelle_barre,fleche_nord,annotation_realisation,annotation_sources=loc_PN(total_area_feux,level_strate,nb_strat,data_env,pos_legend,label_legend,label_legend_env,color,color_env,texte_sources)
+    elif cadre == bb_GS:
+        annotation_area,legend_text_feux,legend_items,legend_feux,texte_echelle,echelle_barre,fleche_nord,annotation_realisation,annotation_sources=loc_sud(total_area_feux,level_strate,nb_strat,data_env,pos_legend,label_legend,label_legend_env,color,color_env,texte_sources)
+    else :
+        annotation_area,legend_text_feux,legend_items,legend_feux,texte_echelle,echelle_barre,fleche_nord,annotation_realisation,annotation_sources=loc_GT(total_area_feux,level_strate,nb_strat,data_env,pos_legend,label_legend,label_legend_env,color,color_env,texte_sources)
+
+    # Création de la carte finale
+    map_zb_env = tiled_basemap_dark.opts() * \
+        texte_echelle * \
+        echelle_barre * \
+        fleche_nord * \
+        annotation_sources * \
+        annotation_realisation * \
+        annotation_area * \
+        bb_overlay * \
+        polygons * \
+        rasterized_feux * \
+        overlay * \
+        legend_feux * \
+        legend_text_feux *\
+        hv.Overlay(legend_items)
+
+    x_min, y_min, x_max, y_max = bb.total_bounds
+    xlim = (x_min, x_max)
+    ylim = (y_min, y_max)
+
+    viz_map_zb_env = map_zb_env.opts(
+        xlim=xlim,
+        ylim=ylim,
+        title=title,
+        toolbar=None,
+        width=700,
+        height=500
+    )
+
+    return viz_map_zb_env
+```

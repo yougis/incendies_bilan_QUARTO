@@ -1,0 +1,47 @@
+
+
+
+```{python}
+#| echo: false
+#| output: false
+#| label: Compute new burned surfaces 
+data = data_S2_.read().to_crs(3857)
+
+data['annee'] = data['annee'].astype(int)
+
+annees = sorted(data.annee.unique().tolist())
+# Suppression de la valeur 
+
+resultats = pd.DataFrame(columns=['Annee', 'Surface_Nouvelle', 'Surface_Ancienne'])
+# Analyser chaque année
+for annee in range(data['annee'].min(), data['annee'].max() + 1):
+    data_annee_actuelle = data[data['annee'] == annee]
+    data_annees_precedentes = data[data['annee'] < annee]
+    
+    if not data_annees_precedentes.empty:
+        data_precedente_union = data_annees_precedentes.dissolve()
+        surfaces_nouvelles = gpd.overlay(data_annee_actuelle, data_precedente_union, how='difference')
+    else:
+        surfaces_nouvelles = data_annee_actuelle
+
+    surface_nouvelle = surfaces_nouvelles.area.sum()
+    surface_ancienne = data_annee_actuelle.area.sum() - surface_nouvelle
+    
+
+    row = {'Annee': annee, 'Surface_Nouvelle': surface_nouvelle, 'Surface_Ancienne': surface_ancienne}
+    resultats = pd.concat([resultats,  pd.DataFrame([row])], ignore_index=True)
+     
+
+
+```
+
+
+```{python}
+#| echo: false
+#| output: true
+#| label: "Output nouvelles surfaces brûlées"
+
+resultats.set_index('Annee').plot(kind='bar', stacked=True)
+
+
+```

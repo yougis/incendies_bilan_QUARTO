@@ -1,0 +1,494 @@
+#### Informations
+
+Le type de foncier représente la répartition des droits de propriétés des terres. Les informations croisées avec les surfaces brûlées de Sentinel 2 sont séparées en différents types de foncier, à savoir le foncier faisant référence à la collectivité, le foncier faisant référence aux propriétaires privés, et enfin le foncier appartenant aux terres coutumières. On note également l’existence d’une catégorie regroupant les zones pour lesquelles le caractère foncier n’a pas été précisé. A noter que les Îles Loyautés sont comprises dans la catégorie « Terres coutumières ». 
+
+#### Partenaires
+
+Ces données sont issues du cadastre, elles ont été obtenues par le biais du gouvernement calédonien.
+
+#### Résultats à l’échelle de la Nouvelle-Calédonie
+
+La @tbl-zb-par-type-foncier présente des détails sur l’impact des zones brûlées, dont notamment la superficie incendiée, et la part qu’elle représente par rapport au total incendié. Il est à noter que le total du nombre de feux par zone ne correspond pas au nombre global de feux détectés en Nouvelle-Calédonie par les capteurs Sentinel 2 car un double comptage a été appliqué. Ainsi, si un incendie se trouve sur la limite administrative entre deux types de foncier, il sera comptabilisé comme un incendie dans chaque type de foncier.
+
+{{< include etude_caracterisation/0_methode/tab_stats.qmd >}}
+
+```{python}
+#| echo: false
+#| output: true
+#| label: tbl-zb-par-type-foncier
+
+figureName = "tbl-zb-par-type-foncier"
+
+tableau_statistiques = tableau_statistiques(
+    data=data_foncier,
+    level_them=None,
+    label_them=None,
+    groupby=['upper_libelle','proprio_ty'],
+    annee=Annee,
+    type_zone='ZEE',
+    columns=['proprio_ty','nb_theme_indic','superficie_ha'],
+    label_col=['Type de foncier','Nombre de surfaces brûlées','Surface brûlée (ha)'],
+    title=" ",
+    filtre='superficie_ha',
+    hauteurtab=35)
+
+title= f"Répartition de l’impact des zones brûlées (Sentinel 2) par type de foncier pour l'année {Annee}"
+# export des figures en images pour les afficher dans le rapport 
+export_output_plotly(tableau_statistiques,figureName)
+
+```
+
+```{python}
+display(Markdown(f"[![{title}]({export_file_path}{figureName}.png){{#tbl-zb-par-type-foncier}}]({export_file_path}{figureName}.html)"))
+```
+
+
+{{< include etude_caracterisation/0_methode/hist_cumul.qmd >}}
+
+```{python}
+#| echo: false
+#| output: true
+#| label: fig-hist-zb-par-type-foncier-all-year
+
+figureName = "fig-hist-zb-par-type-foncier-all-year"
+hist_cumul = hist_cumul(
+    data=data_foncier,
+    start_year=2017,
+    end_year=Annee,
+    type_zone='ZEE',
+    level_tem='proprio_ty',
+    title= " ",
+    label_x= 'Type de foncier',
+    label_y= 'Superficie brûlée (ha)',
+)
+title= f"Evolution de la superficie brûlée par type de foncier de 2017 à {Annee}"
+
+# export des figures en images pour les afficher dans le rapport 
+export_output(hist_cumul,figureName)
+
+```
+
+```{python}
+display(Markdown(f"[![{title}]({export_file_path}{figureName}.png){{#fig-hist-zb-par-type-foncier-all-year}}]({export_file_path}{figureName}.html)"))
+```
+
+
+#### Résultats à l’échelle des provinces
+
+##### Informations  
+
+La @tbl-stat-foncier-prov présente des détails sur l’impact des zones brûlées par type de foncier pour chaque province. Il est à noter que le total du nombre de feux par zone ne correspond pas au nombre global de feux détectés sur chaque province car un double compte a été appliqué. Ainsi, si un incendie se trouve sur la limite administrative entre deux provinces et/ou entre deux types de foncier, il sera comptabilisé comme un incendie dans chaque type de foncier, et chaque périmètre administratif. 
+
+La situation par rapport au foncier n’est pas homogène entre les provinces. La particularité de la province des Iles est qu’elle n’est constituée que de terres coutumières. La comparaison de la répartition des types de fonciers par province (cf. @fig-carte-zb-foncier-coutumier-terre-coutu) montre que les plus fortes proportions de foncier concernent le domaine appartenant aux collectivités (respectivement 60 et 64% pour les province Nord et Sud).
+
+{{< include etude_caracterisation/0_methode/tab_stats.qmd >}}
+
+```{python}
+#| echo: false
+#| output: true
+#| label: tbl-stat-foncier-prov
+
+figureName = "tbl-stat-foncier-prov"
+
+tableau_statistiques = tableau_statistiques(
+    data=data_foncier,
+    level_them=None,
+    label_them=None,
+    groupby=['upper_libelle','proprio_ty'],
+    annee=Annee,
+    type_zone='province',
+    columns=['upper_libelle','proprio_ty','superficie_ha','nb_theme_indic'],
+    label_col=['Territoire concerné','Type de foncier','Superficie brûlée (ha)','Nombre de surfaces brûlées'],
+    title=" ",
+    filtre='superficie_ha',
+    hauteurtab=30
+)
+
+title= f"Répartition de l’impact des zones brûlées sur les différents types de fonciers par province pour l’année {Annee}"
+
+# export des figures en images pour les afficher dans le rapport 
+export_output_plotly(tableau_statistiques,figureName)
+```
+
+```{python}
+display(Markdown(f"[![{title}]({export_file_path}{figureName}.png){{#tbl-stat-foncier-prov}}]({export_file_path}{figureName}.html)"))
+```
+
+{{< include etude_caracterisation/0_methode/pie_chart.qmd >}}
+
+```{python}
+#| echo: false
+#| output: true
+#| label: fig-diag-part-zb-par-foncier-province-annee
+
+figureName = "fig-diag-part-zb-par-foncier-province-annee"
+pie_chart = pie_chart(
+    data=data_foncier,
+    type_zone='province',
+    filter='proprio_ty',
+    start_year=Annee,
+    end_year=Annee,
+    title= " "
+)
+
+title= f"Répartition des surfaces brûlées (%) par type de foncier et par province en {Annee}"
+# export des figures en images pour les afficher dans le rapport 
+export_output_plotly(pie_chart,figureName)
+```
+
+```{python}
+display(Markdown(f"[![{title}]({export_file_path}{figureName}.png){{#fig-diag-part-zb-par-foncier-province-annee}}]({export_file_path}{figureName}.html)"))
+```
+
+##### Résultats
+
+```{python}
+#| echo: false
+#| output: true
+#| label: fig-carte-zb-foncier-public-prov
+
+figureName =  "fig-carte-zb-foncier-public-prov"
+viz_map_choropleth_province = carte_choroplethe(
+    geodata=province,
+    data=data_foncier,
+    thematique='COLLECTIVITE',
+    label_them='proprio_ty',
+    indicateur='indicateur_1',
+    annee=Annee,
+    tolerance=3000,
+    title= " ",
+    custom_cmap=custom_cmap,
+    x=x,
+    y=y,
+    left_key='id_spatial',
+    right_key='id_spatial',
+    how='left',
+    global_min=global_min,
+    global_max=global_max,
+    source='OEIL / Copernicus'
+)
+
+title= f"Part de la superficie brûlée en {Annee} sur foncier public par province"
+
+# export des figures en images pour les afficher dans le rapport 
+export_output(viz_map_choropleth_province,figureName)
+```
+
+```{python}
+display(Markdown(f"[![{title}]({export_file_path}{figureName}.png){{#fig-carte-zb-foncier-public-prov}}]({export_file_path}{figureName}.html)"))
+```
+
+```{python}
+#| echo: false
+#| output: true
+#| label: fig-carte-zb-foncier-coutumier-terre-coutu
+
+figureName =  "fig-carte-zb-foncier-coutumier-terre-coutu"
+viz_map_choropleth_province = carte_choroplethe(
+    geodata=province,
+    data=data_foncier,
+    thematique='TERRE COUTUMIERE',
+    label_them='proprio_ty',
+    indicateur='indicateur_1',
+    annee=Annee,
+    tolerance=3000,
+    title= " ",
+    custom_cmap=custom_cmap,
+    x=x,
+    y=y,
+    left_key='id_spatial',
+    right_key='id_spatial',
+    how='left',
+    global_min=global_min,
+    global_max=global_max,
+    source='OEIL / Copernicus'
+)
+
+title= f"Part de la superficie brûlée en {Annee} sur terre coutumière par province "
+
+# export des figures en images pour les afficher dans le rapport 
+export_output(viz_map_choropleth_province,figureName)
+```
+
+```{python}
+display(Markdown(f"[![{title}]({export_file_path}{figureName}.png){{#fig-carte-zb-foncier-coutumier-terre-coutu}}]({export_file_path}{figureName}.html)"))
+```
+
+```{python}
+#| echo: false
+#| output: true
+#| label: fig-carte-zb-foncier-prive-prov
+#| 
+figureName =  "fig-carte-zb-foncier-prive-prov"
+viz_map_choropleth_province = carte_choroplethe(
+    geodata=province,
+    data=data_foncier,
+    thematique='PRIVE',
+    label_them='proprio_ty',
+    indicateur='indicateur_1',
+    annee=Annee,
+    tolerance=3000,
+    title= " ",
+    custom_cmap=custom_cmap,
+    x=x,
+    y=y,
+    left_key='id_spatial',
+    right_key='id_spatial',
+    how='left',
+    global_min=global_min,
+    global_max=global_max,
+    source='OEIL / Copernicus'
+
+)
+title= f"Part de la superficie brûlée en {Annee} sur foncier privé par province "
+
+# export des figures en images pour les afficher dans le rapport 
+export_output(viz_map_choropleth_province,figureName)
+```
+
+
+```{python}
+display(Markdown(f"[![{title}]({export_file_path}{figureName}.png){{#fig-carte-zb-foncier-prive-prov}}]({export_file_path}{figureName}.html)"))
+```
+
+
+#### Résultats à l’échelle des communes 
+
+```{python}
+#| echo: false
+#| output: true
+#| label: fig-carte-zb-foncier-commune
+
+figureName =  "fig-carte-zb-foncier-commune"
+viz_map_choropleth_commune = carte_choroplethe(
+    geodata=commune,
+    data=data_foncier,
+    thematique='COLLECTIVITE',
+    label_them='proprio_ty',
+    indicateur='indicateur_1',
+    annee=Annee,
+    tolerance=1000,
+    title= " ",
+    custom_cmap=custom_cmap,
+    x=x,
+    y=y,
+    left_key='id_spatial',
+    right_key='id_spatial',
+    how='left',
+    global_min=global_min,
+    global_max=global_max,
+    source='OEIL / Copernicus'
+
+)
+
+title= f"Part de la superficie brûlée en {Annee} sur foncier public par commune"
+
+# export des figures en images pour les afficher dans le rapport 
+export_output(viz_map_choropleth_commune,figureName)
+```
+
+```{python}
+display(Markdown(f"[![{title}]({export_file_path}{figureName}.png){{#fig-carte-zb-foncier-commune}}]({export_file_path}{figureName}.html)"))
+```
+
+```{python}
+#| echo: false
+#| output: true
+#| label: fig-carte-zb-foncier-coutumier-commune
+
+figureName =  "fig-carte-zb-foncier-coutumier-commune"
+viz_map_choropleth_commune = carte_choroplethe(
+    geodata=commune,
+    data=data_foncier,
+    thematique='TERRE COUTUMIERE',
+    label_them='proprio_ty',
+    indicateur='indicateur_1',
+    annee=Annee,
+    tolerance=3000,
+    title= " ",
+    custom_cmap=custom_cmap,
+    x=x,
+    y=y,
+    left_key='id_spatial',
+    right_key='id_spatial',
+    how='left',
+    global_min=global_min,
+    global_max=global_max,
+    source='OEIL / Copernicus'
+)
+
+title= f"Part de la superficie brûlée en {Annee} sur terre coutumière par commune "
+
+# export des figures en images pour les afficher dans le rapport 
+export_output(viz_map_choropleth_commune,figureName)
+```
+
+```{python}
+display(Markdown(f"[![{title}]({export_file_path}{figureName}.png){{#fig-carte-zb-foncier-coutumier-commune}}]({export_file_path}{figureName}.html)"))
+```
+
+
+```{python}
+#| echo: false
+#| output: true
+#| label: fig-carte-zb-foncier-prive-comm
+
+figureName =  "fig-carte-zb-foncier-prive-comm"
+viz_map_choropleth_commune = carte_choroplethe(
+    geodata=commune,
+    data=data_foncier,
+    thematique='PRIVE',
+    label_them='proprio_ty',
+    indicateur='indicateur_1',
+    annee=Annee,
+    tolerance=3000,
+    title= " ",
+    custom_cmap=custom_cmap,
+    x=x,
+    y=y,
+    left_key='id_spatial',
+    right_key='id_spatial',
+    how='left',
+    global_min=global_min,
+    global_max=global_max,
+    source='OEIL / Copernicus'
+
+)
+
+title= f"Part de la superficie brûlée en {Annee} sur foncier privé par commune "
+
+# export des figures en images pour les afficher dans le rapport 
+export_output(viz_map_choropleth_commune,figureName)
+```
+
+```{python}
+display(Markdown(f"[![{title}]({export_file_path}{figureName}.png){{#fig-carte-zb-foncier-prive-comm}}]({export_file_path}{figureName}.html)"))
+```
+
+{{< include etude_caracterisation/0_methode/tab_stats.qmd >}}
+
+```{python}
+#| echo: false
+#| output: true
+#| label: tbl-zb-foncier-public-commune
+
+figureName =  "tbl-zb-foncier-public-commune"
+
+tableau_statistiques = tableau_statistiques(
+    data=data_foncier,
+    level_them='proprio_ty',
+    label_them="COLLECTIVITE",
+    groupby='upper_libelle',
+    annee=Annee,
+    type_zone='commune',
+    columns=['upper_libelle','nb_indic','superficie_ha'],
+    label_col=['Territoire concerné','Nombre de surfaces brûlées','Superficie brûlée (ha)'],
+    title=" ",
+    filtre='superficie_ha',
+    hauteurtab=25
+)
+title= f"Répartition de l’impact des zones brûlées sur le foncier public par commune pour l'année {Annee}"
+
+# export des figures en images pour les afficher dans le rapport 
+export_output_plotly(tableau_statistiques,figureName)
+```
+
+```{python}
+display(Markdown(f"[![{title}]({export_file_path}{figureName}.png){{#tbl-zb-foncier-public-commune}}]({export_file_path}{figureName}.html)"))
+```
+
+{{< include etude_caracterisation/0_methode/tab_stats.qmd >}}
+
+```{python}
+#| echo: false
+#| output: true
+#| label: tbl-zb-foncier-prive-commune
+
+figureName =  "tbl-zb-foncier-prive-commune"
+
+tableau_statistiques = tableau_statistiques(
+    data=data_foncier,
+    level_them='proprio_ty',
+    label_them="TERRE COUTUMIERE",
+    groupby='upper_libelle',
+    annee=Annee,
+    type_zone='commune',
+    columns=['upper_libelle','nb_indic','superficie_ha'],
+    label_col=['Territoire concerné','Nombre de surfaces brûlées','Superficie brûlée (ha)'],
+    title=" ",
+    filtre='superficie_ha',
+    hauteurtab=25
+)
+title= f"Répartition de l’impact des zones brûlées sur le foncier terre coutumière par commune pour l'année {Annee}"
+
+# export des figures en images pour les afficher dans le rapport 
+export_output_plotly(tableau_statistiques,figureName)
+```
+
+```{python}
+display(Markdown(f"[![{title}]({export_file_path}{figureName}.png){{#tbl-zb-foncier-prive-commune}}]({export_file_path}{figureName}.html)"))
+```
+
+{{< include etude_caracterisation/0_methode/tab_stats.qmd >}}
+
+```{python}
+#| echo: false
+#| output: true
+#| label: tbl-zb-foncier-terre-coutumiere-commune
+
+figureName =  "tbl-zb-foncier-terre-coutumiere-commune"
+
+tableau_statistiques = tableau_statistiques(
+    data=data_foncier,
+    level_them='proprio_ty',
+    label_them="PRIVE",
+    groupby='upper_libelle',
+    annee=Annee,
+    type_zone='commune',
+    columns=['upper_libelle','nb_indic','superficie_ha'],
+    label_col=['Territoire concerné','Nombre de surfaces brûlées','Superficie brûlée (ha)'],
+    title=" ",
+    filtre='superficie_ha',
+    hauteurtab=25
+)
+
+title= f"Répartition de l’impact des zones brûlées sur le foncier privé par commune pour l'année {Annee}"
+# export des figures en images pour les afficher dans le rapport 
+export_output_plotly(tableau_statistiques,figureName)
+```
+
+```{python}
+display(Markdown(f"[![{title}]({export_file_path}{figureName}.png){{#tbl-zb-foncier-terre-coutumiere-commune}}]({export_file_path}{figureName}.html)"))
+```
+
+{{< include etude_caracterisation/0_methode/tab_stats.qmd >}}
+
+```{python}
+#| echo: false
+#| output: true
+#| label: tbl-zb-foncier-non-renseigne-commune
+
+figureName =  "tbl-zb-foncier-non-renseigne-commune"
+
+tableau_statistiques = tableau_statistiques(
+    data=data_foncier,
+    level_them='proprio_ty',
+    label_them="NON RENSEIGNE",
+    groupby='upper_libelle',
+    annee=Annee,
+    type_zone='commune',
+    columns=['upper_libelle','nb_indic','superficie_ha'],
+    label_col=['Territoire concerné','Nombre de surfaces brûlées','Superficie brûlée (ha)'],
+    title=" ",
+    filtre='superficie_ha',
+    hauteurtab=25
+)
+title= f"Répartition de l’impact des zones brûlées sur le foncier non renseigné par commune pour l'année {Annee}"
+
+# export des figures en images pour les afficher dans le rapport 
+export_output_plotly(tableau_statistiques,figureName)
+```
+
+```{python}
+display(Markdown(f"[![{title}]({export_file_path}{figureName}.png){{#tbl-zb-foncier-non-renseigne-commune}}]({export_file_path}{figureName}.html)"))
+```

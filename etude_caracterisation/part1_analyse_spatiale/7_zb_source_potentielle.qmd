@@ -1,0 +1,61 @@
+### Distance entre zones brûlées et sources potentielles
+
+#### Distance entre zones brûlées et voies d'accès
+
+##### Informations
+
+Pour calculer la proximité entre les zones brûlées et les voieries, la méthode de distance la plus proche, en ligne droite, entre les surfaces brûlées et les voies d’accès. Les résultats sont classés par tranche de 0,5 kilomètre. Afin de prendre en compte les principaux axes routiers, la couche de voierie « VOI_VOIRIE_L » de la BDTOPO_NC a été utilisée. La @fig-histo-cumul-feux-dist dévoile les résultats de l’étude sur la proximité des zones brûlées 2021 avec les voies d’accès.
+
+##### Résultats
+
+```{python}
+#| echo: false
+#| output: true
+#| label: fig-histo-cumul-feux-dist
+
+figureName = "fig-histo-cumul-feux-dist"
+
+data=data_voirie
+start_year=Annee
+end_year=Annee
+title= f"Nombre d'incendies par classe de distance en kilomètres à une route en {Annee}"
+label_x= 'Classe de distance (km)'
+label_y= 'Nombre de zones brûlées'
+
+
+data = data.read()
+data_filtered = data[(data['annee'] >= start_year) & (data['annee'] <= end_year)]    
+data_filtered=data_filtered[::-1]
+bars = hv.Bars(data_filtered, kdims=['classe_distance_km','annee'], vdims=['nb_zones_brulees'])
+
+hover = HoverTool(tooltips=[
+    ("Nombre", "@nb_zones_brulees"),
+    ("Année", "@annee"),
+
+])
+
+palette = ['#620F46']
+bars.opts(
+    opts.Bars(
+        stacked=True,
+        xlabel=label_x,
+        ylabel=label_y,
+        color=hv.Cycle(values=palette),
+        legend_position='right',
+        width=900,
+        height=500,
+        xrotation=45,
+        tools=[hover],
+        line_color='white',
+        invert_axes=True,
+        show_grid=True,
+    )
+)
+# export des figures en images pour les afficher dans le rapport 
+export_output(bars,figureName)
+
+```
+
+```{python}
+display(Markdown(f"[![{title}]({export_file_path}{figureName}.png){{#fig-histo-cumul-feux-dist}}]({export_file_path}{figureName}.html)"))
+```

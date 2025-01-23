@@ -1,0 +1,26 @@
+<!-- 
+
+<!-- 
+from IPython.display import Markdown
+Markdown(f"**{db_traitement}**.")
+-->
+
+
+Cette partie du rapport présente différentes approches ayant pour but de caractériser la répartition des incendies tout en tenant compte d’autres facteurs comme le substrat ou zones anthropiques à proximité du déclenchement de ces incendies. Leur taille et leur localisation sont prises en compte afin de mettre en avant les lieux où les incendies ont été les plus intenses.
+
+
+
+::: {.callout-note}
+## Données exploitées dans les analyses du rapport
+```{python}
+#| echo: false
+
+Markdown(f"Les analyses effectuées dans le rapport sont issues d'un traitement sur les données de l'année **{Annee}**.")
+```
+:::
+
+### Répartition par unité territoriale 
+Sont présentés dans cette partie, le nombre de surfaces brûlées et la superficie en hectares incendiés par unité administrative. Ces résultats s’appuient principalement sur les données issues de la chaîne de traitement des images satellitaires de Sentinel 2.
+
+#### Répartition en Nouvelle-Calédonie
+À l’échelle de la Nouvelle-Calédonie, les résultats sont présentés pour les données du capteur VIIRS du satellite SUOMI NPP ainsi que celles issues de la chaîne de traitement des images satellitaires de Sentinel 2 opérée par l'OEIL.

@@ -1,0 +1,36 @@
+```{python}
+#| echo: false
+#| output: true
+#| warning: false
+
+def graph_evolution(data, type_zone,indicateur, start_year, end_year, title,xlabel,ylabel):
+    # Charger les données depuis le catalogue
+    data = data.read()
+
+    # Filtrer les données pour les années spécifiées et le type de zone
+    data_years = data[(data['annee'] >= start_year) & (data['annee'] <= end_year) & (data['level'] == type_zone)]
+    # Grouper les données par année et par type de zone
+    grouped_data_years = data_years.groupby(['upper_libelle', 'annee']).agg({
+        indicateur: 'mean'
+    }).reset_index()
+    grouped_data_years[indicateur].fillna(0, inplace=True)
+
+    # Renommer les colonnes pour le graphique
+    grouped_data_years.columns = ['upper_libelle'.capitalize(), 'Année', 'Pourcentage brûlé (%)']
+
+    # Convertir l'objet Cycle en itérateur
+    curves = []
+    for zone in grouped_data_years['upper_libelle'.capitalize()].unique():
+        zone_data = grouped_data_years[grouped_data_years['upper_libelle'.capitalize()] == zone]
+        curve_color = iter(hv.Cycle('Category10'))
+        curve = hv.Curve(zone_data, kdims='Année', vdims='Pourcentage brûlé (%)', label=zone).opts(line_width=2, color=next(curve_color))
+        curves.append(curve)
+
+    # Overlay des courbes
+    overlay = hv.Overlay(curves).opts(
+        width=800, height=400, xlabel=xlabel, ylabel=ylabel, 
+        title=title, xticks=list(range(start_year, end_year+1))
+    )
+
+    return overlay
+```

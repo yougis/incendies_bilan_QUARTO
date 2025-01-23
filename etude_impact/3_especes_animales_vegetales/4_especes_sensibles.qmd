@@ -1,0 +1,62 @@
+#### Informations
+
+Les espèces sensibles représentent la localisation de la compilation des observations naturalistes recensant la faune, la flore ou encore les champignons possédant un niveau d'enjeu plus ou moins important sur l’ensemble du territoire calédonien en fonction de la rareté de l’espèce et de son classement UICN (Figure A METTRE A JOUR). Les données intersectées avec les incendies détectés par Sentinel 2 possèdent quatre niveaux d’enjeux croissant, allant de 1, le moins important à 4 le plus important. Il est tenu de préciser que ces données ne sont pas exhaustives à l’échelle du territoire compte tenu des méthodes de collecte des informations relatives à la faune et à la flore sensible.  
+
+Les données utilisées dans la présente analyse ont été mise à jour en 2020 pour la Province Sud. La Province Nord et la Province des Iles n’ayant effectué cette mise à jour, la couche utilisée pour l’analyse est donc composée des dernières mises à jour de chacune des provinces. De plus, entre 2017, 2018 et 2019, une différence notable entre les données est à noter. En effet, la base donnée utilisée pour le bilan incendie 2017 comprenait 7 957 observations d’espèces sensibles présentes sur le territoire terrestre de la Nouvelle-Calédonie. En 2018, cette dernière comprenait 18 209 espèces. Pour le bilan incendie 2019, la base de données en comprenait 87 414. Toutefois, la base de données étant construite et renseignée à l’aide de différents partenaires, il est possible que la mise à jour des informations décrivant chaque occurrence ne soit pas réalisée en même temps. Ainsi, le niveau d’enjeu de certaines espèces sensibles a pu ne pas être renseigné. Dans ce cas, l’analyse qui suit ne prendra pas en compte ces taxons malgré qu’ils aient été observés sur le site. 
+
+À noter qu’ici est mis en avant le nombre d’espèces impactées par les incendies, et non le nombre d’occurrences touchées pour chaque espèce concernée par les incendies. Une espèce dont la présence a été constatée strictement au même endroit plusieurs fois, ne sera comptabilisée qu’une seule fois. Pour autant, une espèce peut avoir été observée sur différents secteurs sur une même commune. Le tableau qui présente le nom scientifique des espèces impactées ne fait apparaître qu’une seule fois le nom des espèces touchées par commune.  
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: carte localisation perimetres especes sensibles
+#| 
+figureName = "carte_faune_flore_menacees"
+viz_map_nc = carte_bdenv(
+    data_carto=nc_,
+    data_env=especes_sensibles,
+    cadre=bb_PS,
+    color_env = '#b3f0ab',
+    title=f"Carte de répartition des périmètres des espèces sensibles en Province Sud",
+    tolerance=2000,
+    textlegende='test',
+    nb_strat=1,
+    level_strate=None,
+    pos_legend=2000,
+    label_legend_env='Espèces sensibles de la Province Sud',
+    texte_sources="Direction de l'Environnement (Province Sud) / OEIL"
+
+)
+
+export_output(viz_map_nc,figureName)
+
+```
+
+#### Résultats
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab impact zb sur especes sensible echelon communal
+
+figureName = "fig-tab-echelon-nc-especes-menacees-commune"
+
+table_province = tableau_statistiques(
+    data=data_esp_sensibles,
+    level_them=None,
+    label_them=None,
+    groupby=['upper_libelle'],
+    annee=Annee,
+    type_zone='commune',
+    columns=['upper_libelle','nb_theme','nb_theme_indic','indicateur_3'],
+    label_col=['Territoire concerné',"Nombre d'espèces sensibles","Nombre d'ES touchées par les surfaces brûlées",'Part des espèces sensibles touchées par les incendies (%)'],
+    title= f"Répartition de l’impact des incendies sur les espèces sensibles affectées par commune pour l’année {Annee}",
+    filtre='nb_theme_indic',
+    hauteurtab=500
+)
+#export_output(pie_chart,figureName)
+table_province
+
+```
+
+Les résultats par taxon sur chaque périmètre d’espèces sensibles impactés sont présentés en annexe dans la partie sur les « Résultats par commune des taxons potentiellement impactés selon les périmètres d’espèces sensibles de la Province Sud ». 

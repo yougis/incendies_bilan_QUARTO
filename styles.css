@@ -1,0 +1,82 @@
+/* Définir les couleurs */
+:root {
+    --color-orange: rgb(227, 108, 10);
+    --color-grey: rgb(128, 128, 128);
+    --color-purple: rgb(102, 0, 102);
+    --color-black: rgb(0, 0, 0);
+    --head-color: rgb(250, 192, 144);
+}
+
+/* Configure les marges de la page */
+body {
+    margin: 1in;
+}
+
+/* Modification de l'en-tête */
+header {
+    font-size: 8pt;
+    color: var(--head-color);
+    text-align: left;
+    padding: 10px 0;
+}
+
+/* Modification du pied de page */
+footer {
+    font-size: 8pt;
+    color: var(--color-grey);
+    text-align: left;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: white;
+    padding: 10px 0;
+}
+
+footer a {
+    color: var(--color-grey);
+    text-decoration: none;
+}
+
+/* Position des numéros de page */
+.page-number {
+    text-align: right;
+    color: var(--color-grey);
+}
+
+/* Styles des sections et sous-sections */
+h1 {
+    font-size: 14pt;
+    color: var(--color-orange);
+}
+
+h2 {
+    font-size: 12pt;
+    color: var(--color-grey);
+}
+
+h3 {
+    font-size: 11pt;
+    font-weight: bold;
+    font-style: italic;
+    color: var(--color-purple);
+}
+
+h4 {
+    font-size: 11pt;
+    font-weight: bold;
+    font-style: italic;
+    color: var(--color-black);
+}
+
+h5 {
+    font-size: 11pt;
+    font-style: italic;
+    color: var(--color-black);
+}
+
+/* Espacement des sous-paragraphes */
+h5 {
+    margin-left: 2em;
+    margin-top: 1.25ex;
+    margin-bottom: 1em;
+}

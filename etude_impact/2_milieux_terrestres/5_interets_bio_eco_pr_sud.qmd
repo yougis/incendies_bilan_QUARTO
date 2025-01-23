@@ -1,0 +1,240 @@
+#### Informations
+
+La cartographie des zones d’intérêts biologiques et écologiques (Figure A METTRE A JOUR) identifie les secteurs présentant un intérêt pour la conservation des milieux naturels selon un indice de conservation allant de 0 à 3. Cet indicateur composite a été associé à chaque formation terrestre afin de délimiter des zones d’actions prioritaires pour la sauvegarde du patrimoine naturel situé en province Sud. La détermination de cet indice a été construit en fonction d’indicateurs botaniques, et faunistiques comme la présence d’herpétofaune (amphibiens et reptiles) mais également d’avifaune (oiseaux) pour chaque type de végétation terrestre[^24]. Les deux indices croisés avec les surfaces brûlées détectées par Sentinel 2 sont :
+
+- **Les milieux naturels essentiels à la préservation de la biodiversité**, composés d’espèces et de milieux considérés comme rares ou originaux, leur indice de priorité de conservation est de niveau 3 
+
+- **Les milieux d’intérêts important pour la conservation de la biodiversité** qui sont composés d’espèces endémiques avec un potentiel d’évolution positif du milieu, leur indice de priorité de conservation est de niveau 2 
+
+Il est à noter que les cartes de définition des milieux naturels et de priorisation de conservation de la biodiversité sont établies à différentes échelles de temps et en recourant à des sources multiples. Ainsi, les éléments issus de ces cartes sont à prendre en considération à titre indicatif, en tant qu’élément d’alerte et de vigilance sur les impacts des incendies sur les périmètres concernés. La connaissance de la nature, de la qualité et de la sensibilité des milieux naturels susceptibles d’être affectés par les incendies nécessite une visite de terrain afin de pouvoir confirmer et/ou infirmer les données issues de ces cartes[^25].  
+Seuls les écosystèmes naturels du milieu terrestre ont été pris en compte. Ceux du milieu marin comme les herbiers ou les récifs ont été écartés.
+
+[^23]: Se référer au bulletin de la géomatique en Nouvelle-Calédonie n°24 du premier trimestre 2011 produit par le gouvernement
+[^24]: Villemain Jérôme, Direction de l’environnement – Province Sud, communication personnelle
+[^25]: Villemain Jérôme, Direction de l’environnement – Province Sud, communication personnelle
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: carte milieu naturel essentiels et importants en PS
+
+figureName = "fig-carte-milieux-PS"
+
+figureName = "carte_faune_flore_menacees"
+viz_map_nc = carte_bdenv(
+    data_carto=commune,
+    data_env=milieu_PS,
+    cadre=bb_PS,
+    color_env = ['#FF0000', '#FFFF00'],
+    title=f"Carte de répartition des périmètres de faune et flore menacée",
+    tolerance=2000,
+    textlegende='test',
+    nb_strat=2,
+    level_strate='typologie',
+    pos_legend=35000,
+    label_legend_env='Périmètres endémia',
+    texte_sources='DENV / Province Sud / OEIL'
+)
+
+export_output(viz_map_nc,figureName)
+
+```
+
+#### Résultats
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab resultats echelon provincial impactant zones d'interets bio et eco
+
+figureName = "fig-tab-stats-mileiux_PS"
+
+data1=data_milieu_nat_essentiel_global
+data2=data_milieu_nat_important_global
+
+level_them=None
+label_them=None
+groupby='upper_libelle'
+annee=Annee
+type_zone='PROVINCE SUD'
+columns=['nom','sup_total_theme','superficie_ha','indicateur_3']
+label_col=[' ','Superficie totale (ha)','Surface brûlée (ha)','Part de la superficie impactée par les surfaces brûlées (%)']
+title= f"Résultats à l'échelon communal des mangroves impactées par les surfaces brûlées en {Annee}"
+filtre='superficie_ha'
+hauteurtab=100
+
+data1 = data1.read()
+data2 = data2.read()
+
+data_years1 = data1[(data1['annee'] == annee) & (data1['upper_libelle'] == type_zone)]
+data_years2 = data2[(data2['annee'] == annee) & (data2['upper_libelle'] == type_zone)]
+
+data_years1['nom']="Milieux d'intérêts importants pour la conservation"
+data_years2['nom']="Milieux essentiels à la préservation"
+
+data=pd.concat([data_years1,data_years2])
+grouped_data = data[(data[filtre] != 0) & (data[filtre].notna())]
+
+grouped_data= grouped_data[columns]
+grouped_data.columns = label_col
+
+table = hv.Table(grouped_data).opts(index_position=None)
+
+table.opts(
+    title=title,
+    width=850,
+    height=hauteurtab,
+)
+
+table
+```
+
+##### Milieux essentiels à la préservation de la biodiversité
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab echelon communal milieux essentiels
+
+figureName = "fig-tab-echelon-communal-milieux-essentiel"
+
+table_province = tableau_statistiques(
+    data=data_milieu_nat_essentiel_global,
+    level_them=None,
+    label_them=None,
+    groupby='upper_libelle',
+    annee=Annee,
+    type_zone='commune',
+    columns=['upper_libelle','superficie_ha','indicateur_3'],
+    label_col=['Territoire concerné','Surface brûlée (ha)','Part de la superficie impactée par les surfaces brûlées (%)'],
+    title= f"Résultats à l'échelon communal des milieux essentiels à la préservation de la biodiversité impactés par les incendies en province Sud pour l’année {Annee}",
+    filtre='superficie_ha',
+    hauteurtab=100
+)
+#export_output(pie_chart,figureName)
+table_province
+
+```
+
+
+::: {#fig-tab-echelon-communal-milieux-essentiel}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-tab-echelon-communal-milieux-essentiel
+#| fig-cap: "Répartition de l’impact des zones brûlées (Sentinel 2) sur les milieux essentiels à la préservation de la biodiversité par commune en province Sud"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: diagramme sb par classe des milieux essentiels preservation bio
+
+import plotly.graph_objects as go
+
+figureName = "diag-zb-milieux-essentiels-PS"
+
+data = data_milieu_nat_essentiel_spe.read()
+data_filtered = data[(data['annee'] == Annee) & (data['upper_libelle'] == 'PROVINCE SUD')]
+data_filtered = data_filtered[data_filtered['milieu_nat'] != 'Récifs']
+
+data_grouped = data_filtered.groupby('milieu_nat').sum().reset_index()
+
+labels = data_grouped['milieu_nat']
+values = data_grouped['superficie_ha']
+
+fig = go.Figure(data=[go.Pie(labels=labels, values=values, marker_colors=['#d62728','#ff7f0e'])])
+
+#export_output(pie_chart,figureName)
+
+fig
+
+```
+
+##### Milieux d’intérêts importants pour la conservation
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab milieux d'interets echelon communal
+
+figureName = "fig-tab-echelon-communal-milieux-important"
+table_province = tableau_statistiques(
+    data=data_milieu_nat_important_global,
+    level_them=None,
+    label_them=None,
+    groupby='upper_libelle',
+    annee=Annee,
+    type_zone='commune',
+    columns=['upper_libelle','superficie_ha','indicateur_3'],
+    label_col=['Territoire concerné','Surface brûlée (ha)','Part de la superficie impactée par les surfaces brûlées (%)'],
+    title= f"Résultats à l'échelon communal des milieux importants pour la conservation de la biodiversité impactés par les incendies en province Sud pour l’année {Annee}",
+    filtre='superficie_ha',
+    hauteurtab=100
+)
+#export_output(pie_chart,figureName)
+table_province
+
+```
+
+::: {#fig-tab-echelon-communal-milieux-important}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-tab-echelon-communal-milieux-important
+#| fig-cap: "Répartition de l’impact des zones brûlées (Sentinel 2) sur les milieux d’intérêts importants pour la conservation par commune en province Sud"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: diagramme sb par classe des milieux naturels d'interets
+
+import plotly.graph_objects as go
+
+figureName = "diag-zb-milieux-important-PS"
+
+data = data_milieu_nat_important_spe.read()
+data_filtered = data[(data['annee'] == Annee) & (data['upper_libelle'] == 'PROVINCE SUD')]
+data_filtered = data_filtered[data_filtered['milieu_nat'] != 'Récifs']
+
+data_grouped = data_filtered.groupby('milieu_nat').sum().reset_index()
+
+labels = data_grouped['milieu_nat']
+values = data_grouped['superficie_ha']
+
+fig = go.Figure(data=[go.Pie(labels=labels, values=values, marker_colors=['#d62728','#ff7f0e'])])
+
+#export_output(pie_chart,figureName)
+
+fig
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: cartes zones impactes milieux naturels d'interets
+
+figureName = f"Zones impactées des milieux naturels d'intérêts en Province Sud en {Annee}"
+
+#A FAIRE
+
+```

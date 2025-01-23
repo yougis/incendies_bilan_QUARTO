@@ -1,0 +1,24 @@
+
+{{< include etude_caracterisation/data.qmd >}}
+{{< include etude_caracterisation/settings.qmd >}}
+{{< include etude_caracterisation/0_methode/carte_cloroplethe.qmd >}}
+{{< include etude_caracterisation/0_methode/tab_stats.qmd >}}
+{{< include etude_caracterisation/0_methode/graph_evolution.qmd >}}
+{{< include etude_caracterisation/0_methode/carte_impact_zb.qmd >}}
+{{< include etude_caracterisation/0_methode/hist_cumul.qmd >}}
+{{< include etude_caracterisation/0_methode/carte_zb_bdenvironnement.qmd >}}
+{{< include etude_caracterisation/0_methode/pie_chart.qmd >}}
+
+# Caractérisation des zones brulées
+
+{{< include etude_caracterisation\1_intro.qmd >}}
+
+## Analyse spatiale des surfaces brûlées
+
+Cette partie du rapport présente différentes approches ayant pour but de caractériser la répartition des zones brûlées tout en tenant compte d’autres facteurs comme le substrat ou zones anthropiques à proximité des surfaces brûlées. Leur taille et leur localisation sont prises en compte afin de mettre en avant les lieux où les incendies ont été les plus intenses. 
+
+### Répartition par unité territoriale
+
+Sont présentés dans cette partie, le nombre d’incendies et la superficie en hectares incendiés par unité administrative. Ces résultats s’appuient principalement sur les données issues de la chaîne de traitement des images satellitaires de Sentinel 2. 
+
+{{< include etude_caracterisation\part1_analyse_spatiale\1_unite_territoriale.qmd >}}

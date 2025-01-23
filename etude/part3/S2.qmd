@@ -1,0 +1,173 @@
+```{python}
+#| echo: false
+#| output: true
+#| label: create maps S2
+
+hover = HoverTool(tooltips=[("Nombre de surface brulées", "@image")])
+data = data_S2_.read().to_crs(3857)
+bb = bb_.read().to_crs(3857)
+
+figureName_focus = "fig-maps-zone-brulee-NC-focus"
+
+figureName = "fig-maps-zone-brulee-NC-annees"
+
+annees = sorted(data.annee.unique().tolist())
+# Suppression de la valeur
+if Annee in annees:
+    annees.remove(Annee)
+
+annotation_sources = update_source(x,y, 'OEIL/COPERNICUS SENTINEL-2')
+annotation_realisation = update_realisation(x,y, 'OEIL')
+
+overlay = hv.Polygons(data, vdims='annee')
+
+# overlay pour cadrer sur la calédonie (BBox NC)
+bb_overlay = hv.Polygons(bb).opts(alpha=0.0)
+
+yearmap = tiled_basemap.opts(alpha=0.5) * \
+         annotation_sources * \
+         annotation_realisation * \
+         texte_echelle * \
+         echelle_barre * \
+         fleche_nord * \
+         bb_overlay * \
+         rasterize(overlay.select(annee=Annee), 
+            aggregator=ds.reductions.count('annee')
+            ).opts(
+                cmap='fire', 
+                width=plot_width, 
+                height=plot_height, 
+                colorbar=True, 
+                colorbar_opts={"ticker": FixedTicker(ticks=[2,4,6,8,10, 20])},
+                color_levels=[0,2,4,6,8,10,20,20.1],
+                clim=(0, 20),
+                tools=[hover]
+                )
+
+viz_yearmap = (yearmap).opts(title=f"Répartition des surfaces brulées en {Annee} ", toolbar=None)
+
+
+allyearmap = tiled_basemap.opts(alpha=0.5) * \
+         annotation_sources * \
+         annotation_realisation * \
+         texte_echelle * \
+         echelle_barre * \
+         fleche_nord * \
+         bb_overlay * \
+         rasterize(overlay, 
+            aggregator=ds.reductions.count('annee')
+            ).opts(
+                cmap='fire', 
+                width=plot_width, 
+                height=plot_height, 
+                colorbar=True, 
+                colorbar_opts={"ticker": FixedTicker(ticks=[2,4,6,8,10, 20])},
+                color_levels=[0,2,4,6,8,10,20,20.1],
+                clim=(0, 20),
+                tools=[hover]
+                )
+
+viz_allyearmap = (allyearmap).opts(title=f"Répartition des surfaces brulées de {int(annees[0])} à {int(annees[-1])}", toolbar=None)
+
+
+maps_batch = []
+for i in range(0, len(annees), 4):
+    maps = hv.NdLayout( { 
+        annee: tiled_basemap.opts(alpha=0.5) * 
+        annotation_sources * 
+        annotation_realisation *
+        texte_echelle * 
+        echelle_barre * 
+        fleche_nord * 
+        bb_overlay * 
+        rasterize(overlay.select(annee=annee), 
+        aggregator=ds.reductions.count('annee')
+        ).opts(
+            cmap='fire', 
+            width=plot_width_col2, 
+            height=plot_height_col2,
+            color_levels=[0,2,4,6,8,10,20,40, 100,100.1],
+            clim=(0, 100),
+        )
+        for annee in annees[i:i+4]
+        }).opts('Image').cols(2)
+    maps_batch.append(maps)
+
+
+i=0
+for maps in maps_batch:
+    # export des figures en images par lot de 4 années pour les afficher dans le rapport 
+
+    i+=1
+
+    viz_maps = (maps).opts(toolbar=None)
+
+    saving = hv.save(viz_maps, f'{export_file_path}{figureName}_{i}.png', backend='bokeh',  title=f'{figureName}_{i}', fmt='png')
+    saving = hv.save(viz_maps, f'{export_file_path}{figureName}_{i}.html', backend='bokeh',  title=f'{figureName}_{i}', fmt='html')
+
+
+
+
+# # export des figures en images pour les afficher dans le rapport 
+saving = hv.save(viz_yearmap, f'{export_file_path}{figureName_focus}.png', backend='bokeh',  title=f'{figureName_focus}', fmt='png')
+saving = hv.save(viz_yearmap, f'{export_file_path}{figureName_focus}.html', backend='bokeh',  title=f'{figureName_focus}', fmt='html')
+
+saving = hv.save(viz_allyearmap, f'{export_file_path}{figureName}_AllYear.png', backend='bokeh',  title=f'{figureName}', fmt='png')
+saving = hv.save(viz_allyearmap, f'{export_file_path}{figureName}_AllYear.html', backend='bokeh',  title=f'{figureName}', fmt='html')
+
+saving = hv.save(viz_maps, f'{export_file_path}{figureName}.png', backend='bokeh',  title=f'{figureName}', fmt='png')
+saving = hv.save(viz_maps, f'{export_file_path}{figureName}.html', backend='bokeh',  title=f'{figureName}', fmt='html')
+# export des figures en images pour les afficher dans le rapport 
+
+
+```
+
+
+::: {#fig-map-annee-etude-S2}
+
+```{python}
+#| echo: false
+#| label: fig-map-annee-etude-S2
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName_focus}.png){{width=100%}}]({export_file_path}{figureName_focus}.html)"
+        )
+)
+
+```
+:::
+
+::: {#fig-mapS2}
+```{python}
+#| echo: false
+#| label: fig-mapS2
+#| 
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}_AllYear.png){{width=100%}}]({export_file_path}{figureName}_AllYear.html)"
+        )
+)
+```
+:::
+
+
+::: {#fig-map-annee-par-annee-S2}
+
+##### Répartitions des détéctions années après années
+```{python}
+#| echo: false
+#| label: fig-map-annee-par-annee-S2
+i=0
+for maps in maps_batch:
+    # export des figures en images par lot de 4 années pour les afficher dans le rapport 
+
+    i+=1
+    display(
+        Markdown(
+            f"[![]({export_file_path}{figureName}_{i}.png){{width=100%}}]({export_file_path}{figureName}_{i}.html)"
+    )
+    )
+```
+:::
+

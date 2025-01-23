@@ -1,0 +1,3 @@
+Les données sur les incendies utilisées dans le cadre de cette étude, décrite dans la [partie -@sec-contexte], ainsi que leurs méthodes de production sont détaillées en [Annexe @sec-appendix-datasources]. 
+
+Afin de mesurer les impacts environnementaux qui découlent des incendies, de nombreuses données exogènes ont pu être considérées dans cette étude @tbl-source-impact .

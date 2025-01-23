@@ -1,0 +1,12 @@
+
+
+La différence de résolution spatiale entre les données satellitaires présentées dans les parties [Exploitation des données d’anomalies thermiques issues des satellites Aqua MODIS, Terra MODIS et Suomi NPP](thermique.qmd) et [Exploitation des données de surfaces brûlées issues du satellite Sentinel 2](S2.qmd), implique que les surfaces brûlées détectées par ces satellites ne peuvent être utilisées à la même échelle spatiale et temporelle. 
+
+D’un point de vue temporel, le satellite MODIS offre la plus grande chronique de données, cependant l’imprécision de sa résolution spatiale ne permet pas d’utiliser ces données pour quantifier les impacts environnementaux et économiques des incendies sur le territoire calédonien. Les 375 mètres de résolution spatiale du capteur VIIRS du satellite SUOMI NPP permettront d’apporter des informations complémentaires à la caractérisation des incendies à l’échelle du territoire. Enfin, la résolution décamétrique des satellites Sentinel-2 permet de quantifier précisément les dégâts provoqués par les incendies sur les enjeux environnementaux présents sur le territoire.
+
+| Satellite / capteur | Résolution spatiale | Historique | Utilisation |
+| --- | --- | --- | --- |
+| Aqua et Terra (MODIS) | 1 km | Depuis 2001 | Analyse temporelle |
+| Suomi NPP (VIIRS) | 375 m | Depuis 2012 | Analyse spatiale et temporelle |
+| Sentinel 2 (MSI) | 10 m | Depuis 2017 | Caractérisation des incendies et leurs impacts sur l’environnement |
+: Caractéristiques des différents capteurs et leur utilisation {#tbl-capteurs}

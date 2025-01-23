@@ -1,0 +1,43 @@
+# Résumé executif {.unnumbered}
+
+## Objectif
+
+L’objectif de cette étude est de caractériser les incendies de l’année {{< var Annee >}} sur la Nouvelle-Calédonie et de quantifier les impacts environnementaux associés en s’appuyant sur des données géographiques relatives aux enjeux environnementaux.
+
+## Contexte
+
+L’origine de ce bilan annuel résulte du constat d’un manque de caractérisation des incendies et, de fait, d’absence de quantification des impacts induits par les feux sur le territoire calédonien. La Nouvelle-Calédonie, considérée comme un haut-lieu de la biodiversité mondiale, accueille un grand nombre d’espèces animales et végétales endémiques voire micro-endémiques dont la survie est impactée par les changements infligés aux milieux naturels. Les incendies, du fait de leur ampleur et de leur fréquence, exercent une pression importante sur ces milieux. Leurs effets peuvent être directs, mais également indirects. L’OEIL, a développé des méthodes issues de la télédétection et de la géomatique afin de caractériser cette pression et ses impacts environnementaux sur l’ensemble de la Nouvelle-Calédonie. Parallèlement aux outils numériques d’alerte et de suivi^[[https://oeil.nc/fr/page/alerte-incendies](https://oeil.nc/fr/page/alerte-incendies)] de cette pression qu’il a pu développer, L’observatoire a pour ambition de produire un bilan détaillé annuellement afin d’inscrire la caractérisation des incendies de manière pérenne dans le suivi des impacts liés aux pressions environnementales.
+
+## Méthodologie
+
+Les données sur les surfaces brûlées sont issues d’un processus de traitement des images satellitaires issues des satellites Sentinel 2A et 2B dotés d’une résolution spatiale décamétrique. Les surfaces détectées ont été croisées avec une vingtaine de sources d’information relatives aux enjeux environnementaux.
+
+## Résultats et conclusions
+
+Ce travail représente la quatrième quantification des incendies issus d’images hautes résolutions sur le territoire calédonien et constitue la suite du travail engagé en 2017.
+Voici un extrait des résultats obtenus : La caractérisation du phénomène montre que {{< var Annee >}} est une des années relativement moins impactées avec un total de {{ x }} hectares incendiés, soit  {{ x% }} de la superficie de la Nouvelle-Calédonie impactée par les feux. Ce constat est confirmé par une analyse temporelle, où {{< var Annee >}}  détient près de {{ x % / annee n-1 }} en moins d’incendies par rapport à {{< var Annee n-1 >}}, une année très impactée, et reste comparable à 2018 avec près de 200 incendies détectés par le capteur VIIRS. Cette année est considérée selon Météo France comme une année pluvieuse suite à l’influence du phénomène la Nina.
+En s’intéressant à la saisonnalité des feux, selon les données du capteur VIIRS, il n’y a que le mois de janvier 2020 qui reste supérieur à la médiane mensuelle sur la période 2012-2020. Ce constat est également souligné par Météo France dans son bulletin climatique annuel où il y a eu un déficit pluviométrique sur le mois de janvier 2020. Sur le reste de l’année, le cumul des incendies reste faible par rapport aux médianes mensuelles 2012-2020, en correspondance avec l’analyse réalisée par Météo France, avec six épisodes pluviométriques marquants dans l’année, deux phénomènes cycloniques, avec un mois de décembre ayant un bilan pluviométrique largement excédentaire.
+Près de 88% des surfaces brûlées en 2020 concernent des secteurs jamais incendiés en comparaison avec les années précédentes entre 2017 et 2019. La répartition spatiale de ces incendies reste hétérogène sur le territoire calédonien avec une grande partie Nord de la Grande Terre plus touchée, et notamment la Province Nord qui reste la province la plus touchée avec près de 58% de la superficie impactée. La commune de Boulouparis reste la plus impactée avec près de 1 566 hectares brûlés. L’aire coutumière Hot ma whaap, constituée de trois communes les plus impactées par les incendies dépassant les 1000 hectares (Ouégoa, Kaala Gomen et Voh) concerne à elle seule près de 40% de la superficie brûlée en Nouvelle-Calédonie. 
+Cette répartition correspond également aux résultats sur le substrat, où il s’agit du sol utramafique qui a été le plus impacté réparti essentiellement sur les 5 communes les plus impactées (Boulouparis, Kaala-Gomen, Ouégoa, Voh, Pouembout) avec plus de 5 000 hectares, soit près de 30% de la superficie incendiée en Nouvelle-Calédonie.
+Il est constaté que 80% des incendies se produisent à moins de 500 mètres d’une voie d’accès et ce sont près de 70% des incendies se produisent à moins d’un kilomètre d’une habitation ou d’une construction.
+En considérant la taille des zones brûlées sur l’année 2020, celles-ci sont en grande partie de petite taille, plus de 90% ne dépassant pas les 10 hectares. Avec une année assez humide, ces petites surfaces brûlées ont été plus nombreuses et participent à plus de 50% de la superficie totale brûlée.
+
+Ainsi les impacts qui en découlent sont conséquents. 
+La destruction du couvert végétal est estimée à 11 936 hectares soit 3 fois moins qu’en 2019. 
+De façon plus détaillée, la répartition pour 100 hectares de végétation brûlés, 47 hectares ont concerné la strate de végétation arbustive, 39 hectares pour la strate herbacée, et 14 hectares pour la strate arborée. La strate de végétation arbustive a donc été principalement impactée avec plus de 5 000 hectares, chiffre inférieur à 2019 mais supérieure à 2018, année moins impactée. 
+La végétation arborée, dont font partie les forêts qui représentent les écosystèmes les plus riches, a subi tout de même des dégâts avec plus de 1000 hectares mais c’est deux fois moins qu’en 2019.
+Parmi la végétation, des écosystèmes particuliers (forêts sèches, mangroves) ont également été impactées 2020. Les zones de vigilance concernant les forêts sèches ont brûlée sur 26 hectares, moins de 15 hectares qu’en 2019. Les mangroves, ont été impactés à près de 60 hectares.
+
+Au sein de ces formations végétales, des espèces endémiques, souvent rares et menacées, sont potentiellement impactées.
+En considérant les périmètres d’alerte sur les espèces menacées, 326 d’entre eux ont été très certainement touchés par les flammes, dont 60% concernent des espèces classées en danger d’extinction selon les critères de l’UICN. Dans les faits, ces périmètres d’alerte concernent 124 espèces.
+
+Certaines aires géographiques présentant un intérêt écologique et biologique bénéficient d’une protection réglementaire ou d’un label international. Ces périmètres protégés ont subi des impacts plus conséquents en 2019 que les deux années précédentes. Concernant les zones tampons de l’UNESCO, plus de 4 600 hectares ont été incendiés en 2020. Parmi les aires protégées provinciales terrestres, 14 d’entre elles ont été impactées sur une superficie de plus de 250 hectares.
+
+Les incendies de 2020 ont également impacté la ressource en eau, avec 120 périmètres de protection des eaux touchés (soit 19% des périmètres de protection des eaux du territoire) sur près de 2 500 hectares.
+Les incendies sur terres agricoles ont concerné plus de 1 400 hectares brûlés, dont 80% concerne sans surprise des zones de pâturage, le secteur de l’élevage étant le plus représenté en Nouvelle-Calédonie.
+En utilisant l’outil OCMC, il a été possible d’estimer à 55 milliards de F CFP le coût de la restauration écologique relatif aux impacts sur la végétation et les écosystèmes associés.
+En utilisant ainsi la méthode déterminée par le GIEC, les émissions de gaz à effet de serre sont évaluées à 232 637 teq CO2, représentant environ 3% des émissions à l’échelle de la Nouvelle-Calédonie.
+
+## Limites de l’étude
+
+Bien qu’aucun autre bilan n’ait été réalisé en Nouvelle-Calédonie avec un tel niveau de précision, il présente quelques limites liées aux données sur les incendies. En effet, la détection exclusive des surfaces brûlées par les satellites possède des biais liés à la présence de nuages et à d’autres objets pouvant être confondus avec des surfaces brûlées (végétation sèche, labours, …). De même, la procédure de contrôle des incendies détectés par Sentinel 2 a nécessité des prises de décisions qui possèdent leurs limites (contrôle automatique par un mode d’occupation du sol datant de 2014 et à une résolution différente de celles des données sur les incendies, des erreurs potentielles lors de la classification des surfaces détectées durant la phase de photo-interprétation, ...). Par ailleurs, les données utilisées pour caractériser l’impact des incendies possèdent elles aussi des facteurs intrinsèques qui peuvent limiter leur utilisation (échelle de travail différente de celles des données sur les incendies, données non exhaustives, …).

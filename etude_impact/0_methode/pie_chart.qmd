@@ -1,0 +1,41 @@
+```{python}
+#| echo: false
+#| output: true
+#| label: méthode graph evolution unite territoriale
+import plotly.express as px
+from plotly.subplots import make_subplots
+import plotly.graph_objects as go
+
+def pie_chart(data,type_zone,filter, start_year, end_year, title):
+    data = data.read()
+    
+    if type_zone is None:
+        data_filtered = data[(data['annee'] >= start_year) & (data['annee'] <= end_year)]
+        unique_levels = []
+
+    else:
+        data_filtered = data[(data['annee'] >= start_year) & (data['annee'] <= end_year) & (data['level'] == type_zone)]    
+        unique_levels = data_filtered['upper_libelle'].unique()
+
+    if len(unique_levels) > 1:
+        rows = int(len(unique_levels) ** 0.5)
+        cols = (len(unique_levels) + rows - 1) // rows  # Arrondir au supérieur
+        fig = make_subplots(rows=rows, cols=cols, specs=[[{'type': 'pie'}] * cols] * rows,
+            subplot_titles=[f"{level}" for level in unique_levels])
+        
+        for i, level in enumerate(unique_levels, 1):
+            data_level = data_filtered[data_filtered['upper_libelle'] == level]
+            grouped_data = data_level.groupby([filter,'annee'])['superficie_ha'].sum().reset_index()
+            print(grouped_data)
+            trace = go.Pie(labels=grouped_data[filter], values=grouped_data['superficie_ha'], name=f"Level {level}")
+            fig.add_trace(trace, row=(i - 1) // cols + 1, col=(i - 1) % cols + 1)
+            fig.update_layout(title_text=title, height=500 * rows, width=500 * cols)
+
+        return fig
+    else:
+        grouped_data = data_filtered.groupby([filter,'annee'])['superficie_ha'].sum().reset_index()
+        grouped_data = grouped_data.sort_values([filter])
+        fig = go.Figure(data=[go.Pie(labels=grouped_data[filter], values=grouped_data['superficie_ha'])])
+        fig.update_layout(title_text=title)
+        return fig
+```

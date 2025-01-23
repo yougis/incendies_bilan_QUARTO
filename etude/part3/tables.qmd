@@ -1,0 +1,120 @@
+
+
+```{python}
+#| echo: false
+#| output: false
+opts.defaults(
+
+    opts.Curve( 
+        line_width=0.8,
+        xrotation=45,
+        color='red'
+
+        #responsive=True
+        )
+    )
+```
+
+```{python}
+#| echo: false
+#| output: false
+
+data = data_SNPP_.read().to_crs(3857)
+#data['date'] = pd.to_datetime(data['annee'].astype(int),format='%Y')
+data['annee'] = data['annee'].astype(int)
+```
+
+
+
+```{python}
+#| echo: false
+#| label: tbl-S2-NC
+#| tbl-cap: Zones potentiellement brûlées en Nouvelle-calédonie. Sources - VIIRS SNPP.
+superficieNC=1838615 
+
+data['area'] = data['geometry'].area / 10000
+data['part_area'] = (data['area'] / superficieNC * 100)
+aggreg = pd.DataFrame(data.groupby('annee')[['area','part_area']].sum().reset_index())
+
+aggreg['part_area'] = aggreg['part_area'].round(2)
+aggreg['area'] = aggreg['area'].astype(int)
+#table = aggreg.to_markdown(index=False)
+
+display(Markdown(
+#'Superficie du territoire (ha)', 'Nombre de détéction',
+tabulate(
+    aggreg, 
+    headers=['Année', 'Superficie potentiellement brûlée (ha)','Part de la surface potentiellement brûlée du territoire (%)'],
+    tablefmt='pipe',
+    showindex=False)
+ )
+ )
+ 
+```
+
+
+
+```{python}
+#| echo: false
+#| output: false
+df = pd.DataFrame(data.drop(columns='geometry')).sort_values(by ='date')
+# df.hvplot.hist(y='area',bins=20, title='Superficie brûlée (ha)', xlabel='Année', ylabel='Superficie (ha)', width=800, height=400)
+```
+
+
+```{python}
+#| echo: false
+#| output: false
+
+
+# Création des graphiques avec HoloViews
+plot_superficie = hv.Curve(df, ('date', "Année"), ('area', "Superficie brûlée (ha)" ), label='Superficie brûlée (ha)')
+plot_part_surface = hv.Curve(df, ('date', "Année"), ('part_area','Part de la surface brûlée (%)'), label='Part de la surface brûlée (%)')
+
+viz = (  
+    timeseries.rolling(plot_superficie,rolling_window=1)*
+    timeseries.rolling(plot_part_surface,rolling_window=1).opts(alpha=0.0, color='white')
+    # *
+    # timeseries.rolling(plot_superficie,rolling_window=100).opts(color='red')
+    ).opts(
+    multi_y=True, 
+    show_legend=False,
+    width=800,
+    active_tools=['wheel_zoom', 'pan']
+    )
+
+
+#Affichage des graphiques
+
+```
+
+
+```{python}
+#| echo: false
+#| output: true
+
+
+saving = hv.save(
+    viz, 
+    f'{export_file_path}chronique_VIIRS.png', 
+    backend='bokeh',  
+    title='chronique VIIRS', 
+    fmt='png')
+
+saving = hv.save(
+    viz, 
+     f'{export_file_path}chronique_VIIRS.png', 
+    backend='bokeh',  
+    title='chronique VIIRS',
+    fmt='html')
+
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}chronique_VIIRS.png){{width=100%}}]({export_file_path}chronique_VIIRS.html)"
+
+        )
+)
+```
+

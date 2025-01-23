@@ -1,0 +1,607 @@
+#### Répartition en Nouvelle-Calédonie
+
+À l’échelle de la Nouvelle-Calédonie, les résultats sont présentés pour les données du capteur VIIRS du satellite SUOMI NPP et sur les données issues de la chaîne de traitement des images satellitaires de Sentinel 2.
+
+##### Informations   
+
+```{python}
+#| echo: false
+#| output: false
+#| label: fig-zb-nc
+#| warning: false
+#| context: shared
+
+figureName = "fig-zb-nc"
+
+viz_map_nc = carte_impact_zb(
+    data_carto=nc_,
+    data_feux=data_feux,
+    data_them=None,
+    level_them=None,
+    indicateur='superficie_ha',
+    annee=Annee,
+    title='',
+    tolerance=2000,
+    source= 'OEIL / Copernicus'
+)
+
+export_output(viz_map_nc,figureName)
+```
+
+::: {#fig-zb-nc} 
+
+```{python}
+display(Markdown(f"[![]({export_file_path}{figureName}.png)]({export_file_path}{figureName}.html)"))
+```
+
+Carte de l’impact des surfaces brûlées sur la Nouvelle-Calédonie en `{python} Annee`
+:::
+
+Les méthodes de détections des surfaces brûlées ne sont pas les mêmes pour ces deux satellites. Le capteur VIIRS du satellite SUOMI NPP s’appuie sur une détection de points chauds à la surface de la terre possédant une résolution spatiale de 375 mètres, et ce, en pointant le pixel concerné par une augmentation de la chaleur. Le point chaud est représenté par un pixel de 375 mètres de côté, ainsi on a une exagération de la superficie des surfaces incendiées issues du capteur VIIRS en comparaison avec leur taille réelle. La chaîne de traitement des images satellitaires s’appuie quant à elle sur des images Sentinel 2 possédant au mieux 10 mètres de résolution spatiale. A la différence du capteur VIIRS, les détections ne correspondent pas à des anomalies thermiques, mais elles se basent en partie sur l’analyse de l’activité chlorophyllienne de la végétation. Les surfaces détectées par Sentinel 2 sont donc plus précises en termes de localisation, et de superficie. Il est tenu de souligner que la chaîne de traitement des images satellitaires de Sentinel 2 possède des limites qui induisent une sous-estimation probable de la superficie des surfaces incendiées [Annexe @sec-methodosentinel2]. Ces différences de méthodologie expliquent que les quantifications en nombre des surfaces brûlées et en hectares de surfaces brûlées ne soient pas exactement les mêmes [^1].
+
+Une localisation des zones brûlées issus de Sentinel 2 peut être observée sur la @fig-zb-nc.
+
+[^1]: Pour plus de détails, se référer à la partie 1 du guide méthodologique en appendices
+
+##### Résultats   
+
+```{python}
+#| echo: false
+#| output: true
+#| label: tbl-stats-feux-nc
+#| warning: false
+#| error: false
+#| context: shared
+
+figureName = "tbl-stats-feux-nc"
+
+data=data_feux_analys
+level_them=None
+annee=Annee
+type_zone='ZEE'
+columns=['upper_libelle','sup_total_id_spatial','nb_indic','superficie_ha','indicateur_1']
+label_col=['Territoire concerné','Superficie (ha)','Nb de surfaces brûlée','Surface brûlée (ha)','Part de la surface incendiée du territoire (%)']
+hauteurtab=150
+
+data = data.read()
+data_years = data[(data['annee'] == annee) & (data['level'] == type_zone)]
+
+grouped_data=data_years.groupby('upper_libelle').sum().reset_index()
+
+grouped_data['upper_libelle'] = 'Nouvelle-Calédonie'
+
+grouped_data['sup_total_id_spatial'] = 1838615
+grouped_data['indicateur_1'] = (grouped_data['superficie_ha']/1838615)*100
+
+grouped_data= grouped_data[columns]
+grouped_data.columns = label_col
+
+for column in grouped_data.columns:
+    if grouped_data[column].dtype == 'float' or grouped_data[column].dtype =='int64':
+        grouped_data[column] = grouped_data[column].apply(lambda x: locale.format_string('%.2f', x, grouping=True))
+        
+table = go.Figure(data=[go.Table(
+    header=dict(
+        values=list(grouped_data.columns),
+        fill_color='lightblue',  
+        align='left',
+        line=dict(color='black', width=2)
+    ),
+    cells=dict(
+        values=[grouped_data[col] for col in grouped_data.columns],
+        fill_color='white',  
+        align='left',
+        line=dict(color='black', width=2) 
+    ))
+])
+
+table.update_layout(
+    width=850,
+    height=hauteurtab*len(grouped_data),
+)
+
+export_output_plotly(table,figureName)
+```
+
+::: {#tbl-stats-feux-nc} 
+
+```{python}
+display(Markdown(f"[![]({export_file_path}{figureName}.png)]({export_file_path}{figureName}.html)"))
+```
+Résultats des zones brûlées (Sentinel 2) en Nouvelle-Calédonie pour l’année `{python} Annee`
+
+:::
+
+```{python}
+#| echo: false
+#| output: true
+#| label: tbl-stats-viirs-nc
+#| warning: false
+#| error: false
+
+figureName = "tbl-stats-viirs-nc"
+
+data=data_viirs_snpp_geom.read()
+
+data = data.groupby(['geom','annee']).size().reset_index(name='Nombre d\'incendies')
+gdf = gpd.GeoDataFrame(data, geometry='geom')
+
+data_dissolved = gdf.dissolve(by='annee', aggfunc='count').reset_index()
+data_dissolved['surface_nc']=1838615
+data_dissolved['surface_viirs']=data_dissolved['geom'].area/10000
+data_dissolved['part_brulee']=data_dissolved['surface_viirs']/data_dissolved['surface_nc']*100
+data_dissolved['Territoire']='Nouvelle-Calédonie'
+
+data_dissolved = data_dissolved[(data_dissolved['annee'] == Annee)]
+
+columns=['Territoire','surface_nc','Nombre d\'incendies','surface_viirs','part_brulee']
+label_col=['Territoire concerné','Superficie (ha)',"Nb d'incendies",'Surface potentiellement incendiée (ha)','Part de la surface potentiellement incendiée (%)']
+title= f"Statistiques des zones potentiellement incendiées détectées par le capteur VIIRS SNPP en Nouvelle-Calédonie pour l’année {Annee}"
+hauteurtab=150
+
+grouped_data= data_dissolved[columns]
+grouped_data.columns = label_col
+
+for column in grouped_data.columns:
+    if grouped_data[column].dtype == 'float' or grouped_data[column].dtype =='int64':
+        grouped_data[column] = grouped_data[column].apply(lambda x: locale.format_string('%.2f', x, grouping=True))
+
+table = go.Figure(data=[go.Table(
+    header=dict(
+        values=list(grouped_data.columns),
+        fill_color='lightblue',  
+        align='left',
+        line=dict(color='black', width=2)
+    ),
+    cells=dict(
+        values=[grouped_data[col] for col in grouped_data.columns],
+        fill_color='white',  
+        align='left',
+        line=dict(color='black', width=2) 
+    ))
+])
+
+table.update_layout(
+    width=850,
+    margin=dict(l=0, r=0, t=0, b=0),
+    height=hauteurtab*len(grouped_data),
+)
+
+export_output_plotly(table,figureName)
+```
+
+::: {#tbl-stats-viirs-nc} 
+```{python}
+display(Markdown(f"[![]({export_file_path}{figureName}.png)]({export_file_path}{figureName}.html)"))
+```
+
+Statistiques des zones potentiellement incendiées détectées par le capteur VIIRS SNPP en Nouvelle-Calédonie pour l’année `{python} Annee`
+
+:::
+```{python}
+#| echo: false
+#| output: true
+#| label: fig-diag-zb-new
+#| warning: false
+#| error: false
+
+import plotly.graph_objects as go
+
+figureName = "fig-diag-zb-new"
+
+data = data_feux_impact.read()
+data_filtered = data[(data['annee_1'] == 2017) & (data['annee_2'] == Annee) & (data['type_spatial'] == 'ZEE')]    
+
+labels = ['Nouvelle superficie impactée', 'Superficie déjà Impactée']
+values = [data_filtered['ratio_nouvel_impact'].sum(), data_filtered['ratio_deja_impact'].sum()]
+
+fig = go.Figure(data=[go.Pie(labels=labels, values=values,marker_colors=['#d62728','#ff7f0e'])])
+fig.update_layout(
+    width=350,
+    height=350,
+    margin=dict(l=5, r=0, t=0, b=0),
+    legend=dict(
+        x=1,  
+        y=0.5,  
+        font=dict(size=12),
+        orientation="v" 
+    )
+)
+title_text=f"Comparaison de la superficie déjà incendiée en fonction des résultats précédents de 2017 à {Annee}"
+
+export_output_plotly(fig,figureName)
+```
+
+::: {#fig-diag-zb-new} 
+```{python}
+display(Markdown(f"[![]({export_file_path}{figureName}.png)]({export_file_path}{figureName}.html)"))
+```
+
+Comparaison de la superficie déjà incendiée en fonction des résultats précédents de 2017 à `{python} Annee`
+
+:::
+
+#### Répartition par province
+
+```{python}
+#| echo: false
+#| warning: false
+#| output: true
+#| label: fig-part-sb-province
+
+# Définir le nom de la figure
+figureName = "fig-part-sb-province"
+
+viz_map_choropleth_province = carte_choroplethe(
+    geodata=province,
+    data=data_feux_analys,
+    thematique=None,
+    label_them=None,
+    indicateur='indicateur_1',
+    annee=Annee,
+    tolerance=3000,
+    title= " ",
+    custom_cmap=custom_cmap,
+    x=x,
+    y=y,
+    left_key='id_spatial',
+    right_key='id_spatial',       
+    how='left',
+    global_min=global_min,
+    global_max=global_max,
+    source='OEIL / Copernicus')
+
+title= f"Part de la superficie brûlée par province en {Annee}"
+
+# export des figures en images pour les afficher dans le rapport 
+export_output(viz_map_choropleth_province,figureName)
+```
+
+::: {#fig-part-sb-province} 
+```{python}
+display(Markdown(f"[![]({export_file_path}{figureName}.png)]({export_file_path}{figureName}.html)"))
+```
+
+Part de la superficie brûlée par province en `{python} Annee`
+
+:::
+{{< include etude_caracterisation/0_methode/tab_stats.qmd >}}
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tbl-stats-feux-province
+
+figureName = "tbl-stats-feux-province"
+
+table_province = tableau_statistiques(
+    data=data_feux_analys,
+    level_them=None,
+    label_them=None,
+    groupby='upper_libelle',
+    annee=Annee,
+    type_zone='province',
+    columns=['upper_libelle','sup_total_id_spatial','superficie_ha','nb_indic'],
+    label_col=['Territoire concerné','Superficie (ha)','Surface brûlée (ha)','Nombre de surfaces brûlée'],
+    title= " ",
+    filtre='superficie_ha',
+    hauteurtab=60
+)
+title= f"Répartition par province des zones brûlées pour l'année {Annee}"
+
+export_output_plotly(table_province,figureName)
+```
+
+::: {#tbl-stats-feux-province} 
+```{python}
+display(Markdown(f"[![]({export_file_path}{figureName}.png)]({export_file_path}{figureName}.html)"))
+```
+
+Répartition par province des zones brûlées pour l'année `{python} Annee`
+
+:::
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-graph-evol-feux-province
+
+figureName = "fig-graph-evol-feux-province"
+
+graph_province = graph_evolution(
+    data=data_feux_analys,
+    type_zone='province',
+    indicateur='superficie_ha',
+    start_year=2017,
+    end_year=Annee,
+    title=" ",
+    xlabel='Année',
+    ylabel='Superficie brûlée (ha)'
+)
+title=f"Evolution de la superficie brûlée (Sentinel 2) de 2017 à {Annee} par province"
+
+# export des figures en images pour les afficher dans le rapport 
+export_output(graph_province,figureName)
+```
+
+::: {#fig-graph-evol-feux-province} 
+```{python}
+display(Markdown(f"[![]({export_file_path}{figureName}.png)]({export_file_path}{figureName}.html)"))
+```
+
+Evolution de la superficie brûlée (Sentinel 2) de 2017 à `{python} Annee` par province
+
+:::
+#### Répartition par commune
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-carte-choro-feux-commune
+
+figureName = "fig-carte-choro-feux-commune"
+
+viz_map_choropleth_commune = carte_choroplethe(
+    geodata=commune,
+    data=data_feux_analys,
+    thematique=None,
+    label_them=None,
+    indicateur="indicateur_1",
+    annee=Annee,
+    tolerance=1000,
+    title= " ",
+    custom_cmap=custom_cmap,
+    x=x,
+    y=y,
+    left_key='id_spatial',
+    right_key='id_spatial',       
+    how='left',
+    global_min=global_min,
+    global_max=global_max,
+    source='OEIL / Copernicus'
+
+)
+title= f"Part de la superficie brûlée par commune en {Annee}"
+
+# export des figures en images pour les afficher dans le rapport 
+export_output(viz_map_choropleth_commune,figureName)
+```
+
+::: {#fig-carte-choro-feux-commune} 
+```{python}
+display(Markdown(f"[![]({export_file_path}{figureName}.png)]({export_file_path}{figureName}.html)"))
+```
+
+Part de la superficie brûlée par commune en `{python} Annee`
+
+:::
+{{< include etude_caracterisation/0_methode/tab_stats.qmd >}}
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tbl-stat-feux-commune
+
+figureName = "tbl-stat-feux-commune"
+
+tableau_statistiques = tableau_statistiques(
+    data=data_feux_analys,
+    level_them=None,
+    label_them=None,
+    groupby='upper_libelle',
+    annee=Annee,
+    type_zone='commune',
+    columns=['upper_libelle','sup_total_id_spatial','superficie_ha','nb_indic'],
+    label_col=['Territoire concerné','Superficie (ha)','Surface brûlée (ha)','Nombre de surfaces brûlée'],
+    title=" ",
+    filtre='superficie_ha',
+    hauteurtab=25)
+
+title= f"Répartition par commune des zones brûlées (Sentinel 2) pour l'année {Annee}"
+
+# export des figures en images pour les afficher dans le rapport 
+export_output_plotly(tableau_statistiques,figureName)
+```
+
+::: {#tbl-stat-feux-commune} 
+```{python}
+display(Markdown(f"[![]({export_file_path}{figureName}.png)]({export_file_path}{figureName}.html)"))
+```
+
+Répartition par commune des zones brûlées pour l'année `{python} Annee`
+
+:::
+
+{{< include etude_caracterisation/0_methode/hist_cumul.qmd >}}
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-histo-cumul-feux-commune
+
+figureName = "fig-histo-cumul-feux-commune"
+
+hist_cumul = hist_cumul(
+    data=data_feux_analys,
+    start_year=2017,
+    end_year=Annee,
+    type_zone='commune',
+    level_tem='upper_libelle',
+    title= " ",
+    label_x= 'Commune',
+    label_y= 'Superficie brulées (ha)'
+)
+
+title= f"Cumul de la superficie brûlée entre 2017 et {Annee} par commune"
+
+# export des figures en images pour les afficher dans le rapport 
+export_output(hist_cumul,figureName)
+```
+
+::: {#fig-histo-cumul-feux-commune} 
+```{python}
+display(Markdown(f"[![]({export_file_path}{figureName}.png)]({export_file_path}{figureName}.html)"))
+```
+
+Cumul de la superficie brûlée entre 2017 et `{python} Annee` par commune
+
+:::
+
+#### Répartition par aire coutumière
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-carte-choro-feux-aire_coutumiere
+
+figureName = "fig-carte-choro-feux-aire_coutumiere"
+
+viz_map_choropleth_aire = carte_choroplethe(
+    geodata=aire_coutumiere,
+    data=data_feux_analys,
+    thematique=None,
+    label_them=None,
+    indicateur='indicateur_1',
+    annee=Annee,
+    tolerance=1000,
+    title=" ",
+    custom_cmap=custom_cmap,
+    x=x,
+    y=y,
+    left_key='id_spatial',
+    right_key='id_spatial',       
+    how='left',
+    global_min=global_min,
+    global_max=global_max,
+    source='OEIL / Copernicus'
+
+)
+title=f"Part de la superficie brûlée par aire coutumière en {Annee}"
+
+# export des figures en images pour les afficher dans le rapport 
+export_output(viz_map_choropleth_aire,figureName)
+
+```
+
+::: {#fig-carte-choro-feux-aire_coutumiere} 
+```{python}
+display(Markdown(f"[![]({export_file_path}{figureName}.png)]({export_file_path}{figureName}.html)"))
+```
+
+Part de la superficie brûlée par aire coutumière en `{python} Annee`
+
+:::
+{{< include etude_caracterisation/0_methode/tab_stats.qmd >}}
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tbl-stat-feux-aire_coutumiere
+
+figureName = "tbl-stat-feux-aire_coutumiere"
+
+table_aire = tableau_statistiques(
+    data=data_feux_analys,
+    level_them=None,
+    label_them=None,
+    groupby='upper_libelle',
+    annee=Annee,
+    type_zone='aire_coutumiere',
+    columns=['upper_libelle','superficie_ha','nb_indic'],
+    label_col=['Territoire concerné','Surface brûlée (ha)','Nombre de surfaces brûlée'],
+    title=" ",
+    filtre='superficie_ha',
+    hauteurtab=30)
+
+title= f"Répartition par aire coutumière des surfaces brûlées pour l'année {Annee}"
+
+export_output_plotly(table_aire,figureName)
+```
+
+::: {#tbl-stat-feux-aire_coutumiere} 
+```{python}
+display(Markdown(f"[![]({export_file_path}{figureName}.png)]({export_file_path}{figureName}.html)"))
+```
+
+Répartition par aire coutumière des surfaces brûlées pour l'année `{python} Annee`
+
+:::
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-graph-evol-feux-aire_coutumiere
+
+figureName = "fig-graph-evol-feux-aire_coutumiere"
+
+graph_aire = graph_evolution(
+    data=data_feux_analys,
+    type_zone='aire_coutumiere',
+    indicateur='superficie_ha',
+    start_year=2017,
+    end_year=Annee,
+    title=" ",
+    xlabel='Année',
+    ylabel='Superficie brûlée (ha)'
+)
+
+title=f"Evolution de la superficie brûlée entre 2017 et {Annee} par aire coutumière"
+
+# export des figures en images pour les afficher dans le rapport 
+export_output(graph_aire,figureName)
+```
+
+::: {#fig-graph-evol-feux-aire_coutumiere} 
+```{python}
+display(Markdown(f"[![]({export_file_path}{figureName}.png)]({export_file_path}{figureName}.html)"))
+```
+
+Evolution de la superficie brûlée entre 2017 et `{python} Annee` par aire coutumière
+
+:::
+
+#### Répartition par carroyage DFCI
+
+Le carroyage DFCI (Défense de la Forêt Contre les Incendies) est souvent utilisé par les services de lutte contre les feux (DSCGR, Sapeurs-pompiers) pour repérer rapidement l’emplacement d’un évènement de type feu de forêt. Une analyse est donc fournie pour déterminer quels carrés ont donc été les plus impactés durant l’année. 
+
+Les résultats chiffrés sont présentés en annexe dans la partie «Répartition par unité territoriale – Carroyage DFCI ».
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-carte-cloro-feux-dfci
+
+figureName = "fig-carte-cloro-feux-dfci"
+
+viz_map_choropleth_dfci = carte_choroplethe(
+    geodata=dfci,
+    data=data_feux_analys,
+    thematique=None,
+    label_them=None,
+    indicateur='indicateur_1',
+    annee=Annee,
+    tolerance=1000,
+    title=" ",
+    custom_cmap=custom_cmap,
+    x=x,
+    y=y,
+    left_key='id_spatial',
+    right_key='code',       
+    how='left',
+    global_min=global_min,
+    global_max=global_max,
+    source='OEIL / Copernicus'
+
+)
+title=f"Part de la superficie brûlée en {Annee} par carré du carroyage DFCI à 20 kilomètres"
+
+export_output(viz_map_choropleth_dfci,figureName)
+```
+
+::: {#fig-carte-cloro-feux-dfci} 
+```{python}
+display(Markdown(f"[![]({export_file_path}{figureName}.png)]({export_file_path}{figureName}.html)"))
+```
+
+Part de la superficie brûlée en `{python} Annee` par carré du carroyage DFCI à 20 kilomètres
+
+:::

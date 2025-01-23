@@ -1,0 +1,79 @@
+
+\KOMAoptions{paper=landscape,pagesize}
+\recalctypearea
+
+\newpage
+\newgeometry{top=20mm,left=20mm,right=0mm,bottom=40mm}
+
+# Sources de données exploitées dans l'étude {.unnumbered}
+
+En accord avec les acteurs de l’environnement en Nouvelle-Calédonie, des données environnementales ont été mise à disposition de l’OEIL afin de caractériser l’impact des incendies sur les milieux. Ainsi, des traitements ont été effectués en utilisant ces données afin de pouvoir quantifier le nombre d’incendies et la superficie incendiée pour chaque source d’information étudiée. La @tbl-source-impact présente les informations étudiées ainsi que leurs principales caractéristiques.
+
+::: {#tbl-source-impact tbl-colwidths="[30,30,15,15,10]"} 
+
+| Nom de la donnée | Résumé | Emprise spatiale | Propriétaire de la donnée | Date de la donnée utilisée et à jour |
+|------------------|--------|-----------------|--------------------------|-------------------------------------|---|
+| Zone de fort micro-endémisme végétal | Données issues d’une modélisation déterminant la probabilité de localisation d'espèces micro-endémiques vasculaires. Extrait des zones à forte probabilité de micro-endémisme végétal, supérieures ou égales à 70% de densité d'espèces micro-endémiques vasculaires. | Ensemble de la Nouvelle-Calédonie | Adrien Wulff, UNC, IAC | 2012 |
+| Périmètre d'alertes sur la faune et la flore menacées | Zone entourée d'un tampon de 100, 200 ou 500 m de diamètre, caractérisant la localisation des espèces faunistiques et floristiques menacées (Statut UICN ; CR : « En danger critique », EN : « En danger » et VU : « vulnérable » uniquement sur le critère D2) | Ensemble de la Nouvelle-Calédonie | Endemia | 2021 |
+| Espèces Sensibles | Localisation de la compilation des observations naturalistes recensant la faune, la flore ou encore les champignons possédant un niveau d'enjeu plus ou moins important en fonction du classement UICN et de la rareté des espèces | Ensemble de la Nouvelle-Calédonie | Province Sud | 2021 |
+| Mangroves | Données représentant la localisation des mangroves | Ensemble de la Nouvelle-Calédonie | Programme CARNAMA, IFRECOR | 2020 |
+| Strates de végétation (arborée, arbustive, herbacée) | Localisation des types de végétation arborée, arbustive et herbacée | Ensemble de la Nouvelle-Calédonie | OEIL, Gouvernement de la Nouvelle-Calédonie | 2014 |
+| Zones de vigilance pour le maintien des forêts sèches | Localisation des zones de vigilance primordiales pour le maintien de l’écosystème des forêts sèches | Ensemble de la Nouvelle-Calédonie | Conservatoire d'espaces naturels de Nouvelle-Calédonie | 2021 |
+| Connectivités moyenne distance des forêts sèches | Localisation des liaisons entre les zones de vigilance de forêt sèche avec un seuil de distance minimal de 200 mètres | Ensemble de la Nouvelle-Calédonie | Conservatoire d'espaces naturels de Nouvelle-Calédonie | 2021 |
+| Milieu d'intérêt important pour la conservation | Localisation des milieux d'intérêt important pour la conservation | Province Sud | Province Sud | 2020 |
+| Milieu essentiel à la préservation de la biodiversité | Localisation des milieux essentiels à la préservation de la biodiversité | Province Sud | Province Sud | 2020 |
+| Zones clés de biodiversité | Localisation des sites d'importance mondiale pour la conservation de la biodiversité identifiés à l'aide des standards internationaux UICN | Ensemble de la Nouvelle-Calédonie | Groupe : Profil d'Ecosystème de Nouvelle-Calédonie regroupant la Province Sud, la Province Nord, la Province des îles, le Gouvernement de Nouvelle-Calédonie, l'État Français, AFD, CI, SCO, WWF, AICA, IRD, UNC, IAC, IFREMER | 2016 |
+| Forêt de la Province Nord | Localisation de tous types de forêts situées en Province Nord | Province Nord | Province Nord | 2020 |
+: Impact sur l'environnement {#tbl-source-impact-environnement .striped .hover}
+
+
+| Nom de la donnée | Résumé | Emprise spatiale | Propriétaire de la donnée | Date de la donnée utilisée et à jour |
+|------------------|--------|------------------|---------------------------|---|
+| Parcelles - AGRIBASE | Localisation des parcelles agricoles de la Province Sud. | Province Sud | Province Sud | 2020 |
+: Impact sur l'agrigulture {#tbl-source-impact-agrigulture}
+
+| Nom de la donnée | Résumé | Emprise spatiale | Propriétaire de la donnée | Date de la donnée utilisée et à jour |
+|------------------|--------|------------------|---------------------------|-------|
+| Zones tampons terrestres UNESCO | Localisation des zones tampons terrestres des biens inscrits au patrimoine mondial de l'UNESCO | Ensemble de la Nouvelle-Calédonie | IFRECOR | 2011 |
+| Aires protégées provinciales terrestres | Localisation des zones terrestres de protection de l'environnement de compétence provinciale | Ensemble de la Nouvelle-Calédonie | Gouvernement de la Nouvelle-Calédonie, Province Sud, Province Nord  | 2021 |
+| Périmètres des zones humides Ramsar | Localisation des zones inscrites à la convention Ramsar, traité intergouvernemental servant de cadre à l'action nationale et à la coopération internationale en matière de conservation et d'utilisation rationnelle des zones humides et de leurs ressources | Plaines des Grands Lacs | Province Sud | 2014 |
+: Impact sur les sites d'intérêts {#tbl-source-impact-interets .striped .hover}
+
+
+| Nom de la donnée | Résumé | Emprise spatiale | Propriétaire de la donnée |Date de la donnée utilisée et à jour |
+|------------------|--------|------------------|---------------------------|---|
+| Périmètres de protection des eaux | Localisation des périmètres de protection des eaux destinées à la consommation humaine | Ensemble de la Nouvelle-Calédonie | Gouvernement de la Nouvelle-Calédonie | 2020 |
+| Bassins versants producteurs d'eau potable | Localisation des bassins versants producteurs d'eau potable basée sur les captages surfaciques définies comme les surfaces ou superficies concourant à l’alimentation de captages ou de futurs captages | Ensemble de la Nouvelle-Calédonie | Gouvernement de la Nouvelle-Calédonie | 2018 |
+
+: Impact sur la ressource en eau {#tbl-source-impact-eau .striped .hover}
+
+| Nom de la donnée | Résumé | Emprise spatiale | Propriétaire de la donnée |Date de la donnée utilisée et à jour |
+|------------------|--------|------------------|---------------------------|---|
+| Bâtiments | Localisation de toutes édifications importantes, construites dans un but quelconque et représenté par un objet surfacique, issues de la BD TOPO. | Ensemble de la Nouvelle-Calédonie | Gouvernement de la Nouvelle-Calédonie | 2021 |
+| Voiries | Localisation des différents types de voiries (voie non revêtue, allée piétonne aménagée, voie revêtue, piste, sentier, piste cyclable, gué, passerelle), issues de la BD TOPO. | Ensemble de la Nouvelle-Calédonie | Gouvernement de la Nouvelle-Calédonie | 2021 |
+: Effets possibles des infrastructures humaines sur les incendies {#tbl-source-impact-infrastructures .striped .hover}
+
+
+| Nom de la donnée | Résumé | Emprise spatiale | Propriétaire de la donnée |Date de la donnée utilisée et à jour |
+|------------------|--------|------------------|---------------------------|---|
+| Foudres | Localisation des zones touchées par la foudre. | Ensemble de la Nouvelle-Calédonie | Météo France | 2020 |
+: Effets possibles des phénomènes naturels sur les incendies {#tbl-source-impact-naturels}
+
+
+| Nom de la donnée | Résumé | Emprise spatiale | Propriétaire de la donnée |Date de la donnée utilisée et à jour |
+|------------------|--------|------------------|---------------------------|---|
+| Formation géologique | Localisation des différents substrats, regroupés en trois groupes majoritaires, que sont le type volcano-sédimentaire, ultramafique et autres, classification obtenue par Brice Sevin, à partir de données de surfaces géologiques au 1/50 000e de la DIMENC | Ensemble de la Nouvelle-Calédonie | Gouvernement de la Nouvelle-Calédonie | 2020 |
+
+: Répartition en fonction du substrat {#tbl-source-impact-substrat .striped .hover}
+
+
+| Nom de la donnée | Résumé | Emprise spatiale | Propriétaire de la donnée |Date de la donnée utilisée et à jour |
+|------------------|--------|------------------|---------------------------|---|
+| Foncier | Localisation de la répartition foncière sur la Nouvelle-Calédonie comprenant le domaine public, le privé ainsi que le foncier coutumier issue du cadastre | Ensemble de la Nouvelle-Calédonie | Gouvernement de la Nouvelle-Calédonie | 2018 |
+: Répartition foncière {#tbl-source-impact-foncier .striped .hover}
+
+Présentation des sources d’information utilisées pour réaliser le bilan de l’impact des incendies 
+:::
+
+\KOMAoptions{paper=portrait,pagesize}
+\recalctypearea

@@ -1,0 +1,693 @@
+#### Informations
+
+A VERIFIER
+
+Cette partie vise à mettre en avant l’impact des incendies sur les différents types d’étages de végétation présents sur le territoire, regroupés en strates en fonction de la hauteur moyenne des végétaux qui les composent. 
+
+Afin de construire une couche d’informations relatives aux différents types de strates de végétation pour l’ensemble du territoire, les Modes d’Occupation du Sol (MOS) de 2014 de la province Sud, Nord et celle des Iles ont été utilisés. La strate arborée représente les zones constituées de plus de 50% d’arbres possédant une hauteur supérieure à 5 mètres. Les forêts composent majoritairement cette strate. La strate arbustive est composée d’une dominance d’arbustes d’une hauteur comprise entre 1 et 5 mètres. La strate herbacée regroupe la végétation inférieure à 1 mètre, notamment les zones de pâturages ou encore de savanes. 
+
+Il est tenu de préciser que la diversité en termes de richesses d’espèces des formations arbustives et herbacées est inférieure à celle des formations forestières (cf Tableau ci-dessous).
+
+:::{tbl-nb-especes-par-strate-vege}
+|                    | Forêt humide | Maquis associé à la strate arbustive | Forêt Sèche | Savane |
+|--------------------|--------------|--------------------------------------|-------------|--------|
+| Nombre d'espèces   | 2013         | 1144                                 | 424         | 410    |
+:::
+
+De la même manière, d’après Gomez et al[^15], la résilience, la vulnérabilité ainsi que la perte en biodiversité des écosystèmes ne seraient pas les mêmes en fonction des types de végétation. En effet, la forêt sèche serait l’écosystème sur lequel la perte en biodiversité serait la plus importante en cas d’incendie. Le temps de reconstitution des strates arborées est très lent et peut s’étaler sur plusieurs siècles sous réserve que le feu ne revienne pas altérer les mêmes milieux.  
+
+L’effet répété des incendies engendre une ouverture du milieu qui le rend plus perméable à la propagation des futurs incendies et risque d’interrompre le processus de recolonisation des espèces. Les formations végétales initiales sont fréquemment remplacées par des espèces envahissantes végétales héliophiles et pyrophiles, (ex : lantana et sensitive géante) ou animales (ex :  fourmis dont fait mention la thèse de Berman[^16]).
+
+D’après Jaffré et al[^17], « la forêt dense humide, qui est la végétation climatique de ces zones, ne possède pas, sauf en période sèche exceptionnelle, une inflammabilité suffisante pour être la proie des flammes. Néanmoins, l'action des feux se fait largement sentir sur ses marges. Dans les secteurs soumis à des incendies fréquents, la forêt se trouve rognée progressivement. Aussi observe-t-on une discontinuité nette entre la forêt dense humide et les savanes ou les maquis voisins. Les feux, poussés par les vents dominants, les alizés du sud-est, sont souvent arrêtés en crête et ne se propagent pas sur les versants sous le vent qui demeurent généralement les plus boisés. A basse et moyenne altitude, la fréquence des feux a réduit l'étendue des forêts à des reliques forestières qui garnissent les versants sud, sud-ouest et nord-est ainsi que les flancs et les fonds de vallées encaissées ». Le tableau ci-dessous montre l’évolution des proportions respectives de forêts et savanes entre l’état climatique et 2019 en se basant sur les données de formations végétales et climaciques du projet ANR datant de 2012 sur les Incendies et la biodiversité des écosystèmes en Nouvelle-Calédonie.
+
+[^15]: Ibid.
+[^16]: M.Berman. Impacts of anthropogenic fires and invasive ants on native ant diversity in New Caledonia: from genes to communities. PhD Thesis, Université Montpellier 2 & Charles Darwin University, 2013, 232p.
+[^17]: T.Jaffré, J.M.Veillon, F.Rigault, G.Dagostini. Impact des feux de brousse sur la flore et les groupements végétaux de Nouvelle Calédonie. Rapport Cordet. ORSTOM, Nouméa, 1997. 
+
+:::{tbl-type-vege-etat-climacique}
+| Type de végétation                        | Etat climacique | Etat actuel |
+|-------------------------------------------|-----------------|-------------|
+| Forêt humide                              | 81,08%          | 35,55%      |
+| Forêt sèche                               | 9,06%           | 0,28%       |
+| Maquis associé à la strate arbustive      | 2,64%           | 23,09%      |
+:::
+
+D’après Ibanez[^18], « selon la fréquence des incendies, les forêts et les savanes se côtoient et peuvent représenter deux états alternatifs stables pouvant basculer d’un état à l’autre si une composante du régime de perturbation (fréquence, intensité...) vient à changer. ». Ainsi, les incendies impacteraient les dynamiques des forêts humides et des savanes, et se révèleraient favorables au développement des savanes en Nouvelle-Calédonie. En effet, après avoir empiété sur les secteurs des forêts humides, les incendies permettraient de maintenir la savane en consumant les nouvelles pousses d’arbres forestiers. 
+
+L’effet de lisière, induit par les incendies, créé des conditions climatiques et écologiques particulières sur plusieurs centaines de mètres en profondeur qui vont réduire les cœurs de forêt et contribuer à la fragmentation des milieux (Laurance et al, 2002[^19]). Les nouveaux arbres en cours de régénération situés à moins de 100 mètres des lisières de forêts seront principalement composées d’espèces pionnières et secondaires, au détriment des essences qui composaient initialement la forêt (Laurance et al, 1998[^20]). Les incendies vont ainsi contribuer à réduire ces espaces forestiers déjà fragmentés. L’exemple sur le Grand Sud dans le cadre du projet CORIFOR[^21] a permis de déterminer que ces forêts ont été fragmentées « par succession de nombreuses activités anthropiques, notamment les exploitations forestières et minières (cobalt, fer, nickel) qui ont progressivement morcelé le paysage ne laissant alors que quelques stigmates des forêts originelles ».
+
+[^18]: T.Ibanez. Dynamiques des forêts denses humides et des savanes en réponse aux incendies en Nouvelle-Calédonie. Thèse en Science de l’environnement. Université Aix-Marseille, 2012, 325p.
+[^19]: WF.Laurance, TE.Lovejoy, HL.Vasconcelos, EM.Bruna, RK.Didham, PC.Stouffer, C.Gascon, RO.Bierregaard, SG.Laurance, E.Sampaio. Ecosystem decay of Amazonian forest fragments : A 22‐year investigation. In Conservation Biology, 16: 605–618. 2002.
+[^20]:WF.Laurance, LV.Ferreira, JM.Rankin-de Merona and SG.Laurance. Rain forest fragmentation and the dynamics of Amazonian tree communities. In Ecology, 79: 2032-2040. 1998.
+[^21]:Projet CORIFOR, Caractérisation des connectivités structurelle et fonctionnelle des paysages fragmentés sur sols ultramafiques, CNRT, CIRAD, IAC, IRD, Mai 2016.
+
+#### Résultats
+
+##### Strate arborée
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab strate arboree echelon territorial
+
+figureName = "fig-tab-stats-territorial-strate-arboree"
+
+table_nc = tableau_statistiques(
+    data=data_strate,
+    level_them="l_2014_n3",
+    label_them='Strate arborée',
+    groupby='upper_libelle',
+    annee=Annee,
+    type_zone='ZEE',
+    columns=['upper_libelle','sup_total_theme','superficie_ha','indicateur_3'],
+    label_col=['Territoire concerné','Superficie (ha)','Surface brûlée (ha)','Part de la superficie de la strate arborée impactée par les surfaces brûlées (%)'],
+    title= f"Résultats à l'échelon territorial pour la strate arborée pour l'année {Annee}",
+    filtre='superficie_ha',
+    hauteurtab=100
+)
+#export_output(table_nc,figureName)
+table_nc
+
+```
+
+::: {#fig-tab-stats-territorial-strate-arboree}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-tab-stats-territorial-strate-arboree
+#| fig-cap: "Résultats à l'échelon territorial pour la strate arborée"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: diagramme strate arboree nouvellement impactee
+import plotly.graph_objects as go
+
+figureName = "diag-zb-new-strat-arboree"
+
+data = data_arboree_impact.read()
+data_filtered = data[(data['annee_1'] == 2017) & (data['annee_2'] == Annee) & (data['type_spatial'] == 'ZEE')]    
+
+labels = ['Nouvelle superficie impactée', 'Superficie déjà impactée']
+values = [data_filtered['ratio_nouvel_impact'].sum(), data_filtered['ratio_deja_impact'].sum()]
+
+fig = go.Figure(data=[go.Pie(labels=labels, values=values,marker_colors=['#d62728','#ff7f0e'])])
+fig.update_layout(title_text="Répartition des zones de végétation arborée nouvellement impactée en {Annee}")
+
+#export_output(pie_chart,figureName)
+fig
+
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab strate arboree echelon provincial
+
+figureName = "tab-strate-arboree-echelon-provincial"
+
+table_province = tableau_statistiques(
+    data=data_strate,
+    level_them="l_2014_n3",
+    label_them='Strate arborée',
+    groupby='upper_libelle',
+    annee=Annee,
+    type_zone='province',
+    columns=['upper_libelle','sup_total_theme','superficie_ha','indicateur_3'],
+    label_col=['Territoire concerné','Superficie (ha)','Surface brûlée (ha)','Part de la superficie de la strate arborée impactée par les surfaces brûlées (%)'],
+    title= f"Résultats à l'échelon provincial pour la strate arborée pour l'année {Annee}",
+    filtre='superficie_ha',
+    hauteurtab=100
+)
+
+#export_output(pie_chart,figureName)
+
+table_province
+
+```
+
+::: {#fig-tab-stats-provincial-strate-arboree}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-stat-strate-arboree-echelon-provincial
+#| fig-cap: "Résultats à l'échelon provincial pour la strate arborée"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab strate arboree echelon communal
+
+figureName = "tab-strate-arboree-echelon-communal"
+
+table_province = tableau_statistiques(
+    data=data_strate,
+    level_them="l_2014_n3",
+    label_them='Strate arborée',
+    groupby='upper_libelle',
+    annee=Annee,
+    type_zone='commune',
+    columns=['upper_libelle','sup_total_theme','superficie_ha','indicateur_3'],
+    label_col=['Territoire concerné','Superficie (ha)','Surface brûlée (ha)','Part de la superficie de la strate arborée impactée par les surfaces brûlées (%)'],
+    title= f"Résultats à l'échelon communale pour la strate arborée pour l'année {Annee}",
+    filtre='superficie_ha',
+    hauteurtab=100
+)
+#export_output(pie_chart,figureName)
+
+table_province
+
+```
+
+::: {#fig-tab-stats-communal-strate-arboree}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-stat-strate-arboree-echelon-communal
+#| fig-cap: "Résultats à l'échelon communal pour la strate arborée"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: carte cercle proportionnelle superficie incendiee strate arboree
+
+figureName = "carte-proportionnelle-strate-arboree"
+
+viz_map_cercles_arboree = carte_cercles_proportionnels(
+    data=data_strate,
+    level_them="l_2014_n3",
+    label_them='Strate arborée',
+    data_carto=commune,
+    cadre=bb_,
+    level='commune',
+    tolerance=1000,
+    annee=Annee,
+    colonne_valeurs='superficie_ha',
+    couleur_cercles='green',
+    title=f"Superficie incendiée de la strate arborée par commune en {Annee}",
+    hovertool='Superficie en ha',
+    titrelegende='Superficie impacrée des strates\narborées par communes',
+    texte_sources='Gouvernement la Nouvelle-Calédonie / OEIL / Copernicus',
+    min_size=10,
+    max_size=30,
+    legend_values=[60, 125, 250]
+)
+#export_output(pie_chart,figureName)
+
+viz_map_cercles_arboree
+```
+
+::: {#fig-carte-proportionnelle-strate-arboree}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-carte-proportionnelle-strate-arboree
+#| fig-cap: "Superficie incendiée de la strate arborée par commune"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::
+
+##### Strate arbustive
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab strate arbustive echelon territorial
+
+figureName = "tab-strate-arbustive-echelon-territorial"
+
+table_province = tableau_statistiques(
+    data=data_strate,
+    level_them="l_2014_n3",
+    label_them='Strate arbustive',
+    groupby='upper_libelle',
+    annee=Annee,
+    type_zone='ZEE',
+    columns=['upper_libelle','sup_total_theme','superficie_ha','indicateur_3'],
+    label_col=['Territoire concerné','Superficie (ha)','Surface brûlée (ha)','Part de la superficie de la strate arbustive impactée par les surfaces brûlées (%)'],
+    title= f"Résultats à l'échelon territoriale pour la strate arbustive pour l'année {Annee}",
+    filtre='superficie_ha',
+    hauteurtab=100
+)
+#export_output(pie_chart,figureName)
+
+table_province
+
+```
+
+::: {#fig-tab-strate-arbustive-echelon-territorial}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-tab-strate-arbustive-echelon-territorial
+#| fig-cap: "Résultats à l'échelon territorial pour la strate arbustive"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: diagramme strate arbustive nouvellement impactee
+
+
+data = data_arbustive_impact.read()
+data_filtered = data[(data['annee_1'] == 2017) & (data['annee_2'] == Annee) & (data['type_spatial'] == 'ZEE')]    
+
+labels = ['Nouvelle superficie impactée', 'Superficie déjà impactée']
+values = [data_filtered['ratio_nouvel_impact'].sum(), data_filtered['ratio_deja_impact'].sum()]
+
+fig = go.Figure(data=[go.Pie(labels=labels, values=values,marker_colors=['#d62728','#ff7f0e'])])
+fig.update_layout(title_text="Répartition des zones de végétation arbustive nouvellement impactée en {Annee}")
+
+#export_output(pie_chart,figureName)
+fig
+
+
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab strate arbustive echelon provincial
+
+figureName = "tab-strate-arbustive-echelon-provincial"
+
+table_province = tableau_statistiques(
+    data=data_strate,
+    level_them="l_2014_n3",
+    label_them='Strate arbustive',
+    groupby='upper_libelle',
+    annee=Annee,
+    type_zone='province',
+    columns=['upper_libelle','sup_total_theme','superficie_ha','indicateur_3'],
+    label_col=['Territoire concerné','Superficie (ha)','Surface brûlée (ha)','Part de la superficie de la strate arbustive impactée par les surfaces brûlées (%)'],
+    title= f"Résultats à l'échelon provincial pour la strate arbustive pour l'année {Annee}",
+    filtre='superficie_ha',
+    hauteurtab=100
+)
+#export_output(pie_chart,figureName)
+
+table_province
+
+```
+
+::: {#fig-tab-strate-arbustive-echelon-provincial}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-tab-strate-arbustive-echelon-provincial
+#| fig-cap: "Résultats à l'échelon provincial pour la strate arbustive"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab strate arbustive echelon communal
+
+figureName = "tab-strate-arbustive-echelon-communal"
+
+table_province = tableau_statistiques(
+    data=data_strate,
+    level_them="l_2014_n3",
+    label_them='Strate arbustive',
+    groupby='upper_libelle',
+    annee=Annee,
+    type_zone='commune',
+    columns=['upper_libelle','sup_total_theme','superficie_ha','indicateur_3'],
+    label_col=['Territoire concerné','Superficie (ha)','Surface brûlée (ha)','Part de la superficie de la strate arbustive impactée par les surfaces brûlées (%)'],
+    title= f"Résultats à l'échelon communale pour la strate arbustive pour l'année {Annee}",
+    filtre='superficie_ha',
+    hauteurtab=100
+)
+#export_output(pie_chart,figureName)
+table_province
+
+```
+
+::: {#fig-tab-strate-arbustive-echelon-communal}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-tab-strate-arbustive-echelon-communal
+#| fig-cap: "Résultats à l'échelon communal pour la strate arbustive"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: carte cercle proportionnelle superficie incendiee strate arbustive
+
+figureName = "carte-proportionnelle-strate-arbustive"
+
+viz_map_cercles_arboree = carte_cercles_proportionnels(
+    data=data_strate,
+    level_them="l_2014_n3",
+    label_them='Strate arbustive',
+    data_carto=commune,
+    cadre=bb_,
+    level='commune',
+    tolerance=1000,
+    annee=Annee,
+    colonne_valeurs='superficie_ha',
+    couleur_cercles='green',
+    title=f"Superficie incendiée de la strate arbustive par commune en {Annee}",
+    hovertool='Superficie en ha',
+    titrelegende='Superficie impacrée des strates\narbustive par communes',
+    texte_sources='Gouvernement la Nouvelle-Calédonie / OEIL / Copernicus',
+    min_size=10,
+    max_size=30,
+    legend_values=[60, 125, 250]
+)
+#export_output(pie_chart,figureName)
+
+viz_map_cercles_arboree
+```
+
+::: {#fig-carte-proportionnelle-strate-arbustive}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-carte-proportionnelle-strate-arbustive
+#| fig-cap: "Superficie incendiée de la strate arbustive par commune"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::
+
+##### Strate herbacée
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab strate herbacee echelon territorial
+
+figureName = "tab-strate-herbacee-echelon-territorial"
+
+table_province = tableau_statistiques(
+    data=data_strate,
+    level_them="l_2014_n3",
+    label_them='Strate herbacée',
+    groupby='upper_libelle',
+    annee=Annee,
+    type_zone='ZEE',
+    columns=['upper_libelle','sup_total_theme','superficie_ha','indicateur_3'],
+    label_col=['Territoire concerné','Superficie (ha)','Surface brûlée (ha)','Part de la superficie de la strate herbacée impactée par les surfaces brûlées (%)'],
+    title= f"Résultats à l'échelon territorial pour la strate herbacée pour l'année {Annee}",
+    filtre='superficie_ha',
+    hauteurtab=100
+)
+#export_output(pie_chart,figureName)
+table_province
+
+```
+
+::: {#fig-tab-strate-herbacee-echelon-territorial}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-tab-strate-herbacee-echelon-territorial
+#| fig-cap: "Résultats à l'échelon territorial pour la strate herbacée"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: diagramme strate herbacee nouvellement impactee
+
+data = data_herbacee_impact.read()
+data_filtered = data[(data['annee_1'] == 2017) & (data['annee_2'] == Annee) & (data['type_spatial'] == 'ZEE')]    
+
+labels = ['Nouvelle superficie impactée', 'Superficie déjà impactée']
+values = [data_filtered['ratio_nouvel_impact'].sum(), data_filtered['ratio_deja_impact'].sum()]
+
+fig = go.Figure(data=[go.Pie(labels=labels, values=values,marker_colors=['#d62728','#ff7f0e'])])
+fig.update_layout(title_text="Répartition des zones de végétation herbacée nouvellement impactée en {Annee}")
+
+#export_output(pie_chart,figureName)
+fig
+
+
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab strate herbacee echelon provincial
+
+figureName = "tab-strate-herbacee-echelon-provincial"
+
+table_province = tableau_statistiques(
+    data=data_strate,
+    level_them="l_2014_n3",
+    label_them='Strate herbacée',
+    groupby='upper_libelle',
+    annee=Annee,
+    type_zone='province',
+    columns=['upper_libelle','sup_total_theme','superficie_ha','indicateur_3'],
+    label_col=['Territoire concerné','Superficie (ha)','Surface brûlée (ha)','Part de la superficie de la strate herbacée impactée par les surfaces brûlées (%)'],
+    title= f"Résultats à l'échelon provincial pour la strate herbacée pour l'année {Annee}",
+    filtre='superficie_ha',
+    hauteurtab=100
+)
+#export_output(pie_chart,figureName)
+table_province
+
+```
+
+::: {#fig-tab-strate-herbacee-echelon-provincial}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-tab-strate-herbacee-echelon-provincial
+#| fig-cap: "Résultats à l'échelon provincial pour la strate herbacee"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab strate herbacee echelon communal
+
+figureName = "tab-strate-herbacee-echelon-communal"
+
+table_province = tableau_statistiques(
+    data=data_strate,
+    level_them="l_2014_n3",
+    label_them='Strate herbacée',
+    groupby='upper_libelle',
+    annee=Annee,
+    type_zone='commune',
+    columns=['upper_libelle','sup_total_theme','superficie_ha','indicateur_3'],
+    label_col=['Territoire concerné','Superficie (ha)','Surface brûlée (ha)','Part de la superficie de la strate herbacée impactée par les surfaces brûlées (%)'],
+    title= f"Résultats à l'échelon communale pour la strate herbacée pour l'année {Annee}",
+    filtre='superficie_ha',
+    hauteurtab=100
+)
+#export_output(pie_chart,figureName)
+table_province
+
+```
+
+::: {#fig-tab-strate-herbacee-echelon-communal}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-tab-strate-herbacee-echelon-communal
+#| fig-cap: "Résultats à l'échelon communal pour la strate herbacee"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: carte cercle proportionnelle superficie incendiee strate herbacee
+
+figureName = "carte-proportionnelle-strate-herbacee"
+
+viz_map_cercles_arboree = carte_cercles_proportionnels(
+    data=data_strate,
+    level_them="l_2014_n3",
+    label_them='Strate herbacée',
+    data_carto=commune,
+    cadre=bb_,
+    level='commune',
+    tolerance=1000,
+    annee=Annee,
+    colonne_valeurs='superficie_ha',
+    couleur_cercles='green',
+    title=f"Superficie incendiée de la strate herbacée par commune en {Annee}",
+    hovertool='Superficie en ha',
+    titrelegende='Superficie sous influence des strates\nherbacées par commune',
+    texte_sources='Gouvernement la Nouvelle-Calédonie / OEIL / Copernicus',
+    min_size=10,
+    max_size=30,
+    legend_values=[60, 125, 250]
+)
+#export_output(pie_chart,figureName)
+
+viz_map_cercles_arboree
+
+```
+
+::: {#fig-carte-proportionnelle-strate-herbacee}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-carte-proportionnelle-strate-herbacee
+#| fig-cap: "Superficie incendiée de la strate herbacée par commune"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::
+
+##### Bilan sur l'ensemble des strates
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: histo baton comparaison annee impact zb strate
+
+figureName = f"Comparaison 2017-{Annee} de l'impact des zones brûlées sur chaque strate"
+hist_cumul = hist_cumul(
+    data=data_strate,
+    start_year=2017,
+    end_year=Annee,
+    type_zone='ZEE',
+    indicateur='indicateur_3',
+    indic_label='Pourcentage de strate incendiée',
+    level_tem='l_2014_n3',
+    title= f"Comparaison 2017-{Annee} de l'impact des surfaces brûlées sur chaque strate",
+    label_x= 'Classes strates',
+    label_y= 'Pourcentage de strate incendiée'
+)
+
+# export des figures en images pour les afficher dans le rapport 
+#export_output(hist_cumul,figureName)
+
+# Afficher le graphique
+hist_cumul
+
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: diagramme comparaison superficie deja impacte strate vege
+
+import plotly.graph_objects as go
+
+figureName = "diag-zb-new-mos2014"
+
+data = data_herbacee_impact.read()
+data_filtered = data[(data['annee_1'] == 2017) & (data['annee_2'] == Annee) & (data['type_spatial'] == 'ZEE')]    
+
+labels = ['Nouvelle superficie impactée', 'Superficie déjà impactée']
+values = [data_filtered['ratio_nouvel_impact'].sum(), data_filtered['ratio_deja_impact'].sum()]
+
+fig = go.Figure(data=[go.Pie(labels=labels, values=values,marker_colors=['#d62728','#ff7f0e'])])
+fig.update_layout(title_text="Répartition des zones de végétation herbacée nouvellement impactée en {Annee}")
+
+#export_output(pie_chart,figureName)
+fig
+
+```

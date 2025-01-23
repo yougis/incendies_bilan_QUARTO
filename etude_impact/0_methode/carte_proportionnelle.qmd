@@ -1,0 +1,136 @@
+```{python}
+#| echo: false
+#| output: true
+#| warning: false
+#| label: méthode carte cercle proportionelle
+
+def normalize_size(value, min_size, max_size, min_value, max_value):
+    normalized = (value - min_value) / (max_value - min_value) * (max_size - min_size) + min_size
+    return max(min(normalized, max_size), min_size)
+
+def carte_cercles_proportionnels(data,level_them,label_them, data_carto, cadre, annee, level, tolerance, colonne_valeurs, title, couleur_cercles, hovertool, titrelegende,texte_sources, min_size=10, max_size=30, legend_values=[75, 150, 300]):
+    lon, lat = 164, -22
+    lonN, latN = 167.8, -19.60
+    transformer = Transformer.from_crs("EPSG:4326", "EPSG:3857", always_xy=True)
+    x, y = transformer.transform(lon, lat)
+    xN, yN = transformer.transform(lonN, latN)
+
+    data = data.read()
+    data = data[(data['annee'] == annee) & (data['level'] == level)]
+
+    data_carto = data_carto.read().to_crs(3857)
+    data = pd.merge(data_carto, data, how='left', on='upper_libelle')
+    bb = cadre.read().to_crs(3857)
+
+    if level_them is None:
+        pass
+    else:
+        data = data[data[level_them] == label_them]
+        
+    # overlay pour cadrer sur la calédonie (BBox NC)
+    bb_overlay = hv.Polygons(bb).opts(alpha=0.0)
+
+    # Calculer le centroïde pour chaque commune
+    data['centroid'] = data.geometry.centroid
+    centroid_data = pd.DataFrame({
+        'x': data['centroid'].x,
+        'y': data['centroid'].y,
+        colonne_valeurs: data[colonne_valeurs].round(2),  # Arrondir les valeurs à deux chiffres après la virgule
+        'level': data['upper_libelle']
+    })
+    print(centroid_data)
+    # Normaliser les tailles des cercles
+    min_value = centroid_data[colonne_valeurs].min()
+    max_value = centroid_data[colonne_valeurs].max()
+    centroid_data['normalized_size'] = centroid_data[colonne_valeurs].apply(normalize_size, args=(min_size, max_size, min_value, max_value))
+
+    data_carto['geometry'] = data_carto.geometry.simplify(tolerance, preserve_topology=False)
+
+    # Créer le fond de carte
+    overlay = hv.Polygons(data_carto, vdims=['libelle']).opts(
+        fill_color='#d9d9d9',
+        cmap=['#d9d9d9'],
+        line_color='white'
+    )
+
+    # Créer des cercles proportionnels avec les centroïdes
+    points = hv.Points(centroid_data, ['x', 'y'], vdims=[colonne_valeurs, 'normalized_size','level']).opts(
+        size=hv.dim('normalized_size'),
+        color=couleur_cercles,
+        line_color='white',
+        tools=[HoverTool(tooltips=[
+            ("Commune", "@level"),
+            (hovertool, f"@{colonne_valeurs}{{0.00}}"),
+        ])],
+    )
+
+    # Coordonnées géographiques de la Nouvelle-Calédonie
+    lon, lat = 163.75, -22.4
+    transformer = Transformer.from_crs("EPSG:4326", "EPSG:3857", always_xy=True)
+    x, y = transformer.transform(lon, lat)
+
+    # Créer la légende avec des cercles proportionnels au-dessus de l'échelle
+    legend_data = []
+    xL, yL = x -45000, y + 30000  # Position de la légende ajustée
+    for i, value in enumerate(legend_values):
+        size = normalize_size(value, min_size, max_size, min_value, max_value)
+        legend_data.append({'xL': xL, 'yL': yL + i * 30000, 'value': value, 'size': size})
+    
+    legend_df = pd.DataFrame(legend_data)
+    legend_points = hv.Points(legend_df, ['xL', 'yL'], vdims=['value', 'size']).opts(
+        size=hv.dim('size'),
+        color=couleur_cercles,
+        line_color='white',
+    )
+    legend_labels = hv.Labels(legend_df, ['xL', 'yL'], 'value').opts(
+        text_align='left', text_baseline='middle', text_font_size='8pt', xoffset=20000
+    )
+
+    # Ajouter un titre à la légende
+    legend_title = hv.Text(xL - 35000, yL + 120000, titrelegende, halign='left', valign='top', fontsize=10)
+
+    # Annotations (supprimer ou adapter ces fonctions si nécessaire)
+    annotation_sources = update_source(x, y,texte_sources)
+    annotation_realisation = update_realisation(x, y, 'OEIL')
+
+    fleche_nord = hv.Arrow(xN, yN, 'N', '^').opts(
+        text_color='black', 
+        text_font_size='8pt', 
+        text_align='center', 
+        text_baseline='middle', 
+        text_font_style='bold', 
+        text_alpha=0.5, 
+        arrow_size=5, 
+        arrow_color='black',
+        arrow_alpha=0.5
+    )
+
+    x0, y0, x1, y1 = x-50000, y-35000, x+50000, y-34500 # 5000 mètres pour l'exemple
+
+    echelle_barre = hv.Rectangles([(x0, y0, x1, y1)])
+    texte_echelle = hv.Text(x, y-28000, '100 km')
+
+    # Créer la carte finale
+    map_cercles = tiled_basemap_dark.opts() * \
+        bb_overlay * \
+        texte_echelle * \
+        echelle_barre * \
+        fleche_nord * \
+        annotation_sources * \
+        annotation_realisation * \
+        overlay * \
+        points * \
+        legend_points * \
+        legend_labels * \
+        legend_title
+
+    viz_map_cercles = map_cercles.opts(
+        title=title,
+        toolbar=None,
+        width=700,
+        height=500
+    )
+
+    return viz_map_cercles
+```
+

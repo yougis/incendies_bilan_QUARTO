@@ -1,0 +1,73 @@
+
+
+Afin d’être en mesure d’identifier l’impact environnemental des incendies sur le territoire calédonien, une quantification précise des surfaces brûlées est nécessaire. Ainsi, une autre méthode de détection des espaces brûlés a été mis en place par l’OEIL, s’appuyant sur l’analyse des images d’un satellite (Sentinel 2) possédant une résolution spatiale plus fine que celle des autres satellites. Cette analyse repose sur l’utilisation d’une chaine de traitement des images de Sentinel 2 afin de produire des surfaces brulées potentielles, qui seront soumises à un processus de contrôle afin d’en réduire le nombre.
+
+### Les images des satellites Sentinel 2
+
+Les images des satellites Sentinel 2A et 2B sont utilisées pour alimenter la chaîne de traitement des images. La mission qui a lancé les satellites Sentinel 2 fait partie du programme Copernicus, d’observation et de surveillance de la Terre menée par l’Union Européenne. À noter que les images de Sentinel 2B ont été disponibles à partir de juillet 2017 pour la Nouvelle-Calédonie. Ce couple de satellites permet d’avoir une période de revisite des satellites sur le territoire calédonien très fréquente. En effet, avant la mise en service de Sentinel 2B, la fréquence de revisite était de 10 jours, et depuis l’introduction de ce dernier, elle est passée à 5 jours. La résolution spatiale par pixel est de 10, 20 ou 60 mètres en fonction des bandes spectrales.
+
+
+### Principe de la méthode de détection des surfaces brûlées mise en place par l’OEIL
+
+La détection des surfaces brûlées passe par une chaine de traitement des images satellitaires ^[Pour plus d’information concernant le processus d’analyse des images, des détails sont consultables dans le rapport de production de la donnée consultable ici [http://www.oeil.nc/cdrn/index.php/resource/bibliographie/view/29565](http://www.oeil.nc/cdrn/index.php/resource/bibliographie/view/29565 )]
+
+permettant de définir les zones incendiées et de délimiter leurs contours. Les méthodes et techniques de la télédétection utilisent les caractéristiques intrinsèques des objets à la surface de la terre. Par exemple, l’analyse de l’état de la végétation par le biais de l’étude de son activité chlorophyllienne va être utilisée pour la détection des surfaces brûlées. En effet, quand une surface recouverte par de la végétation est amenée à brûler, sa couleur change. Les zones incendiées possèdent ainsi des caractéristiques spécifiques qui seront utilisées par la chaîne de traitement pour délimiter le contour des surfaces brûlées. L’opération de détection réalisée par la chaîne de traitement sera alors répétée sur chaque image satellitaire et ce, de façon automatique.
+Une première version de la chaine de traitement a été développée sur la période 2015-2017 par les sociétés TELESPAZIO et INSIGHT dans le cadre de la réponse à un appel d’offre émis par l’OEIL. Ce dernier pointait le besoin de disposer d’une solution algorithmique utilisant des images optiques gratuites pour détecter les surfaces brûlées sur le territoire néo-calédonien. 
+Sur cette version, les surfaces brûlées étaient détectées par classification supervisée de type "Support Vector Machine" ^[Des renseignements relatifs aux Support Vector Machine sont disponibles sur le lien suivant : [https://fr.wikipedia.org/wiki/Support_vector_machine](https://fr.wikipedia.org/wiki/Support_vector_machine)] avec des données d’apprentissage fournies notamment par la DSCGR correspondant à environ 20 000 pixels. L’analyse des images va ainsi chercher les pixels qui possèdent des valeurs proches de celles associées aux zones brûlées, puis répertorier ces surfaces brûlées dans une base de données. À noter que la taille minimale de détection est de 1 hectare.
+Afin de limiter certaines sous détections et d’avoir une meilleure qualité en matière de détection des surfaces brulées, L’OEIL a fait évoluer la chaine de traitement en confiant la prestation à la société INSIGHT en 2019. La première étape a consisté à identifier les facteurs entrainant les sous-détections rencontrées sur les dispositifs de suivis des incendies.
+Pour pallier ce problème, une bibliographie scientifique a d’abord été réalisée. Elle a permis d’étudier les différentes méthodes utilisées pour la détection de surfaces incendiées et de déterminer la plus adaptée aux spécificités du territoire calédonien. La chaîne de traitement a ainsi reçu des correctifs se basant sur d’autres données sur les feux, comme par exemple, les remontées de terrain de la DSCGR et l’ensemble des retours issus du travail de photo interprétation menées par l’OEIL sur les années 2017 et 2018. Techniquement l’algorithme retenu est Random Forest (Breinman, 2001). Ce choix est motivé par les récentes études menées sur la thématique des feux, démontrant la robustesse du Random Forest face aux classiques SVM et les célèbres réseaux de neurones (NN) [@ramo2018].
+
+Le processus de traitement des images va analyser toutes les images produites par Sentinel 2 tous les 5 jours, en identifiant les pixels correspondant aux incendies. De fait, la même surface brûlée étant détectée plusieurs fois, la base de données brute comportera ainsi une certaine redondance. Il ne faut donc pas se méprendre face à l’ampleur des détections présentes dans la base de données avant que des traitements de fusion des diverses traces d’incendies ne soient effectués.
+
+### Le contrôle des surfaces brûlées
+
+Une qualification du jeu de données des surfaces brûlées détectées par les satellites Sentinel 2 a été mise en œuvre afin de jauger la qualité de la donnée qui va concourir au bilan de l’impact environnemental. En effet, les résultats étant obtenus par le biais d’un processus automatisé, où l’œil humain n’intervient aucunement, les surfaces brûlées détectées peuvent être en partie erronées. Ainsi, un protocole de vérification des détections a été réalisé. En sortie de chaine, une première étape de vérification est réalisée sur les surfaces détectées en vérifiant la présence de doublons, la présence d’erreurs géométriques ainsi que les aberrations localisées sur des espaces où les feux ne peuvent s’y produire (étendue d’eau, tarmac d’aéroport, …). Un premier regroupement des surfaces détectées Sentinel 2 par année est réalisée là où plusieurs d’entre elles se superposent pour ainsi faciliter l’étape de validation par photo-interprétation. Ensuite une étape de photo-interprétation est réalisée sur l’ensemble des résultats par année afin de valider les surfaces brûlées et de déceler également certains cas d’aberration (pas de trace d’incendie et végétation présente, cuirasse, sol nu, nuage et ombre nuageuse, …). Suite à une phase de photo-interprétation complète du jeu de données de surfaces détectées sur l’année 2017, près de 36% des surfaces ont été classées en aberration. En comparaison, le jeu de données 2019 où une partie a été validée automatiquement par d’autres données exogènes sur les feux comme les anomalies thermiques VIIRS ou les surfaces de la DSCGR, a permis de classer en aberration que 8% des surfaces détectées. Face à ce constat, il a été décidé d’abandonner l’étape de validation automatique avec d’autres données sur les incendies qui a été réalisée pour les analyses précédentes de 2017 à 2019 car celle-ci était trop permissive car elle classait un grand nombre de polygones détectées en surfaces brûlées. 
+
+La @fig-schemaPI ci-dessous présente de façon synthétique les étapes qui constituent ce protocole de vérification
+
+![Schéma d’intention des étapes réalisées pour le contrôle des données des Satellites Sentinel 2 (Source : OEIL)](./ressources/guide_methodo/schema_pi.jpg){#fig-schemaPI}
+
+
+À la suite de ces phases de vérification, une démarche de réunion des surfaces brûlées localisées sur un même espace (surfaces brûlées en superposition) a été effectuée afin d’être en mesure de définir des zones ayant brûlées au cours d’une même année. Le rassemblement des détections repose sur des critères de proximité (intersection / superposition entre les surfaces brûlées) et de temporalité (détection issue de la même année). La "zone brûlée" a été conservée comme objet d’étude pour les analyses d’impact environnemental des incendies car il est difficile à partir des surfaces détectées Sentinel 2 de déterminer à quel évènement "incendie" elles appartiennent. Une première approche avait été réalisée sur les analyses précédentes, en essayant de déterminer à l’objet "incendie" en rattachant certaines surfaces brûlées entre elles. Cette approche consistait à agréger les surfaces brûlées en s’aidant en partie des données exogènes sur les feux comme les surfaces issues du VIIRS ou encore celles de la DSCGR, et en se basant sur des critères de proximité (300 mètres entre deux surfaces brûlées) et de temporalité (50 jours). Ces critères se sont révélés très peu satisfaisants et aléatoires car ils pouvaient regrouper des surfaces brûlées qui n’appartenaient pas au même incendie, ou au contraire, pouvaient comptabiliser deux fois sur certaines zones des surfaces brûlées appartenant potentiellement au même incendie, notamment lorsque sur un périmètre assez proche, il y avait par exemple deux détections VIIRS. L’approche essayant de déterminer à quel évènement "incendie" appartiennent les surfaces brûlées a donc été abandonnée.
+
+La @fig-emprisefusion , qui rend compte du phénomène d’agrégation des différents polygones, permet de mieux visualiser ce que permet l’ensemble de ce processus d’analyse. Elle montre l’emprise de détection Sentinel-2 sur une partie des zones brûlées qui ont eu lieu sur Ouégoa en 2019, notamment sur l’Ile de Pam et près de Tiari. L'image "A" montre l’ensemble des polygones détectés représentant potentiellement des surfaces brûlées correspondant à un nombre d’incendies à ce stade indéterminé. Après vérifications et agrégation spatio-temporelle, on obtient l'image "B", montrant les zones brûlées issues de la fusion de plusieurs polygones. 
+
+::: {#fig-emprisefusion}
+![](./ressources/guide_methodo/emprise_fusion.png)
+
+Emprise non fusionnée (A) et fusionnée (B) des détections effectuées par les satellites Sentinel 2A et 2B pour des incendies sur Ouégoa sur l’Ile de Pam et près de Tiari en 2019 (Fond de carte Gouvernement de la Nouvelle-Calédonie, Source : OEIL)
+:::
+
+
+A noter que la taille minimale de cartographie est de 1 hectare.
+
+### Limites liées à la détection
+
+#### Sur détections potentielles liées aux nuages et parcelles labourées/humides
+
+Les surfaces brûlées sont détectées par des satellites dont la qualité et l’exploitabilité des images dépendent des conditions météorologiques. La présence de **nuages et des ombres portées** leur étant associées, a des conséquences sur les détections de surfaces brûlées. En effet, il a été constaté, que le processus d’analyse des images peut produire des surfaces brûlées erronées quand des masses nuageuses sont présentes sur les images analysées.
+
+Certaines aberrations de détection concernaient aussi des parcelles récemment labourées ou des sols particulièrement humides.
+
+#### Sous-détections potentielles liées aux nuages, à la végétation et aux types de substrat
+
+En termes d’exhaustivité, si une surface brûlée est cachée par les nuages pendant plusieurs semaines consécutives, la végétation pourrait avoir repoussé, et de fait, une fois que la zone sera dégagée, la trace de l’incendie pourrait ne plus être visible par les satellites. C’est notamment le cas pour les incendies se déclarant sur les substrats de type volcano-sédimentaire. 
+Les nuages peuvent également avoir comme conséquence de masquer des surfaces brûlées, qui de fait ne seront nullement détectées par la chaîne de traitement. En effet, même sans que la globalité de l’image ne soit couverte par une masse nuageuse, les conditions atmosphériques en Nouvelle-Calédonie impliquent qu’il est très rare de disposer d’une image où aucun nuage n’est présent. La partie Sud du territoire est très impactée par ce phénomène. 
+
+#### Sous détection potentielles liées au Seuil de pâture
+
+De plus, depuis la version 2 de la chaine de traitement, un « seuil de pâture » a été appliqué lors du traitement afin de limiter la détection d’aberrations liées aux parcelles récemment labourées ou des sols particulièrement humides. Cependant, ce seuil a provoqué des sous-détections. Comme le démontre la @fig-sousdetection , ci-dessous, la zone incendiée de la forêt de Saille a subi une sous-détection et n’est pas totalement représentatif de la réalité. Ainsi, depuis 2020, le seuil de pâture sera revu à la baisse afin de limiter ces sous-détections.
+
+![Type de sous-détection remarquée lors de la photo-interprétation. Sur la partie gauche, image infra-rouge : végétation en rouge, zone incendiée essentiellement en noir. Exemple de l'incendie de la Forêt de Saille du 26 novembre 2019, THIO. Source: OEIL](./ressources/guide_methodo/sous_detection.png){#fig-sousdetection}
+
+#### Sur détections potentielles dans les secteurs fréquemment brulés 
+
+
+De plus certains secteurs ont posé un problème à la détection notamment là où la récurrence des surfaces brûlées est très importante, où la chaine de traitement a eu des difficultés à distinguer différentes surfaces brûlées sur certaines images. Plusieurs feux ont été considérés comme une seule surface brûlée sur quelques images quand ceux-ci ont un intervalle temporel très court entre eux et que le processus naturel de revégétalisation a été très lent. Les limites entre ces surfaces brûlées ne sont plus réellement visibles sur certaines images, lors du processus de création, ces surfaces sont détectées ainsi comme une seule et même surface. Pour prendre un exemple, le schéma de la @fig-confusiondetetection montre ainsi comment ce cas peut se produire. Trois feux fictifs sont représentés (vert : 15/05/2020, orange : 18/06/2020, bleu : 19/07/2020). La chaine de traitement détecte au départ bien une seule surface brûlée (gauche du schéma) mais au fur et à mesure il peut confondre les surfaces brûlées entre elles (vers la droite du schéma). 
+
+![Schéma montrant la confusion des surfaces brûlées sur certaines images](./ressources/guide_methodo/confusion_detetection.jpg){#fig-confusiondetetection}
+
+
+Pour mieux illustrer ces propos, un cas concret est montré à la @fig-confusiondetetectionmap
+
+![Cas concret de certaines surfaces brûlées qui sont confondues](./ressources/guide_methodo/confusion_detetection_map.jpg){#fig-confusiondetetectionmap}

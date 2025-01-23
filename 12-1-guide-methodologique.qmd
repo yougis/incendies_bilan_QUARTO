@@ -1,0 +1,32 @@
+---
+format : pdf
+bibliography: ./references.bib
+---
+
+<!-- INFO : 
+
+Include shortcodes are equivalent to copying and pasting the text from the included file into the main file. This means that relative references (links, images, etc.) inside the included file resolve based on the directory of the main file not the included file.
+
+It also means that if the included file has a metadata block, that block will take effect in all included files. In most cases, having metadata blocks in an included file will cause unexpected behavior.
+
+-->
+
+
+# Aspects méthodologiques concernant les données sources {#sec-appendix-datasources}
+
+L’objectif principal du guide méthodoogique est de décrire les données sources qui sont utilisées dans le cadre de l’analyse spatiale de l’impact environnemental des incendies réalisée annuellement par l’OEIL ainsi que leurs limites, mais aussi de détailler les aspects méthodologiques concernant les modalités de croisement et d’analyse permettant ainsi de générer les résultats attendus.
+
+## Exploitation des données d’anomalies thermiques issues des satellites Aqua MODIS, Terra MODIS et Suomi NPP  {#sec-appendix-thermique}
+{{< include ./guide_methodo/part1-thermique.qmd >}}
+
+## Exploitation des données d’occupation du sol issues du satellite Sentinel 2 {#sec-methodosentinel2}
+{{< include ./guide_methodo/part1-S2.qmd >}}
+
+## Exploitation des données satellites en fonction de leur résolution spatiale
+
+{{< include ./guide_methodo/part1-resolution_spatial.qmd >}}
+
+## Exploitation des données pour caractériser l’impact des incendies
+
+{{< include ./guide_methodo/part1-caracteriser_impact.qmd >}}
+

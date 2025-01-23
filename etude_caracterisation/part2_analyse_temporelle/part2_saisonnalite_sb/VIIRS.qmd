@@ -1,0 +1,304 @@
+### Saisonnalité des surfaces brûlées 
+
+#### Informations 
+
+Le contexte climatique de la Nouvelle-Calédonie agit sur les périodes de l’année durant lesquelles le risque d’incendie est maximal. L’intense saison humide induit le développement d’un couvert végétal dense. Puis, la sortie de la saison humide est marquée par un climat transitoire sec, approximativement de mi-septembre à mi-novembre, provoquant une baisse des précipitations, une augmentation progressive des températures, et une accentuation des alizés. Cette transition a pour conséquence d’assécher la végétation jusqu’à l’arrivée de la saison sèche où le couvert végétal, en état de stress hydrique, représente un combustible idéal pour les incendies. 
+
+De plus, la localisation de la Nouvelle-Calédonie induit qu’elle est sujette à l’action du phénomène El Nino14. Ce dernier provoque une réduction de la pluviométrie impliquant un état de sécheresse accru, augmentant notablement le risque d’inflammabilité du couvert végétal. 
+
+Dans une démarche de vigilance, et dans le cadre du plan d’Organisation de la Réponse de Sécurité Civile (ORSEC) feux de forêt, une période de quatre mois a été mise en place afin de contrôler le risque d’incendie et de donner les meilleures chances à la sécurité civile d’intervenir dans les plus brefs délais. Cette période est appelée « saison administrative des feux de forêt » (SAFF), elle s’étend tous les ans du 15 septembre au 15 décembre. 
+
+#### Résultats 
+
+##### Saisonnalité des surfaces brûlées sur l’année 2020 
+
+La Figure 30 représente la comparaison des cumuls mensuels du nombre d’incendies détectés par MODIS et SUOMI NPP sur l’année 2020 en Nouvelle-Calédonie. 
+
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: histogramme cumul par mois 
+
+figureName = "fig-histo-cumul-feux-commune"
+
+modis=data_viirs_modis.read()
+snpp=data_viirs_snpp.read()
+
+snpp = snpp[(snpp['annee'] == Annee)]
+modis = modis[(modis['annee'] == Annee)]
+
+modis = modis.groupby('mois').size().reset_index(name='Nombre d\'incendies')
+snpp = snpp.groupby('mois').size().reset_index(name='Nombre d\'incendies')
+
+modis['Source'] = 'MODIS'
+snpp['Source'] = 'SNPP'
+
+df_concat = pd.concat([modis, snpp])
+mois_dict = {1: 'Janvier', 2: 'Février', 3: 'Mars', 4: 'Avril', 5: 'Mai', 6: 'Juin', 
+             7: 'Juillet', 8: 'Août', 9: 'Septembre', 10: 'Octobre', 11: 'Novembre', 12: 'Décembre'}
+
+df_concat['mois'] = df_concat['mois'].map(mois_dict)
+
+plot = df_concat.hvplot.bar(
+    x='mois', 
+    y='Nombre d\'incendies', 
+    by='Source', 
+    stacked=False, 
+    width=1000, 
+    height=400, 
+    legend='top_right', 
+    color='Source', 
+    cmap=['#E65C00','#FFA500'],
+    title=f"Comparaison des cumuls mensuels du nombre de détections issues de MODIS \n et de SUOMI NPP en {Annee} sur l’ensemble de la Nouvelle-Calédonie",
+    xlabel='Mois'
+).opts(multi_level=False)
+
+export_output(plot,figureName)
+
+plot
+```
+
+#####     Saisonnalité des surfaces brûlées sur différents historiques de données 
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: histogramme cumul viirs mediane
+
+figureName = "fig-histo-cumul-feux-mediane"
+
+modis=data_viirs_modis.read()
+snpp=data_viirs_snpp.read()
+
+modis = modis.groupby(['annee','mois']).size().reset_index(name='Nombre d\'incendies')
+snpp = snpp.groupby(['annee','mois']).size().reset_index(name='Nombre d\'incendies')
+
+modis_median = modis.groupby('mois')['Nombre d\'incendies'].median().reset_index()
+snpp_median = snpp.groupby('mois')['Nombre d\'incendies'].median().reset_index()
+
+modis_median['Source'] = 'MODIS'
+snpp_median['Source'] = 'SNPP'
+
+df_concat = pd.concat([modis_median, snpp_median])
+mois_dict = {1: 'Janvier', 2: 'Février', 3: 'Mars', 4: 'Avril', 5: 'Mai', 6: 'Juin', 
+             7: 'Juillet', 8: 'Août', 9: 'Septembre', 10: 'Octobre', 11: 'Novembre', 12: 'Décembre'}
+
+df_concat['mois'] = df_concat['mois'].map(mois_dict)
+
+plot = df_concat.hvplot.bar(
+    x='mois', 
+    y='Nombre d\'incendies', 
+    by='Source', 
+    stacked=False, 
+    width=1000, 
+    height=400, 
+    legend='top_left', 
+    color='Source', 
+    cmap=['#E65C00','#FFA500'],
+    title=f"Comparaison du nombre de détection médian issues de MODIS entre 2001 et {Annee} \n et de SUOMI NPP entre 2017 et {Annee} sur l’ensemble de la Nouvelle-Calédonie",
+    xlabel='Mois'
+).opts(multi_level=False)
+export_output(plot,figureName)
+
+plot
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: BOX PLOT viirs SAFF
+
+figureName = "fig-box_plot-viirs-saff"
+
+modis=data_viirs_modis.read()
+snpp=data_viirs_snpp.read()
+
+modis = modis[(modis['annee'] >= 2012) & (modis['mois'] >= 9)]
+snpp = snpp[(snpp['annee'] >= 2012) & (snpp['mois'] >= 9)]
+
+modis = modis.groupby(['annee','mois']).size().reset_index(name='Nombre d\'incendies')
+snpp = snpp.groupby(['annee','mois']).size().reset_index(name='Nombre d\'incendies')
+
+modis['Source'] = 'MODIS'
+snpp['Source'] = 'SNPP'
+
+df_concat = pd.concat([modis, snpp])
+mois_dict = {1: 'Janvier', 2: 'Février', 3: 'Mars', 4: 'Avril', 5: 'Mai', 6: 'Juin', 
+             7: 'Juillet', 8: 'Août', 9: 'Septembre', 10: 'Octobre', 11: 'Novembre', 12: 'Décembre'}
+
+df_concat['mois'] = df_concat['mois'].map(mois_dict)
+hover = HoverTool(tooltips=[
+    ("Mois", "@mois"),
+    ("Source", "@Source"),
+    ("Nombre d'incendies", "@{Nombre d'incendies}")
+])
+boxplot = hv.BoxWhisker(df_concat, ['mois', 'Source'], 'Nombre d\'incendies', label='Box Plot des Incendies par Mois et Source')
+boxplot.opts(
+    opts.BoxWhisker(
+        width=800,
+        height=400,
+        box_fill_color='Source',
+        cmap=['#E65C00','#FFA500'], 
+        xrotation=45,
+        show_legend=False,
+        xlabel='Mois',
+        ylabel='Nombre d\'incendies',
+        title=f"Box plots du nombre de surfaces brûlées détectées par MODIS et VIIRS \n pendant la période de la SAFF en Nouvelle-Calédonie pour la période 2012-{Annee}",
+        tools=[hover]
+    )
+)
+export_output(boxplot,figureName)
+
+boxplot
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab stats modis SAFF 2001 à annnée
+
+figureName = "fig-tab-stat-modis_saff"
+
+modis=data_viirs_modis.read()
+modis = modis[(modis['mois'] >= 9)]
+
+modis = modis.groupby(['annee','mois']).size().reset_index(name='Nombre d\'incendies')
+
+stats_par_mois = modis.groupby('mois')['Nombre d\'incendies'].agg(
+    Minimum='min',
+    Maximum='max',
+    Moyenne='mean',
+    Médiane='median',
+    Premier_Quartile='quantile',
+    Troisième_Quartile=lambda x: x.quantile(0.75)
+).reset_index()
+
+mois_dict = {1: 'Janvier', 2: 'Février', 3: 'Mars', 4: 'Avril', 5: 'Mai', 6: 'Juin', 
+             7: 'Juillet', 8: 'Août', 9: 'Septembre', 10: 'Octobre', 11: 'Novembre', 12: 'Décembre'}
+
+stats_par_mois['mois'] = stats_par_mois['mois'].map(mois_dict)
+
+table = hv.Table(stats_par_mois).opts(index_position=None)
+
+table.opts(
+    title=f"Statistiques descriptives du nombre d’incendies détectés par MODIS pendant la période de la SAFF en Nouvelle-Calédonie sur l’historique 2001 à {Annee}",
+    width=850,
+    height=400,
+)
+
+export_output(table,figureName)
+
+table
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab stats snpp VIIRS 2012 à annnée
+
+figureName = "fig-tab-stat-snpp_saff"
+
+snpp=data_viirs_snpp.read()
+snpp = snpp[(snpp['mois'] >= 9)]
+
+snpp = snpp.groupby(['annee','mois']).size().reset_index(name='Nombre d\'incendies')
+
+stats_par_mois = snpp.groupby('mois')['Nombre d\'incendies'].agg(
+    Minimum='min',
+    Maximum='max',
+    Moyenne='mean',
+    Médiane='median',
+    Premier_Quartile='quantile',
+    Troisième_Quartile=lambda x: x.quantile(0.75)
+).reset_index()
+
+mois_dict = {1: 'Janvier', 2: 'Février', 3: 'Mars', 4: 'Avril', 5: 'Mai', 6: 'Juin', 
+             7: 'Juillet', 8: 'Août', 9: 'Septembre', 10: 'Octobre', 11: 'Novembre', 12: 'Décembre'}
+
+stats_par_mois['mois'] = stats_par_mois['mois'].map(mois_dict)
+
+table = hv.Table(stats_par_mois).opts(index_position=None)
+
+table.opts(
+    title=f"Statistiques descriptives du nombre d’incendies détectés par SNPP pendant la période de la SAFF en Nouvelle-Calédonie sur l’historique 2012 à {Annee}",
+    width=850,
+    height=400,
+)
+
+export_output(table,figureName)
+
+table
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: hist mois incendie modis par annee 
+
+figureName = "fig-histo-saff_annee_modis"
+
+modis=data_viirs_modis.read()
+modis = modis[(modis['annee'] >= 2012) & (modis['mois'] >= 9)]
+
+modis = modis.groupby(['annee','mois']).size().reset_index(name='Nombre d\'incendies')
+
+mois_dict = {1: 'Janvier', 2: 'Février', 3: 'Mars', 4: 'Avril', 5: 'Mai', 6: 'Juin', 
+             7: 'Juillet', 8: 'Août', 9: 'Septembre', 10: 'Octobre', 11: 'Novembre', 12: 'Décembre'}
+
+modis['mois'] = modis['mois'].map(mois_dict)
+
+plot = modis.hvplot.bar(
+    x='mois', 
+    y='Nombre d\'incendies', 
+    by='annee', 
+    stacked=False, 
+    width=1000, 
+    height=400, 
+    legend='bottom', 
+    color='Source', 
+    cmap='Category20',
+    title=f"Cumul mensuel des surfaces brûlées détectées par MODIS \n pendant la période de la SAFF en Nouvelle-Calédonie de 2012 à {Annee}",
+    xlabel='Mois'
+).opts(multi_level=False)
+
+export_output(plot,figureName)
+
+plot
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: hist mois incendie snpp par annee 
+
+figureName = "fig-histo-saff_annee_snpp"
+
+snpp=data_viirs_snpp.read()
+snpp = snpp[(snpp['annee'] >= 2012) & (snpp['mois'] >= 9)]
+
+snpp = snpp.groupby(['annee','mois']).size().reset_index(name='Nombre d\'incendies')
+
+mois_dict = {1: 'Janvier', 2: 'Février', 3: 'Mars', 4: 'Avril', 5: 'Mai', 6: 'Juin', 
+             7: 'Juillet', 8: 'Août', 9: 'Septembre', 10: 'Octobre', 11: 'Novembre', 12: 'Décembre'}
+
+snpp['mois'] = snpp['mois'].map(mois_dict)
+
+plot = snpp.hvplot.bar(
+    x='mois', 
+    y='Nombre d\'incendies', 
+    by='annee', 
+    stacked=False, 
+    width=1000, 
+    height=400, 
+    legend='bottom', 
+    color='Source', 
+    cmap='Category20',
+    title=f"Cumul mensuel des surfaces brûlées détectées par SNPP \n pendant la période de la SAFF en Nouvelle-Calédonie de 2012 à {Annee}",
+    xlabel='Mois'
+).opts(multi_level=False)
+
+export_output(plot,figureName)
+
+plot
+```

@@ -1,0 +1,57 @@
+```{python}
+#| echo: false
+#| output: true
+#| label: méthode tab stats unite territoriale
+
+# Configurer les paramètres locaux pour utiliser un espace comme séparateur de milliers
+locale.setlocale(locale.LC_ALL, 'fr_FR.UTF-8')
+
+def format_number(x):
+    return locale.format_string("%d", x, grouping=True)
+
+def tableau_statistiques(data, level_them,label_them,groupby, annee, type_zone, columns,label_col, title,filtre, hauteurtab=400):
+    # Charger et filtrer les données
+    data = data.read()
+
+    if annee is None:
+        data_years = data[(data['annee'] <= Annee) & (data['level'] == type_zone)]
+    else:
+        data_years = data[(data['annee'] == annee) & (data['level'] == type_zone)]
+
+    if level_them is None:
+        grouped_data=data_years.groupby(groupby).sum().reset_index()
+    else:
+        grouped_data=data_years
+
+    if label_them is None:
+        pass
+    else:
+        grouped_data=grouped_data[grouped_data[level_them]==label_them]
+
+    if type_zone == 'ZEE':
+        grouped_data.loc[grouped_data['upper_libelle'] == 'ZONE ECONOMIQUE EXCLUSIVE (ZEE) DE LA NOUVELLE-CALEDONIE', 'upper_libelle'] = 'Nouvelle-Calédonie'
+    else:
+        pass
+
+    grouped_data = grouped_data[(grouped_data[filtre] != 0) & (grouped_data[filtre].notna())]
+
+    float_columns = [col for col in grouped_data.columns if grouped_data[col].dtype == 'float64']
+    int_columns = [col for col in grouped_data.columns if grouped_data[col].dtype == 'int64']
+
+    grouped_data[float_columns] = grouped_data[float_columns].applymap(lambda x: f"{x:.2f}")
+    grouped_data[int_columns] = grouped_data[int_columns].applymap(lambda x: f"{x:.0f}")
+    
+    grouped_data= grouped_data[columns]
+    # Renommer les colonnes
+    grouped_data.columns = label_col
+
+    table = hv.Table(grouped_data).opts(index_position=None)
+
+    table.opts(
+        title=title,
+        width=850,
+        height=hauteurtab,
+    )
+    return table
+
+```

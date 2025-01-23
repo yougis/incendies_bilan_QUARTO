@@ -1,0 +1,217 @@
+#### Informations
+
+Les périmètres d’alertes sur la faune et la flore menacées représentent les zones où des espèces menacées ont été observées en Nouvelle-Calédonie (Figure A METTRE A JOUR).  
+
+Les données d’occurrence des espèces de faune et de flore ont été compilées par l’association Endemia et le Red List Authority (RLA) Flore NC dans le cadre de l’évaluation du risque d’extinction dans la Liste rouge mondiale des espèces menacées (UICN). Elles proviennent de sources diverses : instituts de recherche (IRD, IAC, CNRS…), herbiers, collectivités, entreprises (opérateurs miniers notamment), particuliers, etc. et ont été fiabilisées par Endemia et le RLA Flore NC. 
+
+Un tampon variable est appliqué à chaque occurrence en fonction de la prise de coordonnées GPS et de la date de l’observation. Pour les coordonnées prises directement sur le terrain, un tampon de 100 mètres est appliqué pour ne pas communiquer la localisation précise d’une espèce menacée ou sensible. Si les coordonnées ont été complétées a posteriori, elles sont considérées comme imprécises et le tampon appliqué est plus important, à savoir 200 mètres pour les observations effectuées après l’an 2000, et 500 mètres pour les plus anciennes, et donc potentiellement les moins précises. 
+
+Le degré de menace est défini par l’Autorité Liste rouge locale (RLA Flore NC). Ce groupe d’expertise botanique, animé et coordonné par Endemia depuis 2014, est agréé par l’UICN et chargé d’évaluer les espèces de plantes de Nouvelle-Calédonie dans la liste rouge mondiale des espèces menacées[^27]. Fin 2017, Endemia a mis à profit son expérience sur ce projet pour étendre ses travaux à un premier groupe faunistique, à savoir les lézards (geckos et scinques) du territoire. 
+
+L’évaluation est effectuée sur la base des données disponibles et du dire d’experts. Sont considérés comme critères la répartition de l’espèce, les menaces pesant sur elle ou sur son milieu, les tailles de population et leur évolution dans le temps, etc. 
+
+Ne sont considérées comme menacées que les espèces classées dans les catégories suivantes : en danger critique d’extinction (CR), en danger (EN) et vulnérable (VU). Un ensemble de critères quantitatifs permet l’inscription dans ces différentes catégories. Dès qu’un taxon remplit un de ces critères, il peut être classé dans la catégorie de menace correspondante[^28].
+
+[^27]:Pour plus d’informations sur la liste rouge, se référer au lien suivant : https://www.iucnredlist.org
+[^28]: Pour plus d’informations sur les différents critères et catégories de la liste rouge UICN, se référer au lien suivant : https://www.iucn.org/fr
+
+
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab liste rouge de l'UICN
+
+figureName = "Tableau de discrétisation des catégories CR, EN et VU (Source : UICN. (2012). Catégories et Critères de la Liste rouge de l’UICN"
+
+```
+
+Dans le cadre du présent travail, l’ensemble des occurrences des espèces classées CR, EN ont été étudiées. La catégorie Vulnérable a aussi été intégrée. Toutefois, dans cette catégorie, seules les espèces classées sur la base d’une distribution très restreinte et d’une menace potentielle pouvant les conduire rapidement vers CR ou EX (critère D2) ont été ajoutées.  
+
+Un croisement automatique a été effectué entre la localisation des zones brûlées et les différents périmètres puis une validation a été mise en œuvre à dire d’experts pour garantir la pertinence des résultats présentés. Cela a pu conduire ponctuellement à supprimer certains recoupements non pertinents mais aussi à en ajouter lorsque les surfaces brûlées touchaient des habitats supposés d’espèces menacées. 
+
+Il est important de noter que ces données ne sont pas exhaustives à l’échelle du territoire ou des groupes d’espèces évalués. 
+
+Sur le plan de l’évaluation, les travaux du RLA Flore NC sont en cours, et seule une partie des quelques 3 600 taxons de plantes vasculaires de NC[^29] ont été examinées jusqu’ici. Fin 2020, plus de 4 300 espèces avaient été évaluées, dont 1 200 possèdent un statut localement validé par le groupe d’experts. Les données inclues dans le présent travail ne concernent donc qu’un tiers environ de la flore calédonienne.
+
+[^29]: Munzinger J., Morat Ph., Jaffré T., Gâteblé G., Pillon Y., Rouhan G., Bruy, D., Veillon J.-M., & M. Chalopin. [continuously updated]. FLORICAL: Checklist of the vascular indigenous flora of New Caledonia. (http://publish.plantnet-project.org/project/florical)  
+
+Pour les lézards, la totalité de la centaine d’espèces présentes sur le territoire a été évaluée, mais au 1er décembre 2019, les résultats sont encore en cours de révision. Les catégories indiquées ici sont provisoires, elles ont été proposées par le RLA Flore NC à l’UICN, dans l’attente d’une validation, elles sont à considérer avec précaution. 
+
+Sur le plan géographique, tous les milieux naturels de Nouvelle-Calédonie n’ont pas été prospectés de façon homogène. Ceci est dû à des aspects de faisabilité (nombre de sites sont très peu accessibles, notamment en montagne), ou à la nature même du milieu, qui ne présente parfois pas d’intérêt écologique fort (milieux urbains ou naturels dégradés, type savane). A titre indicatif, sur les 5 561 mailles de 2*2 kilomètres que compte le carroyage DFCI sur le territoire, 2 554 affichent au moins une donnée d’occurrence, soit environ 46%. 
+
+Mais ce chiffre est également à prendre avec beaucoup de précautions car la prospection sur ces mailles est loin d’être homogène. Si le nombre d’occurrences par maille varie de 1 à 1235, la moyenne ne se situe qu’à environ 37 données d’occurrences par maille, et plus de la moitié d’entre elles possèdent 10 données ou moins. La prospection peut donc également s’avérer incomplète sur les mailles prospectées. 
+
+La base de données utilisée pour le présent rapport apparait différente de celle utilisée pour l’analyse spatiale de l’impact environnemental des précédents bilans comme le montre le tableau suivant :
+
+::: {#fig-Nombre-occurences-annee}
+| Année | Nombre d’occurrences |
+|-------|----------------------|
+| 2017  | 4 119                |
+| 2018  | 4 692                |
+| 2019  | 5 266                |
+| 2020  | 6 451                |
+| 2021  | 6 451                |
+:::
+
+Cette différence dans les données est notamment due au fait que de nouvelles espèces ont été ajoutées, telles que certaines espèces classées « Vulnérables ». Le Tableau A METTRE A JOUR montre ainsi l’évolution du nombre d’espèces floristiques et faunistiques considérées entre les bilans 2017 à 2019.
+
+::: {#fig-Nombre-especes-considerees-sur-les-bilans-2017-a-2019}
+| Type                 | 2021 | 2020 | 2019 | 2018 | 2017 |
+|----------------------|------|------|------|------|------|
+| Espèces faunistiques | 75   | 75   | 75   | 75   | 68   |
+| Espèces floristiques | 587  | 587  | 509  | 448  | 378  |
+:::
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: carte repartition faune flore menacee
+
+figureName = "carte_faune_flore_menacees"
+viz_map_nc = carte_bdenv(
+    data_carto=commune,
+    data_env=espece_menacees,
+    cadre=bb_,
+    color_env = ['#FF0000', '#FFA500', '#FFFF00'],
+    title=f"Carte de répartition des périmètres de faune et flore menacée",
+    tolerance=2000,
+    textlegende='test',
+    nb_strat=3,
+    level_strate='categoriee',
+    pos_legend=35000,
+    label_legend_env='Périmètres endémia',
+    texte_sources='Endémia / OEIL'
+
+)
+
+export_output(viz_map_nc,figureName)
+
+```
+
+#### Résultats par périmètre d’alerte
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab nb PA touches par sb echelon territorial
+
+figureName = "fig-tab-echelon-nc-micro-endemisme"
+table_province = tableau_statistiques(
+    data=data_endemia_categorie,
+    level_them='categoriee',
+    label_them=None,
+    groupby='upper_libelle',
+    annee=Annee,
+    type_zone='ZEE',
+    columns=['categoriee','nb_theme_indic'],
+    label_col=['Catégorie','Nombre de PA touchés par les surfaces brûlées'],
+    title= f"Résultats à l'échelon territorial du nombre de périmètre d'alertes des espèces menacées touchés par les incendies par classement IUCN en {Annee}",
+    filtre='nb_theme_indic',
+    hauteurtab=500
+)
+#export_output(pie_chart,figureName)
+table_province
+
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab nb PA touches par sb echelon provincial
+
+figureName = "fig-tab-echelon-nc-micro-endemisme"
+table_province = tableau_statistiques(
+    data=data_endemia_categorie,
+    level_them='categoriee',
+    label_them=None,
+    groupby='upper_libelle',
+    annee=Annee,
+    type_zone='province',
+    columns=['upper_libelle','nb_theme','nb_theme_indic','indicateur_3'],
+    label_col=['Territoire concerné','Nombre de PA par province','Nombre de PA menacés impactés par les surfaces brûlées','Part des périmètres impactés par les surfaces brûlées (%)'],
+    title= f"Résultats à l'échelon provincial pour les périmètres d’alertes sur la faune et la flore menacées en {Annee}",
+    filtre='nb_theme_indic',
+    hauteurtab=500
+)
+#export_output(pie_chart,figureName)
+table_province
+
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: diagramme PA nouvellement impactes par sb
+
+import plotly.graph_objects as go
+
+figureName = "diag-zb-new-PA"
+
+data = data_perimetre_especes_endemia_impact.read()
+data_filtered = data[(data['annee_1'] == 2017) & (data['annee_2'] == Annee) & (data['type_spatial'] == 'ZEE')]    
+
+labels = ['Nouvelle superficie impactée', 'Superficie déjà Impactée']
+values = [data_filtered['ratio_nouvel_impact'].sum(), data_filtered['ratio_deja_impact'].sum()]
+
+fig = go.Figure(data=[go.Pie(labels=labels, values=values,marker_colors=['#d62728','#ff7f0e'])])
+#export_output(pie_chart,figureName)
+
+fig
+
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab impact zb sur PA echelon communal
+
+figureName = "fig-tab-echelon-nc-especes-menacees-commune"
+
+table_province = tableau_statistiques(
+    data=data_endemia_categorie,
+    level_them=None,
+    label_them=None,
+    groupby=['upper_libelle','categoriee'],
+    annee=Annee,
+    type_zone='commune',
+    columns=['upper_libelle','categoriee','nb_theme','nb_theme_indic','nb_indic','superficie_ha'],
+    label_col=['Territoire concerné','Catégorie','Nombre de PA par catégories','Nombre de PA impactés par les surfaces brûlées','Nombre de surfaces brûlées','Surface brûlée (ha)'],
+    title= f"Répartition de l’impact des surfaces brûlées sur les périmètres d’alertes affectés pour la faune et la flore menacées par commune en Nouvelle-Calédonie pour l’année {Annee}",
+    filtre='nb_theme_indic',
+    hauteurtab=500
+)
+#export_output(pie_chart,figureName)
+table_province
+
+```
+
+#### Résultats par espèce
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab impact zb sur especes menacees
+
+figureName = "fig-tab-echelon-nc-especes-menacees-taxon"
+
+table_province = tableau_statistiques(
+    data=data_endemia_taxon,
+    level_them=None,
+    label_them=None,
+    groupby=['nomtaxon','categoriee'],
+    annee=Annee,
+    type_zone='ZEE',
+    columns=['nomtaxon','categoriee','nb_theme_indic'],
+    label_col=['Taxons impactés par les incendies','Catégorie','Fréquence'],
+    title= f"Récapitulatif des espèces menacées impactées par les feux en {Annee}",
+    filtre='nb_theme_indic',
+    hauteurtab=500
+)
+#export_output(pie_chart,figureName)
+table_province
+
+```
+
+
+

@@ -1,0 +1,169 @@
+#### Informations
+
+Les bassins versants représentent des unités drainées par un cours d’eau principal et ses affluents. Ils alimentent des captages d’eaux de surface ou d’eaux souterraines destinés à l’alimentation en eau potable des populations. Ces bassins versants sont au nombre 273 essentiellement répartis sur la Grande Terre comme on peut le constater sur la Figure A METTRE A JOUR pour une superficie de 193 291,55 hectares.
+
+#### Résultats
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab impact zb sur bv eau potable echelon territorial
+
+figureName = "fig-tab-stats-bv-territorial"
+table_province = tableau_statistiques(
+    data=data_bv,
+    level_them=None,
+    label_them=None,
+    groupby=['upper_libelle'],
+    annee=Annee,
+    type_zone='ZEE',
+    columns=['upper_libelle','sup_total_theme','superficie_ha','nb_theme_indic'],
+    label_col=['Territoire concerné','Superficie totale','Surface brûlée (ha)','Nombre de surfaces brûlées par bassins versants'],
+    title= f"Résultat à l'échelon territorial pour les bassins versants producteurs d'eau potable pour l’année {Annee}",
+    filtre='superficie_ha',
+    hauteurtab=500
+)
+#export_output(pie_chart,figureName)
+table_province
+
+```
+
+::: {#fig-tab-stats-bv-territorial}
+
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab impact zb sur bv eau potable echelon provincial
+
+figureName = "fig-tab-stats-bv-province"
+table_province = tableau_statistiques(
+    data=data_bv,
+    level_them=None,
+    label_them=None,
+    groupby=['upper_libelle'],
+    annee=Annee,
+    type_zone='province',
+    columns=['upper_libelle','sup_total_theme','superficie_ha','nb_theme_indic','indicateur_3'],
+    label_col=['Territoire concerné','Superficie totale','Surface brûlée (ha)','Nombre de surfaces brûlées par bassins versants','Part de la superficie impactée par les surfaces brûlées (%)'],
+    title= f"Résultat à l'échelon territorial pour les bassins versants producteurs d'eau potable pour l’année {Annee}",
+    filtre='superficie_ha',
+    hauteurtab=500
+)
+#export_output(pie_chart,figureName)
+table_province
+
+
+```
+
+::: {#fig-tab-stats-bv-province}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-tab-stats-bv-province
+#| fig-cap: "Résultats à l’échelon provincial pour les bassins versants producteurs d’eau potable"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-tab-stats-bv-territorial
+#| fig-cap: "Résultats à l'échelon territorial pour les bassins versants producteurs d'eau potable zb ancienne"
+
+import plotly.graph_objects as go
+
+figureName = "diag-zb-new-bv"
+
+data = data_bv_impact.read()
+data_filtered = data[(data['annee_1'] == 2017) & (data['annee_2'] == Annee) & (data['type_spatial'] == 'ZEE')]    
+
+labels = ['Nouvelle superficie impactée', 'Superficie déjà Impactée']
+values = [data_filtered['ratio_nouvel_impact'].sum(), data_filtered['ratio_deja_impact'].sum()]
+
+fig = go.Figure(data=[go.Pie(labels=labels, values=values,marker_colors=['#d62728','#ff7f0e'])])
+#export_output(pie_chart,figureName)
+
+fig
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab detail impact zb sur bv eau potable
+
+figureName = "fig-tab-stats-bv-province"
+table_province = tableau_statistiques(
+    data=data_bv_detail,
+    level_them=None,
+    label_them=None,
+    groupby=['upper_libelle','intitule'],
+    annee=Annee,
+    type_zone='commune',
+    columns=['upper_libelle','intitule','superficie_ha'],
+    label_col=['Territoire concerné','Bassin versant','Surface brûlée (ha)'],
+    title= f"Détails de l'impact des surfaces brûlées sur les bassins versants producteurs d'eau potable pour l’année {Annee}",
+    filtre='superficie_ha',
+    hauteurtab=500
+)
+#export_output(pie_chart,figureName)
+table_province
+
+
+```
+
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: carte impact zb sur bv eau potable
+
+figureName = "fig-carte-impact-sb-bv-prod-eau-potable"
+
+viz_map_nc = carte_impact_zb_bdenv(
+    data_carto=nc_,
+    data_feux=data_feux,
+    data_env=bv,
+    cadre=bb_,
+    color='#8B0000',
+    color_env='#6bc3e7',
+    title=f"Carte de l'impact des surfaces brûlées sur les bassins versants producteurs d'eau potable en {Annee}",
+    tolerance=2000,
+    textlegende='test',
+    nb_strat=1,
+    level_strate=None,
+    pos_legend=7000,
+    label_legend='Zones brûlées',
+    label_legend_env="Bassins versants producteurs d'eau potable",
+    texte_sources='Gouvernement de la Nouvelle-Calédonie / OEIL / Copernicus'
+
+)
+
+export_output(viz_map_nc,figureName)
+
+```
+
+::: {#fig-carte-impact-sb-bv-prod-eau-potable}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-carte-impact-sb-bv-prod-eau-potable
+#| fig-cap: "Impact des zones brûlées (Sentinel 2) sur les bassins versants producteurs d'eau potable"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::

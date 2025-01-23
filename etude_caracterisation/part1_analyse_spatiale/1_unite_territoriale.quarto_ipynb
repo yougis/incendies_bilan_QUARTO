@@ -1,0 +1,825 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "#### Répartition en Nouvelle-Calédonie\n",
+        "\n",
+        "À l’échelle de la Nouvelle-Calédonie, les résultats sont présentés pour les données du capteur VIIRS du satellite SUOMI NPP et sur les données issues de la chaîne de traitement des images satellitaires de Sentinel 2.\n",
+        "\n",
+        "##### Informations\n"
+      ],
+      "id": "d1c39812"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| output: true\n",
+        "#| label: Carte localisation des feux sentinel\n",
+        "\n",
+        "#A FAIRE"
+      ],
+      "id": "Carte-localisation-des-feux-sentinel",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Les méthodes de détections des surfaces brûlées ne sont pas les mêmes pour ces deux satellites. Le capteur VIIRS du satellite SUOMI NPP s’appuie sur une détection de points chauds à la surface de la terre possédant une résolution spatiale de 375 mètres, et ce, en pointant le pixel concerné par une augmentation de la chaleur. Le point chaud est représenté par un pixel de 375 mètres de côté, ainsi on a une exagération de la superficie des surfaces incendiées issues du capteur VIIRS en comparaison avec leur taille réelle. La chaîne de traitement des images satellitaires s’appuie quant à elle sur des images Sentinel 2 possédant au mieux 10 mètres de résolution spatiale. A la différence du capteur VIIRS, les détections ne correspondent pas à des anomalies thermiques, mais elles se basent en partie sur l’analyse de l’activité chlorophyllienne de la végétation. Les surfaces détectées par Sentinel 2 sont donc plus précises en termes de localisation, et de superficie. Il est tenu de souligner que la chaîne de traitement des images satellitaires de Sentinel 2 possède des limites qui induisent une sous-estimation probable de la superficie des surfaces incendiées [Annexe @sec-methodosentinel2]. Ces différences de méthodologie expliquent que les quantifications en nombre des surfaces brûlées et en hectares de surfaces brûlées ne soient pas exactement les mêmes [^1].\n",
+        "\n",
+        "Une localisation des zones brûlées issus de Sentinel 2 peut être observée sur la Figure @tab-stats-feux-en-NC-Sentinel METTRE A JOUR.\n",
+        "\n",
+        "[^1]: Pour plus de détails, se référer à la partie  1 du guide méthodologique en appendices\n",
+        "\n",
+        "##### Résultats\n"
+      ],
+      "id": "bb8e388c"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| output: true\n",
+        "#| label: tab-stats-feux-en-NC-Sentinel\n",
+        "#| warning: false\n",
+        "#| fig-cap: Résultats des zones brûlées (Sentinel 2) en Nouvelle-Calédonie\n",
+        "\n",
+        "figureName = \"Résultats des zones brûlées (Sentinel 2) en Nouvelle-Calédonie\"\n",
+        "\n",
+        "#A FAIRE"
+      ],
+      "id": "tab-stats-feux-en-NC-Sentinel",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| output: true\n",
+        "#| label: tab stats feux en NC VIIRS\n",
+        "#| warning: false\n",
+        "#| fig-cap: Résultats des incendies détectés par le capteur VIIRS-SUOMI NPP en Nouvelle-Calédonie\n",
+        "\n",
+        "figureName = \"Résultats des incendies détectés par le capteur VIIRS-SUOMI NPP en Nouvelle-Calédonie\"\n",
+        "\n",
+        "#A FAIRE"
+      ],
+      "id": "tab-stats-feux-en-NC-VIIRS",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| output: true\n",
+        "#| label: diagramme comparaison des superfices nouvellement impactés\n",
+        "#| warning: false\n",
+        "#| fig-cap: Comparaison de la superficie déjà incendiée sur les précédentes années\n",
+        "\n",
+        "figureName = \"Comparaison de la superficie déjà incendiée sur les précédentes années\"\n",
+        "\n",
+        "#A FAIRE"
+      ],
+      "id": "diagramme-comparaison-des-superfices-nouvellement-impactes",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "#### Répartition par province\n"
+      ],
+      "id": "8dd2fbe9"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| warning: false\n",
+        "#| label: Carte choroplethe province\n",
+        "\n",
+        "# Définir le nom de la figure\n",
+        "figureName = \"fig-part-sb-province\"\n",
+        "\n",
+        "viz_map_choropleth_province = carte_choroplethe(\n",
+        "    geodata=province,\n",
+        "    data=data_feux_analys,\n",
+        "    annee=Annee,\n",
+        "    tolerance=3000,\n",
+        "    title= f\"Part de la superficie brûlée par province en {Annee}\",\n",
+        "    custom_cmap=custom_cmap,\n",
+        "    x=x,\n",
+        "    y=y,\n",
+        "    how='left',\n",
+        "    global_min=global_min,\n",
+        "    global_max=global_max\n",
+        ")\n",
+        "# export des figures en images pour les afficher dans le rapport \n",
+        "saving = hv.save(viz_map_choropleth_province, f'{export_file_path}{figureName}.png', backend='bokeh',  title=f'{figureName}', fmt='png')\n",
+        "saving = hv.save(viz_map_choropleth_province, f'{export_file_path}{figureName}.html', backend='bokeh',  title=f'{figureName}', fmt='html')\n",
+        "\n",
+        "viz_map_choropleth_province"
+      ],
+      "id": "Carte-choroplethe-province",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "::: {#fig-map-cloro-feux-province}"
+      ],
+      "id": "5f61fc4e"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| warning: false\n",
+        "#| label: fig-part-sb-province\n",
+        "#| fig-cap: Part de la superficie brûlée par province\n",
+        "\n",
+        "display(\n",
+        "    Markdown(\n",
+        "        f\"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)\"\n",
+        "        )\n",
+        ")"
+      ],
+      "id": "fig-part-sb-province",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        ":::\n"
+      ],
+      "id": "3451e56d"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| warning: false\n",
+        "#| label: tab stats feux par province\n",
+        "\n",
+        "figureName = \"fig-tab-stats-feux-province\"\n",
+        "\n",
+        "table_province = tableau_statistiques(\n",
+        "    data=data_feux_analys,\n",
+        "    annee=Annee,\n",
+        "    type_zone='province',\n",
+        "    title= f\"Répartition par province des zones brûlées (Sentinel 2) pour l'année {Annee}\",\n",
+        "    hauteurtab=100\n",
+        ")\n",
+        "\n",
+        "# export des figures en images pour les afficher dans le rapport \n",
+        "saving = hv.save(table_province, f'{export_file_path}{figureName}.png', backend='bokeh',  title=f'{figureName}', fmt='png')\n",
+        "saving = hv.save(table_province, f'{export_file_path}{figureName}.html', backend='bokeh',  title=f'{figureName}', fmt='html')\n",
+        "\n",
+        "table_province"
+      ],
+      "id": "tab-stats-feux-par-province",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "::: {#fig-tab-stats-feux-province}\n"
+      ],
+      "id": "1d3f581b"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| warning: false\n",
+        "#| label: fig-tab-stats-feux-province\n",
+        "#| fig-cap: Répartition par province des zones brûlées (Sentinel 2)\n",
+        "\n",
+        "\n",
+        "display(\n",
+        "    Markdown(\n",
+        "        f\"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)\"\n",
+        "        )\n",
+        ")"
+      ],
+      "id": "fig-tab-stats-feux-province",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        ":::\n"
+      ],
+      "id": "a37c947b"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| warning: false\n",
+        "#| label: graph en ligne évolution de sb par province\n",
+        "\n",
+        "figureName = \"fig-graph-evol-feux-province\"\n",
+        "\n",
+        "graph_province = graph_evolution(\n",
+        "    data=data_feux_analys,\n",
+        "    type_zone='province',\n",
+        "    start_year=2017,\n",
+        "    end_year=Annee,\n",
+        "    title=f\"Evolution de la superficie brûlée (Sentinel 2) de 2017 à {Annee}\"\n",
+        ")\n",
+        "\n",
+        "# export des figures en images pour les afficher dans le rapport \n",
+        "saving = hv.save(graph_province, f'{export_file_path}{figureName}.png', backend='bokeh',  title=f'{figureName}', fmt='png')\n",
+        "saving = hv.save(graph_province, f'{export_file_path}{figureName}.html', backend='bokeh',  title=f'{figureName}', fmt='html')\n",
+        "\n",
+        "graph_province"
+      ],
+      "id": "graph-en-ligne-evolution-de-sb-par-province",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "::: {#fig-graph-evol-feux-province}\n"
+      ],
+      "id": "c1e62ad9"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| warning: false\n",
+        "#| label: fig-graph-evol-feux-province\n",
+        "#| fig-cap: Evolution de la superficie brûlée (Sentinel 2)\n",
+        "\n",
+        "display(\n",
+        "    Markdown(\n",
+        "        f\"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)\"\n",
+        "        )\n",
+        ")"
+      ],
+      "id": "fig-graph-evol-feux-province",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        ":::\n",
+        "\n",
+        "#### Répartition par commune\n"
+      ],
+      "id": "906cff13"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| warning: false\n",
+        "#| label: Carte choroplèthe commune\n",
+        "\n",
+        "figureName = \"fig-carte-choro-feux-commune\"\n",
+        "\n",
+        "viz_map_choropleth_commune = carte_choroplethe(\n",
+        "    geodata=commune,\n",
+        "    data=data_feux_analys,\n",
+        "    annee=Annee,\n",
+        "    tolerance=1000,\n",
+        "    title= f\"Part de la superficie brûlée par commune en {Annee}\",\n",
+        "    custom_cmap=custom_cmap,\n",
+        "    x=x,\n",
+        "    y=y,\n",
+        "    how='left',\n",
+        "    global_min=global_min,\n",
+        "    global_max=global_max\n",
+        ")\n",
+        "\n",
+        "# export des figures en images pour les afficher dans le rapport \n",
+        "saving = hv.save(viz_map_choropleth_commune, f'{export_file_path}{figureName}.png', backend='bokeh',  title=f'{figureName}', fmt='png')\n",
+        "saving = hv.save(viz_map_choropleth_commune, f'{export_file_path}{figureName}.html', backend='bokeh',  title=f'{figureName}', fmt='html')\n",
+        "\n",
+        "viz_map_choropleth_commune"
+      ],
+      "id": "Carte-choroplethe-commune",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "::: {#fig-carte-cloro-feux-commune}\n"
+      ],
+      "id": "98d4fd80"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| warning: false\n",
+        "#| label: fig-carte-choro-feux-commune\n",
+        "#| fig-cap: Part de la superficie brûlée par commune\n",
+        "\n",
+        "display(\n",
+        "    Markdown(\n",
+        "        f\"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)\"\n",
+        "        )\n",
+        ")"
+      ],
+      "id": "fig-carte-choro-feux-commune",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        ":::\n"
+      ],
+      "id": "6020c56b"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| warning: false\n",
+        "#| label: tab stats feux commune\n",
+        "\n",
+        "figureName = \"fig-tab-stat-feux-commune\"\n",
+        "\n",
+        "table_commune = tableau_statistiques(\n",
+        "    data=data_feux_analys,\n",
+        "    annee=Annee,\n",
+        "    type_zone='commune',\n",
+        "    title= f\"Répartition par commune des zones brûlées (Sentinel 2) pour l'année {Annee}\"\n",
+        ")\n",
+        "\n",
+        "# export des figures en images pour les afficher dans le rapport \n",
+        "saving = hv.save(table_commune, f'{export_file_path}{figureName}.png', backend='bokeh',  title=f'{figureName}', fmt='png')\n",
+        "saving = hv.save(table_commune, f'{export_file_path}{figureName}.html', backend='bokeh',  title=f'{figureName}', fmt='html')\n",
+        "\n",
+        "table_commune"
+      ],
+      "id": "tab-stats-feux-commune",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "::: {#fig-tab-stat-feux-commune}\n"
+      ],
+      "id": "5e92a27f"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| warning: false\n",
+        "#| label: fig-tab-stat-feux-commune\n",
+        "#| fig-cap: Répartition par commune des zones brûlées (Sentinel 2)\n",
+        "\n",
+        "display(\n",
+        "    Markdown(\n",
+        "        f\"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)\"\n",
+        "        )\n",
+        ")"
+      ],
+      "id": "fig-tab-stat-feux-commune",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        ":::\n"
+      ],
+      "id": "9472480b"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| warning: false\n",
+        "#| label: histogramme cumul par commune\n",
+        "\n",
+        "figureName = \"fig-histo-cumul-feux-commune\"\n",
+        "\n",
+        "\n",
+        "# Charger et filtrer les données\n",
+        "data = data_feux_analys.read()\n",
+        "data_filtered = data[(data['annee'] >= 2017) & (data['annee'] <= 2021) & (data['type'] == 'commune')]\n",
+        "\n",
+        "# Grouper par 'dimension_spatiale' et 'annee', puis sommer la 'superficie_indic_ha'\n",
+        "grouped_data = data_filtered.groupby(['dim', 'annee'])['superficie_indic_ha'].sum().reset_index()\n",
+        "\n",
+        "# Calculer la somme totale de 'superficie_indic_ha' pour chaque 'dim'\n",
+        "total_superficie = grouped_data.groupby('dim')['superficie_indic_ha'].sum().reset_index()\n",
+        "\n",
+        "# Trier par ordre décroissant\n",
+        "total_superficie = total_superficie.sort_values(by='superficie_indic_ha', ascending=True)\n",
+        "\n",
+        "# Convertir 'dim' en catégorie avec l'ordre défini par 'total_superficie'\n",
+        "grouped_data['dim'] = pd.Categorical(grouped_data['dim'], categories=total_superficie['dim'], ordered=True)\n",
+        "\n",
+        "# Trier grouped_data par 'dim' pour refléter l'ordre des catégories\n",
+        "grouped_data = grouped_data.sort_values(by='dim')\n",
+        "\n",
+        "# Ajouter une colonne avec les valeurs arrondies à 2 chiffres après la virgule\n",
+        "grouped_data['superficie_indic_ha_formatted'] = grouped_data['superficie_indic_ha'].apply(lambda x: f\"{x:.2f}\")\n",
+        "\n",
+        "# Créer un objet Bars en utilisant HoloViews\n",
+        "bars = hv.Bars(grouped_data, kdims=['dim', 'annee'], vdims=['superficie_indic_ha', 'superficie_indic_ha_formatted'])\n",
+        "\n",
+        "palette = ['#620F46', '#9F0328', '#FB8E2C', '#EA6615', '#0F515F', '#DBB28B']\n",
+        "\n",
+        "hover = HoverTool(tooltips=[\n",
+        "    (\"Commune\", \"@dim\"),\n",
+        "    (\"Année\", \"@annee\"),\n",
+        "    (\"Superficie brûlées (ha)\", \"@superficie_indic_ha_formatted\")\n",
+        "])\n",
+        "\n",
+        "bars.opts(\n",
+        "    opts.Bars(\n",
+        "        stacked=True,\n",
+        "        xlabel='Commune',\n",
+        "        ylabel='Superficie brûlée (ha)',\n",
+        "        color=hv.Cycle(values=palette),\n",
+        "        legend_position='right',\n",
+        "        width=900,\n",
+        "        height=500,\n",
+        "        xrotation=45,\n",
+        "        tools=[hover],\n",
+        "        line_color='white',\n",
+        "        invert_axes=True,\n",
+        "        show_grid=True,\n",
+        "    )\n",
+        ")\n",
+        "\n",
+        "# export des figures en images pour les afficher dans le rapport \n",
+        "saving = hv.save(bars, f'{export_file_path}{figureName}.png', backend='bokeh',  title=f'{figureName}', fmt='png')\n",
+        "saving = hv.save(bars, f'{export_file_path}{figureName}.html', backend='bokeh',  title=f'{figureName}', fmt='html')\n",
+        "\n",
+        "# Afficher le graphique\n",
+        "bars\n"
+      ],
+      "id": "histogramme-cumul-par-commune",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "::: {#fig-histo-cumul-feux-commune}\n"
+      ],
+      "id": "5bcc6936"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| warning: false\n",
+        "#| label: fig-histo-cumul-feux-commune\n",
+        "#| fig-cap: Histogramme des cumuls des feux par commune\n",
+        "\n",
+        "display(\n",
+        "    Markdown(\n",
+        "        f\"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)\"\n",
+        "        )\n",
+        ")"
+      ],
+      "id": "fig-histo-cumul-feux-commune",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        ":::\n",
+        "\n",
+        "#### Répartition par aire coutumière\n"
+      ],
+      "id": "755ff4a9"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| warning: false\n",
+        "#| label: Carte choroplèthe aire coutumière\n",
+        "\n",
+        "figureName = \"fig-carte-choro-feux-aire_coutumiere\"\n",
+        "\n",
+        "viz_map_choropleth_aire = carte_choroplethe(\n",
+        "    geodata=aire_coutumiere,\n",
+        "    data=data_feux_analys,\n",
+        "    annee=Annee,\n",
+        "    tolerance=1000,\n",
+        "    title=f\"Part de la superficie brûlée par aire coutumière en {Annee}\",\n",
+        "    custom_cmap=custom_cmap,\n",
+        "    x=x,\n",
+        "    y=y,\n",
+        "    how='left',\n",
+        "    global_min=global_min,\n",
+        "    global_max=global_max\n",
+        ")\n",
+        "\n",
+        "# export des figures en images pour les afficher dans le rapport \n",
+        "saving = hv.save(viz_map_choropleth_aire, f'{export_file_path}{figureName}.png', backend='bokeh',  title=f'{figureName}', fmt='png')\n",
+        "saving = hv.save(viz_map_choropleth_aire, f'{export_file_path}{figureName}.html', backend='bokeh',  title=f'{figureName}', fmt='html')\n",
+        "\n",
+        "viz_map_choropleth_aire"
+      ],
+      "id": "Carte-choroplethe-aire-coutumiere",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "::: {#fig-carte-cloro-feux-aire_coutumiere}\n"
+      ],
+      "id": "044d5453"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| warning: false\n",
+        "#| label: fig-carte-choro-feux-aire_coutumiere\n",
+        "#| fig-cap: Part de la superficie brûlée par aire coutumière\n",
+        "\n",
+        "display(\n",
+        "    Markdown(\n",
+        "        f\"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)\"\n",
+        "        )\n",
+        ")"
+      ],
+      "id": "fig-carte-choro-feux-aire_coutumiere",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        ":::\n"
+      ],
+      "id": "bef18bcb"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| warning: false\n",
+        "#| label: tab stats feux aire coutumière\n",
+        "\n",
+        "figureName = \"fig-tab-stat-feux-aire_coutumiere\"\n",
+        "\n",
+        "table_aire = tableau_statistiques(\n",
+        "    data=data_feux_analys,\n",
+        "    annee=Annee,\n",
+        "    type_zone='aire_coutumiere',\n",
+        "    title= f\"Répartition par aire coutumière des surfaces brûlées (Sentinel 2) pour l'année {Annee}\"\n",
+        ")\n",
+        "\n",
+        "# export des figures en images pour les afficher dans le rapport \n",
+        "saving = hv.save(table_aire, f'{export_file_path}{figureName}.png', backend='bokeh',  title=f'{figureName}', fmt='png')\n",
+        "saving = hv.save(table_aire, f'{export_file_path}{figureName}.html', backend='bokeh',  title=f'{figureName}', fmt='html')\n",
+        "\n",
+        "table_aire"
+      ],
+      "id": "tab-stats-feux-aire-coutumiere",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "::: {#fig-tab-stat-feux-aire_coutumiere}\n"
+      ],
+      "id": "8d8d1c20"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| warning: false\n",
+        "#| label: fig-tab-stat-feux-aire_coutumiere\n",
+        "#| fig-cap: Répartition par aire coutumière des surfaces brûlées (Sentinel 2)\n",
+        "\n",
+        "display(\n",
+        "    Markdown(\n",
+        "        f\"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)\"\n",
+        "        )\n",
+        ")"
+      ],
+      "id": "fig-tab-stat-feux-aire_coutumiere",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        ":::\n"
+      ],
+      "id": "acae5c22"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| warning: false\n",
+        "#| label: graph en ligne évolution par aire coutumière\n",
+        "\n",
+        "figureName = \"fig-graph-evol-feux-aire_coutumiere\"\n",
+        "\n",
+        "graph_aire = graph_evolution(\n",
+        "    data=data_feux_analys,\n",
+        "    type_zone='aire_coutumiere',\n",
+        "    start_year=2017,\n",
+        "    end_year=Annee,\n",
+        "    title= f\"Evolution de la superficie brûlée entre 2017 et {Annee} par aire coutumière\"\n",
+        ")\n",
+        "\n",
+        "# export des figures en images pour les afficher dans le rapport \n",
+        "saving = hv.save(graph_aire, f'{export_file_path}{figureName}.png', backend='bokeh',  title=f'{figureName}', fmt='png')\n",
+        "saving = hv.save(graph_aire, f'{export_file_path}{figureName}.html', backend='bokeh',  title=f'{figureName}', fmt='html')\n",
+        "\n",
+        "graph_aire"
+      ],
+      "id": "graph-en-ligne-evolution-par-aire-coutumiere",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "::: {#fig-graph-evol-feux-aire_coutumiere}\n"
+      ],
+      "id": "477afa21"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| warning: false\n",
+        "#| label: fig-graph-evol-feux-aire_coutumiere\n",
+        "#| fig-cap: Evolution de la superficie brûlée par aire coutumière\n",
+        "\n",
+        "display(\n",
+        "    Markdown(\n",
+        "        f\"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)\"\n",
+        "        )\n",
+        ")"
+      ],
+      "id": "fig-graph-evol-feux-aire_coutumiere",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        ":::\n",
+        "\n",
+        "#### Répartition par carroyage DFCI\n",
+        "\n",
+        "Le carroyage DFCI (Défense de la Forêt Contre les Incendies) est souvent utilisé par les services de lutte contre les feux (DSCGR, Sapeurs-pompiers) pour repérer rapidement l’emplacement d’un évènement de type feu de forêt. Une analyse est donc fournie pour déterminer quels carrés ont donc été les plus impactés durant l’année. \n",
+        "\n",
+        "Les résultats chiffrés sont présentés en annexe dans la partie «Répartition par unité territoriale – Carroyage DFCI ».\n"
+      ],
+      "id": "abda586a"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| warning: false\n",
+        "#| label: Carte choroplèthe DFCI\n",
+        "\n",
+        "figureName = \"fig-carte-cloro-feux-dfci\"\n",
+        "\n",
+        "viz_map_choropleth_dfci = carte_choroplethe(\n",
+        "    geodata=dfci,\n",
+        "    data=data_feux_analys,\n",
+        "    annee=Annee,\n",
+        "    tolerance=1000,\n",
+        "    title=f\"Part de la superficie brûlée en {Annee} par carré du carroyage DFCI à 20 kilomètres\",\n",
+        "    custom_cmap=custom_cmap,\n",
+        "    x=x,\n",
+        "    y=y,\n",
+        "    left_key='id_spatial',\n",
+        "    right_key='code',       \n",
+        "    how='left',\n",
+        "    global_min=global_min,\n",
+        "    global_max=global_max\n",
+        ")\n",
+        "\n",
+        "# export des figures en images pour les afficher dans le rapport \n",
+        "saving = hv.save(viz_map_choropleth_dfci, f'{export_file_path}{figureName}.png', backend='bokeh',  title=f'{figureName}', fmt='png')\n",
+        "saving = hv.save(viz_map_choropleth_dfci, f'{export_file_path}{figureName}.html', backend='bokeh',  title=f'{figureName}', fmt='html')\n",
+        "\n",
+        "viz_map_choropleth_dfci"
+      ],
+      "id": "Carte-choroplethe-DFCI",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "::: {#fig-carte-cloro-feux-dfci}\n"
+      ],
+      "id": "d29c8ca9"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| warning: false\n",
+        "#| label: fig-carte-choro-feux-dfci\n",
+        "#| fig-cap: Part de la superficie brûlée par carré du carroyage DFCI à 20 kilomètres\n",
+        "\n",
+        "display(\n",
+        "    Markdown(\n",
+        "        f\"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)\"\n",
+        "        )\n",
+        ")"
+      ],
+      "id": "fig-carte-choro-feux-dfci",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        ":::"
+      ],
+      "id": "797a4134"
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "python3",
+      "language": "python",
+      "display_name": "Python 3 (ipykernel)",
+      "path": "C:\\Users\\User\\miniconda3\\envs\\quarto\\share\\jupyter\\kernels\\python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}

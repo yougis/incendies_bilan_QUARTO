@@ -1,0 +1,188 @@
+<!-- -->
+```{python}
+#| tags: [parameters]
+#| echo: false
+#| output: false
+#| label: load libraries and settings
+
+import datetime
+from IPython.display import display, Markdown
+from tabulate import tabulate
+import xarray as xr
+from cartopy import crs
+import holoviews as hv
+import hvplot.pandas
+from holoviews.element.tiles import tile_sources as ts
+from holoviews import opts
+from holoviews.operation.datashader import (
+    rasterize, datashade, inspect_polygons
+)
+from holoviews.operation import timeseries
+
+import colorcet as cc
+import datashader as ds
+import datashader.transfer_functions as tf
+
+from matplotlib.colors import LinearSegmentedColormap
+
+from bokeh.models import FixedTicker, HoverTool, DatetimeTickFormatter, BasicTicker, PrintfTickFormatter
+from bokeh.models.formatters import DatetimeTickFormatter
+
+from itertools import cycle
+
+import locale
+
+from pyproj import Proj
+from pyproj import Transformer
+
+# warning extension('matplotlib') fait bugger l'affichage des plots geopandas.plot()
+# tout le code est  fait pour être compatible avec bokeh.
+hv.extension('bokeh')
+# default value Analyses effectuées sur les données de l'année en cours si execute parameter n'est pas utilisé dans le lancement de la génération du rapport : --execute-params _variables.yml
+
+today = datetime.date.today()
+
+#Annee = today.year
+Annee = 2020
+
+
+export_file_path = 'C:/Users/oriane.bruyere/projets/output_bilan/etude_caracterisation/'
+```
+
+```{python}
+#| echo: false
+#| output: false
+#| label : Configuration des output holoviz et bokeh
+
+
+## taille des plots fixés notament pour que les output png ne soit pas tronqué lors de l'utilisation de datashader
+
+plot_width = 1200
+plot_height = int(plot_width * 0.5)
+
+plot_width_col2 = int(plot_width/2)
+plot_height_col2 = int(plot_width_col2 * 0.5)
+
+opts.defaults(
+    opts.Polygons(
+        xaxis=None, 
+        yaxis=None,
+    ),
+
+    opts.Overlay( 
+         #responsive=True
+        )
+    )
+tiled_basemap = ts["CartoLight"]().opts(
+    min_height=500, 
+    #responsive=True, 
+    xaxis=None, 
+    yaxis=None)
+
+tiled_basemap_dark = hv.element.tiles.CartoDark().opts(alpha=0.3)
+
+```
+
+```{python}
+#| echo: false
+#| output: false
+#| label: configurer le rendu carto 
+
+
+styles = {'fontsize': 8}
+
+texte_sources = "Sources: //////"
+realisation = "Réalisation: //////"
+
+
+# Coordonnées géographiques de la Nouvelle-Calédonie
+lon, lat = 163.2, -22.4
+lonN, latN = 167.2, -19.60
+#lonN, latN = 163.12, -22.33
+# Convertir en coordonnées Google Mercator (EPSG:3857)
+
+transformer = Transformer.from_crs("EPSG:4326", "EPSG:3857", always_xy=True)
+x, y = transformer.transform(lon, lat)
+xN, yN = transformer.transform(lonN, latN)
+
+def update_texte(x,y,texte, fontsize, halign):
+    return hv.Text(x, y, texte, fontsize = fontsize,halign=halign)
+
+def update_source(x,y,texte):
+    x = x-50000
+    y = y-50000
+    return update_texte(x, y, f'Sources : {texte}', 8,'left' )
+
+def update_realisation(x,y,texte):
+    x = x-50000
+    y = y-70000
+    return update_texte(x, y, f'Réalisation : {texte}', 8,'left' )
+
+# Positionnement du texte des sources
+annotation_sources = update_source(x,y, texte_sources)
+
+annotation_realisation = update_realisation(x,y, realisation)
+
+
+# Définir les coordonnées de la base et de la pointe de la flèche
+x_start, y_start = xN, yN - 10000  # Ajustez cette valeur pour la longueur de la barre
+x_end, y_end = xN, yN
+
+# Création de la flèche avec une barre plus courte
+fleche_nord = hv.Arrow(xN, yN, 'N', '^').opts(
+    text_color='black', 
+    text_font_size='8pt', 
+    text_align='center', 
+    text_baseline='middle', 
+    text_font_style='bold', 
+    text_alpha=0.5, 
+    arrow_size=5, 
+    arrow_color='black',
+    arrow_alpha=0.5
+)
+
+
+# Définir les coordonnées de la barre d'échelle en coordonnées Google Mercator
+# Ajustez ces valeurs en fonction de la taille souhaitée de votre barre d'échelle
+x0, y0, x1, y1 = x-50000, y-500, x+50000, y+500 # 5000 mètres pour l'exemple
+
+# Création de la barre d'échelle
+echelle_barre = hv.Rectangles([(x0, y0, x1, y1)])
+# Création de annotation d'échelle
+texte_echelle = hv.Text(x, y-15000, '100 km')
+
+
+#palette histogramme
+palette_histo = ['#620F46', '#9F0328', '#FB8E2C', '#EA6615', '#0F515F', '#DBB28B']
+```
+
+
+```{python}
+def export_output(data,figureName):
+    saving_png = hv.save(data, f'{export_file_path}{figureName}.png', backend='bokeh',  title=f'{figureName}', fmt='png')
+    saving_html = hv.save(data, f'{export_file_path}{figureName}.html', backend='bokeh',  title=f'{figureName}', fmt='html')
+
+    return
+
+```
+
+
+```{python}
+def export_output_plotly(data,figureName):
+    saving_png = f'{export_file_path}{figureName}.png'
+    saving_html = f'{export_file_path}{figureName}.html'
+
+    data.write_image(saving_png)
+    data.write_html(saving_html)
+    return
+```
+
+```{python}
+def apply_format(plot, element, widths):
+    plot.handles['table'].index_position = None  # hide index
+    plot.handles['table'].autosize_mode = "none"
+    
+    # Appliquer les largeurs de colonne depuis le dictionnaire
+    for idx, width in enumerate(widths.values()):
+        plot.handles['table'].columns[idx].width = width
+```

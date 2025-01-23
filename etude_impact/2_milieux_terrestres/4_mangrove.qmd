@@ -1,0 +1,137 @@
+#### Informations
+
+La mangrove est un écosystème spécifique des régions tropicales. Majoritairement constituée de palétuviers, de nombreuses espèces viennent y trouver refuge notamment pour être à l’abri des prédateurs mais aussi pour s’y reproduire. Elle se situe dans la zone de balancement des marées sur les bandes littorales ce qui permet dans une certaine mesure de protéger le littoral contre l’érosion marine En effet, les mangroves permettent notamment de filtrer les sédiments apportés par les diverses voies d’accès qu’empruntent les eaux de ruissellement et évitent ainsi de perturber la santé des massifs coralliens. De plus, elles fertilisent le lagon par la production de nourriture issue de la décomposition de la matière organique. En Nouvelle-Calédonie, les mangroves représentent également une ressource pour la pêche du crabe de palétuvier (Scylla serrata). Il convient donc de protéger ces systèmes naturels sensibles afin d’éviter de désorganiser l’écosystème qui lui est lié.
+
+#### Résultats
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab resultats echelon territorial mangrove
+
+figureName = "fig-tab-stats-mangrove-territorial"
+
+table_province = tableau_statistiques(
+    data=data_mangrove,
+    level_them=None,
+    label_them=None,
+    groupby='upper_libelle',
+    annee=Annee,
+    type_zone='ZEE',
+    columns=['upper_libelle','sup_total_theme','superficie_ha','indicateur_3'],
+    label_col=['Territoire concerné','Superficie totale (ha)','Surface brûlée (ha)','Part de la superficie impactée par les surfaces brûlées (%)'],
+    title= f"Résultats à l'échelon territorial des mangroves impactées par les surfaces brûlées en {Annee}",
+    filtre='superficie_ha',
+    hauteurtab=100
+)
+#export_output(pie_chart,figureName)
+table_province
+
+```
+
+::: {#fig-tab-stats-mangrove-territorial}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-tab-stats-mangrove-territorial
+#| fig-cap: "Résultats à l'échelon territorial des mangroves impactées par les surfaces brûlées"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab resultats echelon communal mangrove
+
+figureName = "fig-tab-stats-mangrove-commune"
+
+table_province = tableau_statistiques(
+    data=data_mangrove,
+    level_them=None,
+    label_them=None,
+    groupby='upper_libelle',
+    annee=Annee,
+    type_zone='commune',
+    columns=['upper_libelle','sup_total_theme','superficie_ha','indicateur_3'],
+    label_col=['Territoire concerné','Superficie totale (ha)','Surface brûlée (ha)','Part de la superficie impactée par les surfaces brûlées (%)'],
+    title= f"Résultats à l'échelon communal des mangroves impactées par les surfaces brûlées en {Annee}",
+    filtre='superficie_ha',
+    hauteurtab=100
+)
+#export_output(pie_chart,figureName)
+table_province
+
+
+```
+
+::: {#fig-tab-stats-mangrove-commune}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-tab-stats-mangrove-commune
+#| fig-cap: "Répartition de l’impact des surfaces brûlées (Sentinel 2) sur les mangroves par commune en Nouvelle-Calédonie"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: carte impact sb sur les mangroves
+
+figureName = "fig-carte-impact-sb-mangrove"
+
+viz_map_nc = carte_impact_zb_bdenv(
+    data_carto=nc_,
+    data_feux=data_feux,
+    data_env=mangrove,
+    cadre=bb_,
+    color='#8B0000',
+    color_env='#49c10d',
+    title=f"Carte de l'impact des surfaces brûlées sur les mangroves en {Annee}",
+    tolerance=2000,
+    textlegende='test',
+    nb_strat=1,
+    level_strate=None,
+    pos_legend=8000,
+    label_legend='Zones brûlées',
+    label_legend_env='Mangroves',
+    texte_sources='Carmama / OEIL / Copernicus'
+
+)
+
+export_output(viz_map_nc,figureName)
+
+```
+
+::: {#fig-carte-impact-sb-mangrove}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-carte-impact-sb-mangrove
+#| fig-cap: "Carte de l'impact des surfaces brûlées sur les mangroves"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::

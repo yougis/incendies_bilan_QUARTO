@@ -1,0 +1,83 @@
+
+```{python}
+#| echo: false
+#| warning: false
+#| output: false
+#| label: loading data libraries and environment variables
+
+import os
+from dotenv import load_dotenv
+from intake import open_catalog
+import pandas as pd
+import numpy as np
+import geopandas as gpd
+from cartopy import crs
+
+
+load_dotenv()
+usr=os.getenv("DB_USER")
+pswd=os.getenv("DB_PWD")
+host=os.getenv("DB_HOST")
+port=os.getenv("DB_PORT")
+home=os.getenv("HOME_PATH")
+db_traitement=os.getenv("DB_WORKSPACE")
+db_ref=os.getenv("DB_REF")
+db_externe=os.getenv("DB_EXT")
+dwh_fact_strategy=os.getenv("DWH_FACT_STRATEGY")
+dwh_dim_strategy=os.getenv("DWH_DIM_STRATEGY")
+commun_path = os.getenv("COMMUN_PATH")
+project_dir = os.getenv("PROJECT_PATH")
+data_catalog_dir = os.getenv("DATA_CATALOG_DIR")
+data_output_dir = os.getenv("DATA_OUTPUT_DIR")
+sig_data_path = os.getenv("SIG_DATA_PATH")
+project_db_schema = os.getenv("PROJECT_DB_SCHEMA")
+
+
+```
+
+```{python}
+#| echo: false
+#| label: loading catalogs
+
+
+crsRgnc = crs.LambertConformal(central_longitude=166,
+                                standard_parallels=(-20.66666666666667, -22.33333333333333),
+                                central_latitude=-21.5,
+                                false_easting=400000,
+                                false_northing=300000,
+                                cutoff=0,
+                                globe=crs.Globe(ellipse='GRS80'))
+
+crs_proj4 = crsRgnc.proj4_init
+#crsMerca = crs.GOOGLE_MERCATOR
+
+# Données carto
+
+cat_data_carto = open_catalog('./catalogue/carto.yaml')
+
+
+nc_ = cat_data_carto.Grande_terre_et_iles
+
+
+bb_ = cat_data_carto.bb_Grande_terre_et_iles
+
+# Données feux
+
+#cat_data_feux = open_catalog(f'{data_catalog_dir}feux_faits.yaml')
+cat_data_feux = open_catalog('./catalogue/feux.yaml')
+
+cat_data_feux_dtm = open_catalog(f'{data_catalog_dir}feux_dtm.yaml')
+cat_data_feux_ref = open_catalog(f'{data_catalog_dir}data_reference_feux.yaml')
+
+data_S2_ = cat_data_feux.sentinel_zones_brulees
+data_SNPP_ = cat_data_feux.VIIRS_SNPP
+
+#data_S2 = data_S2_.to_crs(3857)
+# data_S2_filtreAnnee = data_S2[data_S2['annee'] == Annee]
+# data_S2_filtreAnnee_NC = data_S2_filtreAnnee[data_S2['type_spatial'] == 'ZEE']
+
+
+
+
+
+```

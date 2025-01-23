@@ -1,0 +1,97 @@
+### Utilisation de la donnée du MOS pour déterminer l’impact sur la végétation
+
+Contrairement à l’année 2017 où faute d’actualisation, le MOS 2008 de la province Nord avait dû être utilisé, depuis 2018, il a été possible d’accéder aux données 2014 de cette couche d’information. Ainsi, la part d’incertitude liée aux calculs a pu être diminuée. 
+La carte de la végétation utilisée pour l’analyse spatiale de l’impact environnemental des incendies 2017 @fig-carte-strate-2017 apparaît très différente de celle utilisée à partir de 2018 @fig-carte-strate-2018.
+
+![Carte des strates de végétation utilisée pour l'analyse spatiale de l'impact environnemental des incendies 2017 (Source : OEIL)](./ressources/guide_methodo/carte_strate_2017.jpg){width=100%, #fig-carte-strate-2017}
+
+![Carte des strates de la végétation utilisée pour l’analyse spatiale de l’impact environnemental des incendies de 2018 et 2019 (Source : OEIL)](./ressources/guide_methodo/carte_strate_2018.jpg){width=100%, #fig-carte-strate-2018}
+
+
+Sur la carte des strates de végétation produite en 2017 à l’échelle du territoire (@fig-carte-strate-2017) , la strate herbacée en province Nord est plus représentée que sur la carte produite en 2018 (@fig-carte-strate-2018). Le @tbl-comparaison-mos permet d’apprécier les différences d’hectares entre le MOS 2008 de la province Nord utilisé dans l’analyse spatiale de l’impact environnemental des incendies 2017 et le MOS 2014 de la Province Nord utilisé dans l’analyse spatiale de l’impact environnemental des incendies à partie de 2018 Cette disparité dans les données se répercute dans l’analyse et contribue notamment à expliquer pourquoi les proportions incendiées des différentes strates de végétation présentent des écarts importants entre 2017 et 2018 d’une part, 2017 et 2019 d’autre part puisque les mêmes données ont été utilisées à partir de 2018 (@fig-diff-mos2017 et @fig-diff-mos2018).
+
+
+| Type            | 2017 (MOS 2008) | A partir de 2018 (MOS 2014) |
+|-----------------|-----------------|-----------------------------|
+| Strate arborée  | 303 177         | 333 474                     |
+| Strate arbustive| 207 478         | 404 767                     |
+| Strate herbacée | 345 085         | 117 485                     |
+| Total           | 855 740         | 855 740                     |
+: Comparaison du nombre d'hectares de chaque strate (ha) entre le MOS 2008 et le MOS 2014 de la Province Nord {#tbl-comparaison-mos}
+
+
+![Part des différentes strates en Nouvelle-Calédonie en 2017 (Source : OEIL)](./ressources/guide_methodo/graph-diff-part-mos-2017.jpg){width=100% #fig-diff-mos2017}
+
+![Part des différentes strates en Nouvelle-Calédonie en 2018 et 2019 (Source : OEIL)](./ressources/guide_methodo/graph-diff-part-mos-2018.jpg){width=100% #fig-diff-mos2018}
+
+
+La comparaison des @fig-diff-mos2017 et @fig-diff-mos2018 montre que la proportion de la strate herbacée régresse de 30% à 15% selon que l’on considère le MOS 2008 ou 2014 de la province Nord. A l’inverse, la proportion de de la strate arbustive progresse de 30% à 43%. D’après @gomez2015Wildfire qui s’appuient sur les propos de Jaffré et al <!-- TODO-BIBLIO: insérer la reference biblio -->  , les strates herbacées et arbustives sont considérées comme des milieux dégradés issus d’anciennes strates arborées.
+
+
+### Méthode utilisée pour déterminer les gaz à effets de serre par le Groupe d’experts intergouvernemental sur l’évolution du climat (GIEC)
+
+Le Groupe d’experts intergouvernemental sur l’évolution du climat (GIEC) a produit en 2006 un rapport qui donne les lignes directrices pour effectuer les inventaires nationaux de gaz à effet de serre. Ce dernier présente plusieurs approches possibles allant de la plus simple à la plus précise pour estimer les émissions de Gaz à Effet de Serre (GES) dues aux incendies. La @fig-schema-GIEC montre le cheminement à faire pour le choix de la méthode la plus adéquate. Cette démarche pour la détermination de la méthode la plus adaptée étant celle préconisée par la communauté internationale, elle a été utilisée dans le présent rapport pour sélectionner la méthode appropriée afin de quantifier les émissions de dioxyde de carbone induites par les incendies.
+
+
+![Aide à la décision pour identifier la méthode appropriée afin d'estimer les émissions de gaz à effet de serre provenant d'un incendie (Source : 2006 IPCC 2006 IPCC, Lignes directrices 2006 du GIEC pour les inventaires nationaux de gaz à effet serre, Volume 4 : Agriculture, Foresterie et autres affectations des terres](./ressources/guide_methodo/schema-GIEC.jpg){#fig-schema-GIEC}
+
+Etant donné que peu de données sur la biomasse combustible sont disponibles, qu’aucun facteur d’émission ^[Facteur d’émission : ratio entre la quantité de GES émis par une matière et la valeur caractéristique de la matière. Pour plus d’information [https://en.wikipedia.org/wiki/Emission_intensity](https://en.wikipedia.org/wiki/Emission_intensity) ] spécifique au pays n’est informé et que les incendies ne sont pas une catégorie clé car non priorisée dans le système d’inventaire national, la méthode de niveau 1 qui opte pour une approche simplifiée est à privilégier. Cette dernière s’appuie sur la formule suivante ^[Pour plus d’informations sur la méthodologie préconisée par le GIEC suivre ce lien : <https://www.ipcc-nggip.iges.or.jp/public/2006gl/french/pdf/4_Volume4/V4_02_Ch2_Generic.pdf> ] :
+
+$$
+L_{\text{feu}} = A * M_{\text{B}} * C_{\text{f}} * G_{\text{ef}} * 10^{-3}
+$$
+
+
+Où :
+
+- $L_{\text{feu}}$ est la quantité d’émissions de gaz à effet de serre provenant d’un incendie ($\text{t}$)
+- $A$ est la surface brûlée ($\text{ha}$)
+- $M_{\text{B}}$ est la masse de combustible disponible pour la combustion ($\text{t}.\text{ha}^{-1}$)
+- $C_{\text{f}}$ est le facteur de combustion (sans unité)
+- $G_{\text{ef}}$ est le facteur d’émission($\text{g}.\text{kg}^{-1}$)
+
+
+Pour résoudre cette équation, les données agrégées et les facteurs d’émission par défaut fournis par le GIEC seront utilisés. Ces derniers sont donnés dans les tableaux suivants : 
+
+| Tableau | Description |
+|---------|-------------|
+| @fig-GIEC-formule1 | Valeurs de combustion de la biomasse pour les feux selon le type de végétation |
+| @fig-GIEC-formule1bis | Valeurs de consommation de la biomasse pour les feux selon le type de végétation |
+| @fig-GIEC-formule2 | Valeurs des facteurs de combustion pour les feux selon le type de végétation |
+| @fig-GIEC-formule2bis  | Valeurs des facteurs de combustion pour les feux selon le type de végétation |
+| @fig-GIEC-formule3 | Les facteurs d’émissions pour différents types de brûlage |
+
+
+![Valeurs de consommation de la biomasse pour les feux dans divers types de végétation (Source : 2006 IPCC, Lignes directrices 2006 du GIEC pour les inventaires nationaux de gaz à effet de serre, Volume 4 : Agriculture, Foresterie et autres affectations des terres) ](./ressources/guide_methodo/tableau-GIEC-formule1.jpg){#fig-GIEC-formule1}
+
+![Suite valeurs de consommation de la biomasse pour les feux dans divers types de végétation (Source : 2006 IPCC, Lignes directrices 2006 du GIEC pour les inventaires nationaux de gaz à effet de serre, Volume 4 : Agriculture, Foresterie et autres affectations des terres)](./ressources/guide_methodo/tableau-GIEC-formule1bis.jpg){#fig-GIEC-formule1bis}
+
+![Valeurs des facteurs de combustion pour les feux dans divers types de végétation (Source : 2006 IPCC, Lignes directrices 2006 du GIEC pour les inventaires nationaux de gaz à effet de serre, Volume 4 : Agriculture, Foresterie et autres affectations des terres)](./ressources/guide_methodo/tableau-GIEC-formule2.jpg){#fig-GIEC-formule2} 
+
+![Suite valeurs des facteurs de combustion pour les feux dans divers types de végétation (Source : 2006 IPCC, Lignes directrices 2006 du GIEC pour les inventaires nationaux de gaz à effet de serre, Volume 4 : Agriculture, Foresterie et autres affectations des terres)](./ressources/guide_methodo/tableau-GIEC-formule2bis.jpg){#fig-GIEC-formule2bis}
+
+![Facteurs d'émissions pour différents types de brûlage (Source : 2006 IPCC, Lignes directrices 2006 du GIEC pour les inventaires nationaux de gaz à effet de serre, Volume 4 : Agriculture, Foresterie et autres affectations des terres)](./ressources/guide_methodo/tableau-GIEC-formule3.jpg){#fig-GIEC-formule3}
+
+
+Connaissant les surfaces brûlées pour la strate arborée, arbustive et herbacée, les valeurs choisies correspondent aux types de végétation suivants : 
+![Attribution des types des végétations proposés par le GIEC aux strates arborée, arbustive et herbacée correspondantes](./ressources/guide_methodo/cor-strate-GIEC.jpg){#fig-cor-strate-GIEC}
+
+#### Limites de l’étude et perspectives d’améliorations 
+
+Cette estimation des émissions de CO2 induites par les incendies présente de nombreuses incertitudes qu’il est primordial de prendre en compte. Le manque considérable de données concernant la biomasse et notamment la quantité de combustible pouvant être brûlée, des valeurs par défaut fournies par l’IPCC ont été utilisées. Ainsi, certaines spécificités propres au caractère unique de la Nouvelle-Calédonie n’ont pas pu être prises en compte. En effet, le taux d’endémisme de ces végétaux estimé à 76%^[@maisonNC2016biodiversite] et la forte proportion de savane à Niaoulis, essence robuste et résistante aux feux^[@cherrier1981niaouli]pourraient modifier de façon importante les densités de combustible et donc la masse disponible à la combustion. De plus, plusieurs hypothèses inhérentes à la méthodologie proposée par le GIEC ont été appliquées et pourraient ne pas révéler la masse réelle de combustible disponible. Les valeurs par défaut utilisées pour les facteurs de combustion et d’émission sont ainsi à prendre en considération dans l’interprétation des résultats. En effet, le facteur de combustion est intrinsèquement lié au combustible, tel que sa taille, son architecture, sa quantité d’humidité ou encore au type de feu. Le facteur d’émission variant quant à lui en fonction de la teneur en carbone de la biomasse et de l’exhaustivité de la combustion.
+
+Afin de pouvoir proposer à l’avenir une valeur plus précise, il est nécessaire de tendre vers une méthodologie plus robuste à savoir l’approche n°3 proposée par le GIEC. Cette dernière établit des calculs en utilisant des modèles sophistiqués qui tiennent compte des règles de l’ensemble du processus d’émission de GES induites par les incendies, et utilise des données d’entrées détaillées (brûlage de biomasse, facteurs d’émission, de combustions,). L’approche n°2 étant celle qui présente les résultats les plus élevés avec environ 30% de différence avec l’approche n°1 et 11,9% de différence avec l’approche n°3 selon une étude publiée en 2020 @Korísteková.
+
+À terme, il sera donc fondamental d’envisager des études scientifiques poussées sur la caractérisation de la biomasse végétale. Elles devront permettre une identification précise des différents types de végétation qui pourra être faite par observations de terrains et/ou via l’utilisation d’outils satellitaires. De plus, malgré l’acquisition difficile de ces données due à l’hétérogénéité des écosystèmes dictée par des conditions orographiques, édaphiques et climatiques spécifiques <!-- TODO : verifier ici il y avait une annotation étrange numeroté 54 -->, leurs intégrations sous format géoréférencé permettra de répondre aux enjeux cartographiques pour le suivi des multiples formations végétales. Les facteurs de combustion et d’émission nécessitent aussi d’être mieux renseignés notamment au travers d’études relatives à la biomasse. Quoiqu’il en soit, les méthodologies choisies devront intégrer les spécificités propres à l’archipel, être applicables dans le temps et l’espace et être en adéquation avec les moyens qui peuvent être mobilisés de façon récurrente. A noter que l’ensemble de ces études permettront de servir à des aspects clés de sécurité publique et de la gestion des terres.
+
+### Limites liées à la caractérisation des impacts environnementaux
+
+La caractérisation de l’impact des incendies sur l’environnement calédonien a nécessité le croisement avec des données extérieures. Ces données ont été fournies par des partenaires de l’OEIL, sans lesquels cette étude n’aurait pas pu traiter autant d’informations. Ainsi, les données disponibles pour l’étude ont été exploitées au maximum du détail qu’elles offraient. 
+
+Le manque de données disponibles pour caractériser certains impacts est également limitant dans la réalisation d’un bilan se voulant complet sur la caractérisation de l’impact des incendies sur l’environnement calédonien. En effet, il n’existe pas de cartographie présentant une typologie fine des différents types de formations végétales calédoniennes. 
+
+La confidentialité, l’imprécision géographique, la mise à jour incomplète ou encore l’ancienneté de certaines données impliquent que la précision des informations a du parfois être dégradée. Ainsi, les résultats concernant les espèces sensibles et les périmètres d’alertes sur la faune et la flore menacées sont notamment à considérer avec précaution. En effet, ces périmètres d’alertes représentent des atteintes potentielles aux espèces concernées par les incendies, et non des preuves de disparition. De plus, la révision incomplète de la base de données des espèces sensibles a aussi engendré des omissions de classement concernant les niveaux d’enjeux. Les espèces concernées n’ont donc pu être intégrées dans l’analyse. Enfin, le manque d’exhaustivité de la prospection à l’échelle du territoire, implique que l’impact sur les périmètres d’alertes des espèces menacées ou des espèces sensibles est très largement minoré. 
+
+L’utilisation de données datées d’un certain nombre d’années, comme c’est le cas pour les strates de végétation, peut aussi avoir des répercussions car la dynamique de la matière organique est amenée à évoluer régulièrement dépendant des différentes pressions qu’elle subit. Les activités minières ou encore les incendies génèrent une modification profonde du type de végétation pouvant nécessiter une mise à jour régulière des données sur les strates de végétation. 
+
+Enfin, il est à noter que plusieurs données utilisées dans ce présent rapport peuvent se recouper. Par exemple, les zones clés de biodiversité représentent des " sous-ensembles qui se superposent à des aires protégées existantes ou potentielles"^[@langhammer2011identification]. Ceci peut donc générer de la redondance dans les résultats. 

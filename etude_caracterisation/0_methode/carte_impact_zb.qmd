@@ -1,0 +1,120 @@
+
+```{python}
+#| echo: false
+#| output: true
+#| label: carte feux en NC
+#| warning: false
+#| error: false
+
+def carte_impact_zb(data_carto, data_feux, data_them, level_them, indicateur,annee, title, tolerance,source):
+
+    data_feux_env = data_feux.read().to_crs(3857)
+    data_feux_env = data_feux_env[data_feux_env['annee'] == annee]
+
+    data_carto = data_carto.read().to_crs(3857)
+    data_carto = data_carto[data_carto['level'] == 'NC']
+
+    data_feux_env['area'] = data_feux_env.geometry.area
+    total_area_feux = data_feux_env['area'].sum() 
+
+    # Calculer la superficie de la couche environnementale
+    data_carto['area'] = data_carto.geometry.area
+    total_geom = data_carto['area'].sum()
+
+    # Calculer le pourcentage de la superficie brûlée par rapport à la superficie environnementale
+    percentage_area_burned = (total_area_feux / total_geom) * 100
+
+    # Simplifier les géométries pour généraliser le trait de côte
+    data_carto['geometry'] = data_carto.geometry.simplify(tolerance, preserve_topology=False)
+
+    # Créer le fond de carte
+    overlay = hv.Polygons(data_carto, vdims=['libelle']).opts(
+        fill_color='#d9d9d9',
+        cmap=['#d9d9d9'],
+        line_color='white',
+        tools=[HoverTool(tooltips=[
+            ("Dimension spatiale", "@libelle")
+    ])])
+
+    # Rasteriser la couche feux avec Datashader
+    rasterized_feux = hd.rasterize(hv.Polygons(data_feux_env,vdims=['area']), width=500, height=500).opts(
+        cmap=['#8B0000'],
+        alpha=0.5
+    )
+
+    if data_them != None:
+        data_them = data_them.read().to_crs(3857)
+        
+        unique_substrate_count = data_them[level_them].nunique()
+        cmap = hv.plotting.util.list_cmaps()  # Voir les palettes disponibles
+        selected_cmap = 'Viridis' if 'Viridis' in cmap else cmap[0]  # Sélectionner une palette
+
+        gdf_them = data_them.dissolve(by=level_them)
+        gdf_them['area'] = gdf_them.geometry.area
+        
+        rasterized_env = hd.rasterize(
+                hv.Polygons(gdf_them),
+                width=500,
+                height=500,
+                dynamic=False
+            ).opts(
+                cmap=selected_cmap,
+                alpha=0.5,
+                colorbar=True,
+                tools=['hover'])
+    else:
+        pass
+
+    # Coordonnées géographiques de la Nouvelle-Calédonie
+    lon, lat = 163.2, -22.3
+    transformer = Transformer.from_crs("EPSG:4326", "EPSG:3857", always_xy=True)
+    x, y = transformer.transform(lon, lat)
+
+    # Ajouter les annotations pour la superficie totale des zones brûlées et le pourcentage
+    text_area = f"Superficie des zones brûlées: {total_area_feux:.0f} ha"
+    text_percentage = f"Part de la superficie brûlée: {percentage_area_burned:.2f}%"
+    
+    annotation_area = hv.Text(x - 50000, y + 45000, text_area, halign='left', valign='top', fontsize=8)
+    annotation_percentage = hv.Text(x - 50000, y + 25000, text_percentage, halign='left', valign='top', fontsize=8)
+
+    # Annotations (supprimer ou adapter ces fonctions si nécessaire)
+    annotation_sources = update_source(x, y, source)
+    annotation_realisation = update_realisation(x, y, 'OEIL')
+
+    # Créer la légende
+    legend_x, legend_y = x - 50000, y + 90000  # Position de départ de la légende
+    rect_width, rect_height = 30000, 10000  # Taille des rectangles de légende
+
+    # Textes de légende
+    legend_text_feux = hv.Text(legend_x + 108000, legend_y + 3800, 'Zones brûlées', halign='right', valign='center', fontsize=8)
+
+    # Rectangle pour "Zones brûlées"
+    legend_feux = hv.Rectangles([(legend_x, legend_y, legend_x + rect_width, legend_y + rect_height)]).opts(
+        fill_color='#8B0000',
+        line_color='white'
+    )
+
+    # Créer la carte finale
+    map_zb_env = tiled_basemap_dark.opts() * \
+        texte_echelle * \
+        echelle_barre * \
+        fleche_nord * \
+        annotation_sources * \
+        annotation_realisation * \
+        annotation_area * \
+        annotation_percentage * \
+        overlay * \
+        rasterized_feux * \
+        legend_feux * \
+        legend_text_feux 
+
+    viz_map_zb_env = map_zb_env.opts(
+        title=title,
+        toolbar=None,
+        width=700,
+        height=500
+    )
+
+    return viz_map_zb_env
+
+```

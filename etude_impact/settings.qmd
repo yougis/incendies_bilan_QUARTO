@@ -1,0 +1,540 @@
+
+<!-- -->
+```{python}
+#| tags: [parameters]
+#| echo: false
+#| output: false
+#| label: load libraries and settings
+
+import datetime
+from IPython.display import display, Markdown
+from tabulate import tabulate
+import xarray as xr
+from cartopy import crs
+import holoviews as hv
+import hvplot.pandas
+from holoviews.element.tiles import tile_sources as ts
+from holoviews import opts
+from holoviews.operation.datashader import (
+    rasterize, datashade, inspect_polygons
+)
+from holoviews.operation import timeseries
+
+import colorcet as cc
+import datashader as ds
+import datashader.transfer_functions as tf
+import holoviews.operation.datashader as hd
+
+from matplotlib.colors import LinearSegmentedColormap
+
+from bokeh.models import FixedTicker, HoverTool, DatetimeTickFormatter, BasicTicker, PrintfTickFormatter
+from bokeh.models.formatters import DatetimeTickFormatter
+
+from itertools import cycle
+
+import locale
+
+from pyproj import Proj
+from pyproj import Transformer
+
+# warning extension('matplotlib') fait bugger l'affichage des plots geopandas.plot()
+# tout le code est  fait pour être compatible avec bokeh.
+hv.extension('bokeh')
+# default value Analyses effectuées sur les données de l'année en cours si execute parameter n'est pas utilisé dans le lancement de la génération du rapport : --execute-params _variables.yml
+
+today = datetime.date.today()
+
+#Annee = today.year
+Annee = 2020
+
+
+export_file_path = 'C:/Users/oriane.bruyere/projets/output_bilan/etude_impact/'
+```
+
+
+```{python}
+#| echo: false
+#| output: false
+#| label : Configuration des output holoviz et bokeh
+
+
+## taille des plots fixés notament pour que les output png ne soit pas tronqué lors de l'utilisation de datashader
+
+plot_width = 1200
+plot_height = int(plot_width * 0.5)
+
+plot_width_col2 = int(plot_width/2)
+plot_height_col2 = int(plot_width_col2 * 0.5)
+
+opts.defaults(
+    opts.Polygons(
+        xaxis=None, 
+        yaxis=None,
+    ),
+
+    opts.Overlay( 
+         #responsive=True
+        )
+    )
+tiled_basemap = ts["CartoLight"]().opts(
+    min_height=500, 
+    #responsive=True, 
+    xaxis=None, 
+    yaxis=None)
+
+tiled_basemap_dark = hv.element.tiles.CartoDark().opts(alpha=0.3, xaxis=None, yaxis=None)
+
+def update_texte(x,y,texte, fontsize, halign):
+    return hv.Text(x, y, texte, fontsize = fontsize,halign=halign)
+
+def update_source(x,y,texte):
+    x = x-50000
+    y = y-50000
+    return update_texte(x, y, f'Sources : {texte}', 8,'left' )
+
+def update_realisation(x,y,texte):
+    x = x-50000
+    y = y-60000
+    return update_texte(x, y, f'Réalisation : {texte}', 8,'left' )
+
+```
+
+```{python}
+#| echo: false
+#| output: false
+#| label: configurer le rendu carto PN
+styles = {'fontsize': 8}
+
+realisation = 'OEIL'
+
+def loc_PN(total,level_strate,nb_strat,data_env,pos_legend,label_legend,label_legend_env,color_env,color,texte_sources):
+    lon, lat = 163.8, -21.1
+    lonN, latN = 163.25, -21.2
+
+    # Convertir en coordonnées Google Mercator (EPSG:3857)
+    transformer = Transformer.from_crs("EPSG:4326", "EPSG:3857", always_xy=True)
+    x, y = transformer.transform(lon, lat)
+    xN, yN = transformer.transform(lonN, latN)
+
+    def update_texte(x,y,texte, fontsize, halign):
+        return hv.Text(x, y, texte, fontsize = fontsize,halign=halign)
+
+    def update_source(x,y,texte):
+        x = x-50000
+        y = y-50000
+        return update_texte(x, y, f'Sources : {texte}', 8,'left' )
+
+    def update_realisation(x,y,texte):
+        x = x-50000
+        y = y-60000
+        return update_texte(x, y, f'Réalisation : {texte}', 8,'left' )
+
+    # Positionnement du texte des sources
+    annotation_sources = update_source(x,y, texte_sources)
+    annotation_realisation = update_realisation(x,y, realisation)
+
+    text_area = f"Superficie des zones brûlées: {total:.0f} ha"
+
+    annotation_area = hv.Text(x - 50000, y + 30000, text_area, halign='left', valign='top', fontsize=8)
+
+    # Créer la légende
+    legend_x, legend_y = x - 50000, y + pos_legend
+    rect_width, rect_height = 30000, 10000
+    legend_text_feux = hv.Text(legend_x + 35000, legend_y + 3800, label_legend, halign='left', valign='center', fontsize=8)
+    legend_feux = hv.Rectangles([(legend_x, legend_y, legend_x + rect_width, legend_y + rect_height)]).opts(
+        fill_color=color,
+        line_color='white')
+
+    if nb_strat>1:
+        legend_items = [legend_feux, legend_text_feux]
+        for i, (substrat, color) in enumerate(zip(data_env[level_strate], color_env)):
+            legend_y -= rect_height + 5000
+            legend_items.append(hv.Text(legend_x + 35000, legend_y + 3800, substrat, halign='left', valign='center', fontsize=8))
+            legend_items.append(hv.Rectangles([(legend_x, legend_y, legend_x + rect_width, legend_y + rect_height)]).opts(
+                fill_color=color,
+                line_color='white'))
+    else:
+        legend_items = [legend_feux, legend_text_feux]
+        legend_y -= rect_height + 5000
+        legend_items.append(hv.Text(legend_x + 35000, legend_y + 3800, label_legend_env, halign='left', valign='center', fontsize=8))
+        legend_items.append(hv.Rectangles([(legend_x, legend_y, legend_x + rect_width, legend_y + rect_height)]).opts(
+            fill_color=color_env,
+            line_color='white'))
+
+    # Création de la flèche avec une barre plus courte
+    fleche_nord = hv.Arrow(xN, yN, 'N', '^').opts(
+        text_color='black', 
+        text_font_size='8pt', 
+        text_align='center', 
+        text_baseline='middle', 
+        text_font_style='bold', 
+        text_alpha=0.5, 
+        arrow_size=5, 
+        arrow_color='black',
+        arrow_alpha=0.5
+    )
+
+    # Définir les coordonnées de la barre d'échelle en coordonnées Google Mercator
+    # Ajustez ces valeurs en fonction de la taille souhaitée de votre barre d'échelle
+    x0, y0, x1, y1 = x-50000, y-25000, x+50000, y-24500 # 5000 mètres pour l'exemple
+
+    # Création de la barre d'échelle
+    echelle_barre = hv.Rectangles([(x0, y0, x1, y1)])
+    # Création de annotation d'échelle
+    texte_echelle = hv.Text(x, y-31000, '100 km')
+
+    return(annotation_area,legend_text_feux,legend_items,legend_feux,texte_echelle,echelle_barre,fleche_nord,annotation_realisation,annotation_sources)
+```
+
+```{python}
+#| echo: false
+#| output: false
+#| label: configurer le rendu carto GT + ILES
+styles = {'fontsize': 8}
+
+realisation = 'OEIL'
+
+def loc_GT(total,level_strate,nb_strat,data_env,pos_legend,label_legend,label_legend_env,color,color_env,texte_sources):
+    lon, lat = 164, -22
+    lonN, latN = 167.8, -19.60
+
+    # Convertir en coordonnées Google Mercator (EPSG:3857)
+    transformer = Transformer.from_crs("EPSG:4326", "EPSG:3857", always_xy=True)
+    x, y = transformer.transform(lon, lat)
+    xN, yN = transformer.transform(lonN, latN)
+
+    def update_texte(x,y,texte, fontsize, halign):
+        return hv.Text(x, y, texte, fontsize = fontsize,halign=halign)
+
+    def update_source(x,y,texte):
+        x = x-50000
+        y = y-50000
+        return update_texte(x, y, f'Sources : {texte}', 8,'left' )
+
+    def update_realisation(x,y,texte):
+        x = x-50000
+        y = y-60000
+        return update_texte(x, y, f'Réalisation : {texte}', 8,'left' )
+
+    # Positionnement du texte des sources
+    annotation_sources = update_source(x,y, texte_sources)
+    annotation_realisation = update_realisation(x,y, realisation)
+
+    text_area = f"Superficie des zones brûlées: {total:.0f} ha"
+
+    annotation_area = hv.Text(x - 70000, y + 30000, text_area, halign='left', valign='top', fontsize=8)
+
+    # Créer la légende
+    legend_x, legend_y = x - 50000, y + pos_legend
+    rect_width, rect_height = 30000, 10000
+    legend_text_feux = hv.Text(legend_x + 40000, legend_y + 3800, label_legend, halign='left', valign='center', fontsize=8)
+    legend_feux = hv.Rectangles([(legend_x, legend_y, legend_x + rect_width, legend_y + rect_height)]).opts(
+        fill_color='#8B0000',
+        line_color='white')
+
+    if nb_strat>1:
+        legend_items = [legend_feux, legend_text_feux]
+        for i, (substrat, color) in enumerate(zip(data_env[level_strate], color_env)):
+            legend_y -= rect_height + 5000
+            legend_items.append(hv.Text(legend_x + 40000, legend_y + 3800, substrat, halign='left', valign='center', fontsize=8))
+            legend_items.append(hv.Rectangles([(legend_x, legend_y, legend_x + rect_width, legend_y + rect_height)]).opts(
+                fill_color=color,
+                line_color=None))
+    else:
+        legend_items = [legend_feux, legend_text_feux]
+        legend_y -= rect_height + 5000
+        legend_items.append(hv.Text(legend_x + 40000, legend_y + 3800, label_legend_env, halign='left', valign='center', fontsize=8))
+        legend_items.append(hv.Rectangles([(legend_x, legend_y, legend_x + rect_width, legend_y + rect_height)]).opts(
+            fill_color=color_env,
+            line_color=None))
+
+    # Création de la flèche avec une barre plus courte
+    fleche_nord = hv.Arrow(xN, yN, 'N', '^').opts(
+        text_color='black', 
+        text_font_size='8pt', 
+        text_align='center', 
+        text_baseline='middle', 
+        text_font_style='bold', 
+        text_alpha=0.5, 
+        arrow_size=5, 
+        arrow_color='black',
+        arrow_alpha=0.5
+    )
+
+
+    # Définir les coordonnées de la barre d'échelle en coordonnées Google Mercator
+    # Ajustez ces valeurs en fonction de la taille souhaitée de votre barre d'échelle
+    x0, y0, x1, y1 = x-50000, y-35000, x+50000, y-34500 # 5000 mètres pour l'exemple
+
+    # Création de la barre d'échelle
+    echelle_barre = hv.Rectangles([(x0, y0, x1, y1)])
+    # Création de annotation d'échelle
+    texte_echelle = hv.Text(x, y-28000, '100 km')
+
+    return(annotation_area,legend_text_feux,legend_items,legend_feux,texte_echelle,echelle_barre,fleche_nord,annotation_realisation,annotation_sources)
+```
+
+```{python}
+#| echo: false
+#| output: false
+#| label: configurer le rendu carto GT + ILES
+styles = {'fontsize': 8}
+
+realisation = 'OEIL'
+
+def loc_sud(total,level_strate,nb_strat,data_env,pos_legend,label_legend,label_legend_env,color,color_env,texte_sources):
+    lon, lat = 166.46, -22.4
+    lonN, latN = 167.03, -22
+
+    # Convertir en coordonnées Google Mercator (EPSG:3857)
+    transformer = Transformer.from_crs("EPSG:4326", "EPSG:3857", always_xy=True)
+    x, y = transformer.transform(lon, lat)
+    xN, yN = transformer.transform(lonN, latN)
+
+    def update_texte(x,y,texte, fontsize, halign):
+        return hv.Text(x, y, texte, fontsize = fontsize,halign=halign)
+
+    def update_source(x,y,texte):
+        x = x-5000
+        y = y-5000
+        return update_texte(x, y, f'Sources : {texte}', 8,'left' )
+
+    def update_realisation(x,y,texte):
+        x = x-5000
+        y = y-8000
+        return update_texte(x, y, f'Réalisation : {texte}', 8,'left' )
+
+    # Positionnement du texte des sources
+    annotation_sources = update_source(x,y, texte_sources)
+    annotation_realisation = update_realisation(x,y, realisation)
+
+    text_area = f"Superficie des zones brûlées: {total:.0f} ha"
+
+    annotation_area = hv.Text(x - 50000, y + 30000, text_area, halign='left', valign='top', fontsize=8)
+
+    # Créer la légende
+    legend_x, legend_y = x - 5000, y + pos_legend
+    rect_width, rect_height = 4000, 1500
+    legend_text_feux = hv.Text(legend_x + 5000, legend_y + 500, label_legend, halign='left', valign='center', fontsize=8)
+    legend_feux = hv.Rectangles([(legend_x, legend_y, legend_x + rect_width, legend_y + rect_height)]).opts(
+        fill_color='#8B0000',
+        line_color='white')
+
+    if nb_strat>1:
+        legend_items = [legend_feux, legend_text_feux]
+        for i, (substrat, color) in enumerate(zip(data_env[level_strate], color_env)):
+            legend_y -= rect_height + 1000
+            legend_items.append(hv.Text(legend_x + 5000, legend_y + 500, substrat, halign='left', valign='center', fontsize=8))
+            legend_items.append(hv.Rectangles([(legend_x, legend_y, legend_x + rect_width, legend_y + rect_height)]).opts(
+                fill_color=color,
+                line_color='white'))
+    else:
+        legend_items = [legend_feux, legend_text_feux]
+        legend_y -= rect_height + 1000
+        legend_items.append(hv.Text(legend_x + 5000, legend_y + 500, label_legend_env, halign='left', valign='center', fontsize=8))
+        legend_items.append(hv.Rectangles([(legend_x, legend_y, legend_x + rect_width, legend_y + rect_height)]).opts(
+            fill_color=color_env,
+            line_color='white'))
+
+    # Création de la flèche avec une barre plus courte
+    fleche_nord = hv.Arrow(xN, yN, 'N', '^').opts(
+        text_color='black', 
+        text_font_size='8pt', 
+        text_align='center', 
+        text_baseline='middle', 
+        text_font_style='bold', 
+        text_alpha=0.5, 
+        arrow_size=5, 
+        arrow_color='black',
+        arrow_alpha=0.5
+    )
+
+
+    # Définir les coordonnées de la barre d'échelle en coordonnées Google Mercator
+    # Ajustez ces valeurs en fonction de la taille souhaitée de votre barre d'échelle
+    x0, y0, x1, y1 = x-5000, y-1000, x, y-1200 # 5000 mètres pour l'exemple
+
+    # Création de la barre d'échelle
+    echelle_barre = hv.Rectangles([(x0, y0, x1, y1)])
+    # Création de annotation d'échelle
+    texte_echelle = hv.Text(x-2500, y+800, '10 km')
+
+    return(annotation_area,legend_text_feux,legend_items,legend_feux,texte_echelle,echelle_barre,fleche_nord,annotation_realisation,annotation_sources)
+```
+
+
+```{python}
+#| echo: false
+#| output: false
+#| label: configurer le rendu carto GT + ILES
+styles = {'fontsize': 8}
+
+realisation = 'OEIL'
+
+def loc_GT_no_zb(level_strate,nb_strat,data_env,pos_legend,label_legend_env,color_env,texte_sources):
+    lon, lat = 164, -22
+    lonN, latN = 167.1, -19.60
+
+    # Convertir en coordonnées Google Mercator (EPSG:3857)
+    transformer = Transformer.from_crs("EPSG:4326", "EPSG:3857", always_xy=True)
+    x, y = transformer.transform(lon, lat)
+    xN, yN = transformer.transform(lonN, latN)
+
+    def update_texte(x,y,texte, fontsize, halign):
+        return hv.Text(x, y, texte, fontsize = fontsize,halign=halign)
+
+    def update_source(x,y,texte):
+        x = x-50000
+        y = y-50000
+        return update_texte(x, y, f'Sources : {texte}', 8,'left' )
+
+    def update_realisation(x,y,texte):
+        x = x-50000
+        y = y-60000
+        return update_texte(x, y, f'Réalisation : {texte}', 8,'left' )
+
+    # Positionnement du texte des sources
+    annotation_sources = update_source(x,y, texte_sources)
+    annotation_realisation = update_realisation(x,y, realisation)
+
+
+    # Créer la légende
+    legend_x, legend_y = x - 50000, y + pos_legend
+    rect_width, rect_height = 30000, 10000
+
+    if nb_strat>1:
+        legend_items = []
+        for i, (substrat, color) in enumerate(zip(data_env[level_strate], color_env)):
+            legend_y -= rect_height + 5000
+            legend_items.append(hv.Text(legend_x + 40000, legend_y + 3800, substrat, halign='left', valign='center', fontsize=8))
+            legend_items.append(hv.Rectangles([(legend_x, legend_y, legend_x + rect_width, legend_y + rect_height)]).opts(
+                fill_color=color,
+                line_color='white'))
+    else:
+        legend_items = []
+        legend_y -= rect_height + 5000
+        legend_items.append(hv.Text(legend_x + 40000, legend_y + 3800, label_legend_env, halign='left', valign='center', fontsize=8))
+        legend_items.append(hv.Rectangles([(legend_x, legend_y, legend_x + rect_width, legend_y + rect_height)]).opts(
+            fill_color=color_env,
+            line_color='white'))
+
+    # Création de la flèche avec une barre plus courte
+    fleche_nord = hv.Arrow(xN, yN, 'N', '^').opts(
+        text_color='black', 
+        text_font_size='8pt', 
+        text_align='center', 
+        text_baseline='middle', 
+        text_font_style='bold', 
+        text_alpha=0.5, 
+        arrow_size=5, 
+        arrow_color='black',
+        arrow_alpha=0.5
+    )
+
+
+    # Définir les coordonnées de la barre d'échelle en coordonnées Google Mercator
+    # Ajustez ces valeurs en fonction de la taille souhaitée de votre barre d'échelle
+    x0, y0, x1, y1 = x-50000, y-35000, x+50000, y-34500 # 5000 mètres pour l'exemple
+
+    # Création de la barre d'échelle
+    echelle_barre = hv.Rectangles([(x0, y0, x1, y1)])
+    # Création de annotation d'échelle
+    texte_echelle = hv.Text(x, y-28000, '100 km')
+
+    return(legend_items,texte_echelle,echelle_barre,fleche_nord,annotation_realisation,annotation_sources)
+```
+
+
+```{python}
+#| echo: false
+#| output: false
+#| label: configurer le rendu carto GT + ILES
+styles = {'fontsize': 8}
+
+realisation = 'OEIL'
+
+def loc_PS_no_zb(level_strate,nb_strat,data_env,pos_legend,label_legend_env,color_env,texte_sources):
+    lon, lat = 165.5, -22.3
+    lonN, latN = 167.3, -21.35
+
+    # Convertir en coordonnées Google Mercator (EPSG:3857)
+    transformer = Transformer.from_crs("EPSG:4326", "EPSG:3857", always_xy=True)
+    x, y = transformer.transform(lon, lat)
+    xN, yN = transformer.transform(lonN, latN)
+
+    def update_texte(x,y,texte, fontsize, halign):
+        return hv.Text(x, y, texte, fontsize = fontsize,halign=halign)
+
+    def update_source(x,y,texte):
+        x = x-50000
+        y = y-50000
+        return update_texte(x, y, f'Sources : {texte}', 8,'left' )
+
+    def update_realisation(x,y,texte):
+        x = x-50000
+        y = y-60000
+        return update_texte(x, y, f'Réalisation : {texte}', 8,'left' )
+
+    # Positionnement du texte des sources
+    annotation_sources = update_source(x,y, texte_sources)
+    annotation_realisation = update_realisation(x,y, realisation)
+
+
+    # Créer la légende
+    legend_x, legend_y = x - 50000, y + pos_legend
+    rect_width, rect_height = 25000, 10000
+
+    if nb_strat>1:
+        legend_items = []
+        for i, (substrat, color) in enumerate(zip(data_env[level_strate], color_env)):
+            legend_y -= rect_height + 5000
+            legend_items.append(hv.Text(legend_x + 40000, legend_y + 3800, substrat, halign='left', valign='center', fontsize=8))
+            legend_items.append(hv.Rectangles([(legend_x, legend_y, legend_x + rect_width, legend_y + rect_height)]).opts(
+                fill_color=color,
+                line_color='white'))
+    else:
+        legend_items = []
+        legend_y -= rect_height + 5000
+        legend_items.append(hv.Text(legend_x + 40000, legend_y + 3800, label_legend_env, halign='left', valign='center', fontsize=8))
+        legend_items.append(hv.Rectangles([(legend_x, legend_y, legend_x + rect_width, legend_y + rect_height)]).opts(
+            fill_color=color_env,
+            line_color='white'))
+
+    # Création de la flèche avec une barre plus courte
+    fleche_nord = hv.Arrow(xN, yN, 'N', '^').opts(
+        text_color='black', 
+        text_font_size='8pt', 
+        text_align='center', 
+        text_baseline='middle', 
+        text_font_style='bold', 
+        text_alpha=0.5, 
+        arrow_size=5, 
+        arrow_color='black',
+        arrow_alpha=0.5
+    )
+
+
+    # Définir les coordonnées de la barre d'échelle en coordonnées Google Mercator
+    # Ajustez ces valeurs en fonction de la taille souhaitée de votre barre d'échelle
+    x0, y0, x1, y1 = x-50000, y-35000, x, y-34500 # 5000 mètres pour l'exemple
+
+    # Création de la barre d'échelle
+    echelle_barre = hv.Rectangles([(x0, y0, x1, y1)])
+    # Création de annotation d'échelle
+    texte_echelle = hv.Text(x-25000, y-28000, '50 km')
+
+    return(legend_items,texte_echelle,echelle_barre,fleche_nord,annotation_realisation,annotation_sources)
+```
+
+```{python}
+#| echo: false
+#| output: true
+#| label: export fig
+
+def export_output(data,figureName):
+    saving_png = hv.save(data, f'{export_file_path}{figureName}.png', backend='bokeh',  title=f'{figureName}', fmt='png')
+    saving_html = hv.save(data, f'{export_file_path}{figureName}.html', backend='bokeh',  title=f'{figureName}', fmt='html')
+
+    return
+
+```

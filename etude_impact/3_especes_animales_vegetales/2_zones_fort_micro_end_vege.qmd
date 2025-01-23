@@ -1,0 +1,101 @@
+#### Informations
+
+Les zones de micro-endémisme végétal ont été déterminées à l’aide de travaux de modélisation et reposent sur des probabilités de présence d'espèces micro-endémiques vasculaires, visibles à la Figure A METTRE A JOUR. Ces données sont issues d’un travail de recherche sur les espèces micro-endémiques de Nouvelle-Calédonie dans les herbiers et la littérature. Puis grâce à la localisation de ces espèces, un regroupement des espèces micro-endémiques a été effectué afin de définir les paramètres environnementaux des micro-habitats qui les hébergent. Enfin, des techniques de modélisation d’habitat ont été utilisées afin d’évaluer la probabilité de la distribution potentielle d’une ou de plusieurs espèces en fonction des zones respectant les exigences environnementales de l’espèce. L’altitude, la pente, la pluviométrie et la température moyenne (si les espèces étaient situées sur plusieurs localisations), mais également la géologie a ainsi été prises en compte. Les données intersectées avec les surfaces brûlées détectées par Sentinel 2 recensent les zones à forte probabilité de micro-endémisme végétal, supérieures ou égales à 70% de densité d'espèces micro-endémiques vasculaires. Il est tenu de préciser que la donnée est représentée par des pixels d’un kilomètre carré, ce qui implique de lire avec prudence les résultats qui suivront.
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: cartes zones impactes fort micro_endemisme
+
+figureName = "fig-carte-impact-sb-fort-microendemisme"
+
+viz_map_nc = carte_impact_zb_bdenv(
+    data_carto=nc_,
+    data_feux=data_feux,
+    data_env=zone_fort_microendemisme_vegetal,
+    cadre=bb_,
+    color='#8B0000',
+    color_env='#9d44a9',
+    title=f"Carte de l'impact des surfaces brûlées sur les zones de fort micro-endémisme en {Annee}",
+    tolerance=2000,
+    textlegende='test',
+    nb_strat=1,
+    level_strate=None,
+    pos_legend=8000,
+    label_legend='Zones brûlées',
+    label_legend_env='Périmètres à fort micro-endémisme végétal',
+    texte_sources='A. Wulf / IAC-UNC / OEIL / Copernicus'
+
+)
+
+export_output(viz_map_nc,figureName)
+
+```
+
+::: {#fig-carte-impact-sb-fort-microendemisme}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-carte-impact-sb-fort-microendemisme
+#| fig-cap: "Carte de localisation des zones de fort micro-endémisme et des zones brûlées (Sentinel 2)"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::
+
+#### Résultats
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab resultat impact zb sur zones fort micro-endemisme echelon territorial
+
+figureName = "fig-tab-echelon-nc-micro-endemisme"
+table_province = tableau_statistiques(
+    data=data_microendemisme,
+    level_them=None,
+    label_them=None,
+    groupby='upper_libelle',
+    annee=Annee,
+    type_zone='ZEE',
+    columns=['upper_libelle','nb_theme','nb_theme_indic','superficie_ha','indicateur_3'],
+    label_col=['Territoire concerné','Nombre total de ZFME','Nombre de ZFME touchée par les srfaces brûlées','Surface brûlée (ha)','Part de la superficie impactée par les surfaces brûlées (%)'],
+    title= f"Résultats des impacts des surfaces brûlées {Annee} sur les zones de fort micro-endémisme à l'échelle territoriale",
+    filtre='superficie_ha',
+    hauteurtab=500
+)
+#export_output(pie_chart,figureName)
+table_province
+
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab resultat impact zb sur zones fort micro-endemisme echelon communal
+
+figureName = "fig-tab-echelon-nc-micro-endemisme"
+table_province = tableau_statistiques(
+    data=data_microendemisme,
+    level_them=None,
+    label_them=None,
+    groupby='upper_libelle',
+    annee=Annee,
+    type_zone='commune',
+    columns=['upper_libelle','nb_theme','nb_theme_indic','superficie_ha','indicateur_3'],
+    label_col=['Territoire concerné','Nombre total de ZFME','Nombre de ZFME touchée par les srfaces brûlées','Surface brûlée (ha)','Part de la superficie impactée par les surfaces brûlées (%)'],
+    title= f"Répartition de l’impact des surfaces brûlées sur les zones de fort micro-endémisme par commune en Nouvelle-Calédonie pour l’année {Annee}",
+    filtre='superficie_ha',
+    hauteurtab=500
+)
+#export_output(pie_chart,figureName)
+table_province
+
+
+```

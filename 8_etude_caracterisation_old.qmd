@@ -1,0 +1,54 @@
+
+{{< include etude_caracterisation/data.qmd >}}
+{{< include etude_caracterisation/settings.qmd >}}
+{{< include etude_caracterisation/0_methode/carte_cloroplethe.qmd >}}
+{{< include etude_caracterisation/0_methode/tab_stats.qmd >}}
+{{< include etude_caracterisation/0_methode/graph_evolution.qmd >}}
+{{< include etude_caracterisation/0_methode/carte_impact_zb.qmd >}}
+{{< include etude_caracterisation/0_methode/hist_cumul.qmd >}}
+{{< include etude_caracterisation/0_methode/carte_zb_bdenvironnement.qmd >}}
+{{< include etude_caracterisation/0_methode/pie_chart.qmd >}}
+
+# Caractérisation des zones brulées
+
+{{< include etude_caracterisation\1_intro.qmd >}}
+
+## Analyse spatiale des surfaces brûlées
+
+Cette partie du rapport présente différentes approches ayant pour but de caractériser la répartition des zones brûlées tout en tenant compte d’autres facteurs comme le substrat ou zones anthropiques à proximité des surfaces brûlées. Leur taille et leur localisation sont prises en compte afin de mettre en avant les lieux où les incendies ont été les plus intenses. 
+
+### Répartition par unité territoriale
+
+Sont présentés dans cette partie, le nombre d’incendies et la superficie en hectares incendiés par unité administrative. Ces résultats s’appuient principalement sur les données issues de la chaîne de traitement des images satellitaires de Sentinel 2. 
+
+{{< include etude_caracterisation\part1_analyse_spatiale\1_unite_territoriale.qmd >}}
+
+### Répartition selon le type de foncier
+
+{{< include etude_caracterisation\part1_analyse_spatiale\2_type_foncier.qmd >}}
+
+### Analyse de la taille des incendies
+
+{{< include etude_caracterisation\part1_analyse_spatiale\3_taille_zb.qmd >}} 
+
+### Répartition des incendies vis-à-vis du substrat
+
+{{< include etude_caracterisation\part1_analyse_spatiale\5_zb_substrat.qmd >}} 
+
+### Distance entre incendie et source potentielles
+
+{{< include etude_caracterisation\part1_analyse_spatiale\7_zb_source_potentielle.qmd >}}
+
+## Analyse temporelle
+
+### Variabilité interannuelle des départs de feux
+
+{{< include etude_caracterisation\part2_analyse_temporelle\part1_variabilite_interannuelle\VIIRS.qmd >}}
+
+### Saisonnalité des surfaces brûlées
+
+{{< include etude_caracterisation\part2_analyse_temporelle\part2_saisonnalite_sb\VIIRS.qmd >}}
+
+## Bilan sur la répartition spatio-temporelle des incendies
+
+{{< include etude_caracterisation\part3_bilan\bilan.qmd >}}

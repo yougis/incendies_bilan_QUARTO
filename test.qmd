@@ -1,0 +1,390 @@
+---
+title: "Test Boucle Analytique"
+subtitle: "Répartition par unité territoriale"
+author: "Solène Nitsche"
+format: 
+  html: 
+    default: true
+  pdf:
+    default: true
+---
+
+```{python}
+#| echo: false
+#| warning: false
+#| output: false
+#| label: loading data libraries and environment variables
+
+import os
+from dotenv import load_dotenv
+from intake import open_catalog
+import pandas as pd
+import numpy as np
+import geopandas as gpd
+from cartopy import crs
+
+
+load_dotenv()
+usr=os.getenv("DB_USER")
+pswd=os.getenv("DB_PWD")
+host=os.getenv("DB_HOST")
+port=os.getenv("DB_PORT")
+home=os.getenv("HOME_PATH")
+db_traitement=os.getenv("DB_WORKSPACE")
+db_ref=os.getenv("DB_REF")
+db_externe=os.getenv("DB_EXT")
+dwh_fact_strategy=os.getenv("DWH_FACT_STRATEGY")
+dwh_dim_strategy=os.getenv("DWH_DIM_STRATEGY")
+commun_path = os.getenv("COMMUN_PATH")
+project_dir = os.getenv("PROJECT_PATH")
+data_catalog_dir = os.getenv("DATA_CATALOG_DIR")
+data_output_dir = os.getenv("DATA_OUTPUT_DIR")
+sig_data_path = os.getenv("SIG_DATA_PATH")
+project_db_schema = os.getenv("PROJECT_DB_SCHEMA")
+
+```
+
+```{python}
+#| echo: false
+#| label: loading catalogs
+
+
+crsRgnc = crs.LambertConformal(central_longitude=166,
+                                standard_parallels=(-20.66666666666667, -22.33333333333333),
+                                central_latitude=-21.5,
+                                false_easting=400000,
+                                false_northing=300000,
+                                cutoff=0,
+                                globe=crs.Globe(ellipse='GRS80'))
+
+crs_proj4 = crsRgnc.proj4_init
+#crsMerca = crs.GOOGLE_MERCATOR
+
+# Données carto
+
+cat_data_carto = open_catalog('./catalogue/carto.yaml')
+
+nc_ = cat_data_carto.Grande_terre_et_iles
+
+province = cat_data_carto.province
+
+bb_ = cat_data_carto.bb_Grande_terre_et_iles
+
+# Données feux
+
+cat_data_feux = open_catalog('./catalogue/feux.yaml')
+
+data_feux = cat_data_feux.faits_zones_brulees_zee
+
+data_feux_analys = cat_data_feux.vue_dtm_zb_administ_nobyindex
+
+```
+
+```{python}
+#| tags: [parameters]
+#| echo: false
+#| output: false
+#| label: load libraries and settings
+
+import datetime
+from IPython.display import display, Markdown
+from tabulate import tabulate
+import xarray as xr
+from cartopy import crs
+import holoviews as hv
+import hvplot.pandas
+from holoviews.element.tiles import tile_sources as ts
+from holoviews import opts
+from holoviews.operation.datashader import (
+    rasterize, datashade, inspect_polygons
+)
+from holoviews.operation import timeseries
+
+import colorcet as cc
+import datashader as ds
+import datashader.transfer_functions as tf
+
+from bokeh.models import FixedTicker, HoverTool, DatetimeTickFormatter
+from bokeh.models.formatters import DatetimeTickFormatter
+
+
+from pyproj import Proj
+from pyproj import Transformer
+
+# warning extension('matplotlib') fait bugger l'affichage des plots geopandas.plot()
+# tout le code est  fait pour être compatible avec bokeh.
+hv.extension('bokeh')
+# default value Analyses effectuées sur les données de l'année en cours si execute parameter n'est pas utilisé dans le lancement de la génération du rapport : --execute-params _variables.yml
+
+```
+
+```{python}
+#| echo: false
+#| output: false
+#| label : Configuration des output holoviz et bokeh
+
+
+## taille des plots fixés notament pour que les output png ne soit pas tronqué lors de l'utilisation de datashader
+
+plot_width = 1200
+plot_height = int(plot_width * 0.5)
+
+plot_width_col2 = int(plot_width/2)
+plot_height_col2 = int(plot_width_col2 * 0.5)
+
+opts.defaults(
+    opts.Polygons(
+        xaxis=None, 
+        yaxis=None,
+    ),
+
+    opts.Overlay( 
+         #responsive=True
+        )
+    )
+tiled_basemap = ts["CartoLight"]().opts(
+    min_height=500, 
+    #responsive=True, 
+    xaxis=None, 
+    yaxis=None)
+
+```
+
+```{python}
+#| echo: false
+#| output: false
+#| label: configurer le rendu carto 
+
+
+styles = {'fontsize': 8}
+
+texte_sources = "Sources: //////"
+realisation = "Réalisation: //////"
+
+
+# Coordonnées géographiques de la Nouvelle-Calédonie
+lon, lat = 163.75, -22.4
+lonN, latN = 167.1, -19.60
+# Convertir en coordonnées Google Mercator (EPSG:3857)
+
+transformer = Transformer.from_crs("EPSG:4326", "EPSG:3857", always_xy=True)
+x, y = transformer.transform(lon, lat)
+xN, yN = transformer.transform(lonN, latN)
+
+
+
+
+def update_texte(x,y,texte, fontsize, halign):
+    return hv.Text(x, y, texte, fontsize = fontsize,halign=halign)
+
+def update_source(x,y,texte):
+    x = x-50000
+    y = y-50000
+    return update_texte(x, y, f'Sources : {texte}', 8,'left' )
+
+def update_realisation(x,y,texte):
+    x = x-50000
+    y = y-70000
+    return update_texte(x, y, f'Réalisation : {texte}', 8,'left' )
+
+# Positionnement du texte des sources
+annotation_sources = update_source(x,y, texte_sources)
+
+annotation_realisation = update_realisation(x,y, realisation)
+
+
+# Création de la flèche
+fleche_nord = hv.Arrow(xN, yN, 'N', '^').opts(
+    text_color='black', 
+    text_font_size= '10pt', 
+    text_align='center', 
+    text_baseline='middle', 
+    text_font_style='bold', 
+    text_alpha=0.5, 
+    arrow_size=10, 
+    arrow_color='black',
+    arrow_alpha=0.5)    
+
+
+# Définir les coordonnées de la barre d'échelle en coordonnées Google Mercator
+# Ajustez ces valeurs en fonction de la taille souhaitée de votre barre d'échelle
+x0, y0, x1, y1 = x-50000, y-500, x+50000, y+500 # 5000 mètres pour l'exemple
+
+# Création de la barre d'échelle
+echelle_barre = hv.Rectangles([(x0, y0, x1, y1)])
+# Création de annotation d'échelle
+texte_echelle = hv.Text(x, y-15000, '100 km')
+
+
+```
+
+```{python}
+#| echo: true
+#| output: true
+#| label: Carte localisation des feux sentinel 2021
+
+data = data_feux.read().to_crs(3857)
+nc = nc_.read().to_crs(3857)
+bb = bb_.read().to_crs(3857)
+
+data_2021= data[data['annee'] == 2021]
+
+figureName = "fig-maps-zone-brulee-NC-Sentinel-2021"
+
+annotation_sources = update_source(x,y, 'OEIL/COPERNICUS SENTINEL-2')
+annotation_realisation = update_realisation(x,y, 'OEIL')
+
+nc_overlay = hv.Polygons(nc).opts(line_color='black', fill_alpha=0)
+
+feux_overlay = hv.Polygons(data, vdims='values').opts(fill_alpha=0.5)
+
+bb_overlay = hv.Polygons(bb).opts(alpha=0.0)
+
+rasterized_feux = rasterize(feux_overlay, aggregator=ds.count_cat('values'), width=500, height=500)
+rasterized_feux.opts(
+    opts.Image(cmap='fire', colorbar=True, tools=['hover'])
+)
+# Supposition sur la définition de tiled_basemap et autres éléments non définis
+# Assure-toi que tiled_basemap et autres éléments graphiques sont bien définis
+map_localisation_feux_S2_2021 = tiled_basemap.opts(alpha=0.5) * \
+                                annotation_sources * \
+                                annotation_realisation * \
+                                texte_echelle * \
+                                echelle_barre * \
+                                fleche_nord * \
+                                rasterized_feux * \
+                                nc_overlay * \
+                                bb_overlay
+
+viz_map_localisation = map_localisation_feux_S2_2021.opts(
+    title="Localisation des feux détectés par Sentinel 2 en Nouvelle Calédonie, 2021",
+    toolbar=None
+)
+
+viz_map_localisation
+
+```
+
+```{python}
+#| echo: false
+#| output: true
+#| label: Carte cloroplèthe province
+
+# Charger les données géométriques et non géométriques
+data = data_feux_analys.read()
+pr = province.read().to_crs(3857)
+
+# Filtrer pour l'année 2021
+data_2021 = data[data['annee'] == 2021]
+
+# Jointure des données sur l'ID spatial
+merged_data = data_2021.merge(pr, left_on='id_spatial', right_on='id_spatial')
+
+# Groupby pour calculer la somme des pourcentages par province
+#grouped_data = merged_data.groupby('dim', as_index=False)['pct_superficie_indic'].sum()
+
+# Définir les niveaux de couleur pour le pourcentage
+color_levels = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 1, 2, 5, 10, 20, 50, 100]
+
+# Créer les polygones pour les données jointes
+grouped_data = gpd.GeoDataFrame(merged_data,geometry='geometry' ,crs="EPSG:3857")
+
+# Création des Polygons sans spécifier kdims
+province_overlay = hv.Polygons(grouped_data, vdims=['pct_superficie_indic']).opts(
+    cmap='fire', line_color='black', fill_alpha=0.6, tools=['hover'], colorbar=True,
+    colorbar_opts={'title': "Pourcentage d'incendies"}
+)
+
+# Annotations
+annotation_sources = update_source(x, y, 'OEIL/COPERNICUS SENTINEL-2')
+annotation_realisation = update_realisation(x, y, 'OEIL')
+
+# Créer la carte avec les tuiles de base et les données rasterisées
+map_choropleth = tiled_basemap.opts(alpha=0.5) * \
+    annotation_sources * \
+    annotation_realisation * \
+    texte_echelle * \
+    echelle_barre * \
+    fleche_nord * \
+    province_overlay
+
+viz_map_choropleth = (map_choropleth).opts(title="Pourcentage d'incendies par province en Nouvelle Calédonie, 2021", toolbar=None)
+
+viz_map_choropleth
+
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| output: false
+#| label: tab stats feux par province
+
+# Charger et filtrer les données
+data = data_feux_analys.read()
+data_2021 = data[(data['annee'] == 2021) & (data['type'] == 'province')]
+
+# Grouper les données par province
+grouped_data = data_2021.groupby('dim').agg({
+    'superficie_dim_ha': 'sum',
+    'nb_indic': 'sum',
+    'superficie_indic_ha': 'sum',
+    'pct_superficie_indic': 'sum'
+}).reset_index()
+
+# Renommer les colonnes pour le tableau final
+grouped_data.columns = [
+    'Territoires concernés',
+    'Superficie en ha',
+    'Nombre de surface brûlées',
+    'Superficie de surface brûlées en ha',
+    'Pourcentage de superficie brûlées'
+]
+
+# Convertir en élément Holoviews Table
+table = hv.Table(grouped_data)
+
+# Afficher la table avec Holoviews
+table.opts(width=800, height=400)
+
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| output: false
+#| label: graph en ligne évolution de sb par province
+
+# Charger les données depuis le catalogue
+data = data_feux_analys.read()
+
+# Filtrer les données pour les années 2017 à 2021
+data_years = data[(data['annee'] >= 2017) & (data['annee'] <= 2021) & (data['type'] == 'province')]
+
+# Grouper les données par année et par province
+grouped_data_years = data_years.groupby(['dim', 'annee']).agg({
+    'pct_superficie_indic': 'mean'
+}).reset_index()
+
+# Renommer les colonnes pour le graphique
+grouped_data_years.columns = ['Province', 'Année', 'Pourcentage brûlé (%)']
+
+# Convertir en élément Holoviews Curve
+curves = []
+for province in grouped_data_years['Province'].unique():
+    province_data = grouped_data_years[grouped_data_years['Province'] == province]
+    curve = hv.Curve(province_data, kdims='Année', vdims='Pourcentage brûlé (%)', label=province).opts(line_width=2, marker='o', color=next(hv.Cycle('Category10')))
+    curves.append(curve)
+
+# Overlay des courbes
+overlay = hv.Overlay(curves).opts(
+    width=800, height=400, xlabel='Année', ylabel='Pourcentage brûlé (%)', 
+    title='Pourcentage de superficie brûlée par province de 2017 à 2021'
+)
+
+# Afficher le graphique
+overlay
+
+```
+
+

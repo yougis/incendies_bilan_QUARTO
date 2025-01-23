@@ -1,0 +1,47 @@
+---
+bibliography: ./references.bib
+---
+
+<!-- INFO : 
+Include shortcodes are equivalent to copying and pasting the text from the included file into the main file. This means that relative references (links, images, etc.) inside the included file resolve based on the directory of the main file not the included file.
+
+It also means that if the included file has a metadata block, that block will take effect in all included files. In most cases, having metadata blocks in an included file will cause unexpected behavior.
+
+-->
+
+{{< include ./etude/data.qmd >}}
+{{< include ./etude/settings.qmd >}}
+
+# Présentation de l'étude
+
+## Contexte {#sec-contexte}
+{{< include ./etude/part1/contexte.qmd >}}
+
+## Périmètre spatial et temporel de l'étude 
+{{< include ./etude/part1/perimetre-spatio-temporel.qmd >}}
+
+## Objectif
+{{< include ./etude/part1/objectif.qmd >}}
+
+# Méthode de production des résultats
+    
+{{< include ./etude/part2/methodo.qmd >}}   
+
+# Caractérisation des zones brulées
+
+{{< include ./etude/part3/intro.qmd >}} 
+
+## Analyse spatiale des surfaces brûlées
+
+{{< include ./etude/part3/spatial-analyse.qmd >}} 
+
+{{< include ./etude/part3/S2.qmd >}}
+
+{{< include ./etude/part3/VIIRS.qmd >}}
+
+{{< include ./etude/part3/tables.qmd >}}
+
+
+# Caractérisation des impacts environnementaux liés aux zones brulées
+
+# Conclusion

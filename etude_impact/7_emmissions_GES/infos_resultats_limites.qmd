@@ -1,0 +1,89 @@
+### Informations
+
+Les incendies génèrent chaque année la dégradation de plusieurs milliers d’hectares de forêts en Nouvelle Calédonie. Cette biomasse morte ou vivante en brulant va dégager un mélange complexe de dioxyde carbone (CO2), de particules en suspension, de vapeur d’eau, de monoxyde de carbone (CO), de composés organiques (tels l’acroléine et le formaldéhyde), d’oxydes d’azote (NOx) et de divers minéraux[^36]. En affectant la qualité de l’air, les incendies peuvent engendrer des effets délétères significatifs sur l’environnement et la santé des populations exposées à ces fumées. A l’échelle mondiale, les émissions induites par les feux contribuent significativement aux variations des concentrations atmosphériques de gaz carbonés et influent sur le climat[^37]. La combustion de biomasse est estimée globalement, toutes causes confondues, à une contribution d’environ 20% à 30% des émissions de CO2 et autres gaz chimiquement actifs tels que les hydrocarbures, le CO et le NO[^38].  Il convient donc de quantifier de façon précise les incendies pour pouvoir appréhender davantage ses impacts, avoir une connaissance plus fine des interactions entre le climat et le cycle du carbone et mieux comprendre sa part dans les émissions de gaz à effet de serre. Dans le présent rapport seules les émissions de CO2, CH4 et N2O seront analysées car ce sont les gaz, émis lors d’un incendie, qui sont pris en compte dans le bilan carbone. Les émissions de CO et NOx émises au cours d’un incendie ne seront pas donc pas décrites.   
+
+La quantification précise des émissions de GES et autres gaz toxiques lors d’un incendie est un processus complexe qui nécessite la connaissance d’un nombre conséquent d’informations. En effet, la composition des fumées émise est variable selon le combustible et sa densité, l’humidité, les conditions de combustion et l’éloignement de la source[^39]. Ainsi, la caractérisation précise du type de végétation, qui représente le combustible, est importante. Chaque essence dispose d’une valeur en biomasse totale spécifique qu’il est primordial de bien déterminer afin de pouvoir distinguer la biomasse combustible de la biomasse restante. La biomasse combustible étant la valeur d’intérêt car les feux en Nouvelle-Calédonie sont principalement des feux de surface, qui brûlent la litière et le sous-bois. De part une valeur en biomasse et un degré d’inflammabilité propre à chaque essence, la quantité de gaz émise sera donc différente. La temporalité des feux est aussi un paramètre qu’il est intéressant d’intégrer dans les modélisations des calculs des émissions. Le pourcentage de biomasse consumé va effectivement augmenter au cours de la saison avec la dessication. De plus, lorsque le matériel est particulièrement sec et qu’il présente un stress hydrique notamment dans les zones herbacées de type savanicole, la combustion sera plus facile et donc les émanations de gaz tel que le CO2 seront plus importantes[^40].   
+
+Plusieurs méthodes peuvent être utilisées pour déterminer les émissions de GES induites par les incendies. Le choix d’une méthode dépend du niveau de connaissance et donc des données détenues par le pays. Certaines méthodes ont une approche plus « classique ». Elles consistent à évaluer la quantité en biomasse des différentes formations végétales par des observations terrains ou l’analyse d’images satellitaires puis au travers de formulations mathématiques d’obtenir une valeur en CO2 ou équivalent CO2. D’autres méthodes utilisent de nouveaux outils satellitaires afin d’évaluer la puissance radiative du feu (FRP) et l’énergie rayonnante libérée (FRE) pendant les épisodes de combustion de la biomasse. Cette énergie radiative de feu (FRE) permet de quantifier les variations des taux de combustion de la biomasse et des taux de production de polluants atmosphériques[^41],[^42],[^43].  
+
+Dans le cadre du présent rapport, il a été choisi de privilégier une approche « classique ». L’intérêt étant de pouvoir appliquer une méthode en adéquation avec les moyens qui peuvent être mobilisés de façon récurrente. Il est important de préciser que la méthode choisie et les résultats obtenus sont à prendre avec beaucoup de précautions. En effet, les études concernant la quantification précise de biomasse sont extrêmement pauvres et peu récentes en Nouvelle-Calédonie. De plus, la quantification des surfaces brûlées issue d’images à haute résolution réalisée par l’Observatoire de l’Environnement, objet du présent rapport, possède encore certaines limites qui induisent des biais.
+
+[^36]: Benmarhnia T., Mathlouthi F., Smargiassi A. (2013), Les impacts sanitaires des particules liées aux incendies de forêt, Gouvernement du Québec, Institut national de santé publique du Québec, 20p
+[^37]:  Lu ̈, A., H. Tian, M. Liu, J. Liu, and J. M. Melillo (2006), Spatial and temporal patterns of carbon emissions from forest firesin China from 1950 to 2000,J. Geophys. Res.,111, D05313, doi:10.1029/2005JD006198.
+[^38]: Lifei Yin , Pin Du , Minsi Zhang , Mingxu Liu , Tingting Xu , and Yu Song (2019), Estimation of emissions from biomass burning in China (2003–2017) based on MODIS fire radiative energy data, State Key Joint Laboratory of Environmental Simulation and Pollution Control and National Center for Climate Change Strategy and International Cooperation (NCSC).
+[^39]:  Anses (2012), Effets sanitaire liés à la pollution générée par les feux de végétation à l’air libre, Rapport d’expertise collective
+[^41]: Ichoku C., Giglio L., Wooster M., Remer L. (2008), Global characterization of biomass-burning patterns using satellite measurements of fire radiative energy
+[^42]: Wooster M.J., Sergeevich Zhukov B., Oertel D., (2003) Fire Radiative Energy for Quantitative Study of Biomass Burning: Derivation from the BIRD Experimental Satellite and Comparison to MODIS Fire Products 
+[^43]: Palumbo I. (2007), The Emissions of Greenhouse Gases from Forest Fires in the Mediterranean Region, Commission européenne, https://publications.jrc.ec.europa.eu/repository/handle/JRC37666
+
+### Méthode utilisée par le Groupe d’experts intergouvernemental sur l’évolution du climat (GIEC)
+
+A FAIRE
+
+### Résultats
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab emissions GES par province
+
+figureName = "fig-tab-stats-ges_prov"
+
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: carte proportionnelle emissions GES
+
+figureName = "fig-carte-proportionnelle-emissions-GES"
+
+viz_map_cercles_arbustive = carte_cercles_proportionnels(
+    data=data_GES,
+    data_carto=commune,
+    cadre=bb_,
+    level='commune',
+    tolerance=1000,
+    annee=Annee,
+    colonne_valeurs='emission_ges',
+    couleur_cercles='Purple',
+    title=f"Quantités émises de GES estimées par commune en {Annee}",
+    hovertool='Emission de GES',
+    titrelegende='Emission de GES potentielle \n (teC02)',
+    min_size=10,
+    max_size=30,
+    legend_values=[20000, 40000, 600000]
+)
+
+# export des figures en images pour les afficher dans le rapport 
+saving = hv.save(viz_map_cercles_arbustive, f'{export_file_path}{figureName}.png', backend='bokeh',  title=f'{figureName}', fmt='png')
+saving = hv.save(viz_map_cercles_arbustive, f'{export_file_path}{figureName}.html', backend='bokeh',  title=f'{figureName}', fmt='html')
+
+viz_map_cercles_arbustive
+
+```
+
+::: {#fig-carte-proportionnelle-emissions-GES}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-carte-proportionnelle-emissions-GES
+#| fig-cap: "Quantités émises de GES estimées par commune"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::
+
+### Limites de l’étude et perspectives d’améliorations
+
+Cette estimation des émissions de CO2 induites par les surfaces brûlées présente de nombreuses incertitudes qu’il est primordial de prendre en compte. Le manque considérable de données concernant la biomasse et notamment la quantité de combustible pouvant être brûlée, des valeurs par défaut fournies par l’IPCC ont été utilisées. Ainsi, certaines spécificités propres au caractère unique de la Nouvelle-Calédonie n’ont pas pu être prises en compte. En effet, le taux d’endémisme de ces végétaux estimé à 76%43 et la forte proportion de savane à Niaoulis, essence robuste et résistante aux feux44 pourraient modifier de façon importante les densités de combustible et donc la masse disponible à la combustion. De plus, plusieurs hypothèses inhérentes à la méthodologie proposée par le GIEC ont été appliquées et pourraient ne pas révéler la masse réelle de combustible disponible. Les valeurs par défaut utilisées pour les facteurs de combustion et d’émission sont ainsi à prendre en considération dans l’interprétation des résultats. En effet, le facteur de combustion est intrinsèquement lié au combustible, tel que sa taille, son architecture, sa quantité d’humidité ou encore au type de feu. Le facteur d’émission variant quant à lui en fonction de la teneur en carbone de la biomasse et de l’exhaustivité de la combustion.  
+
+Afin de pouvoir proposer à l’avenir une valeur plus précise, il est nécessaire de tendre vers une méthodologie plus robuste à savoir l’approche n°3 proposée par le GIEC. Cette dernière établit des calculs en utilisant des modèles sophistiqués qui tiennent compte des règles de l’ensemble du processus d’émission de GES induites par les surfaces brûlées, et utilise des données d’entrées détaillées (brûlage de biomasse, facteurs d’émission, de combustions,). L’approche n°2 étant celle qui présente les résultats les plus élevés avec environ 30% de différence avec l’approche n°1 et 11,9% de différence avec l’approche n°3 selon une étude publiée en 201845.  
+
+À terme, il sera donc fondamental d’envisager des études scientifiques poussées sur la caractérisation de la biomasse végétale. Elles devront permettre une identification précise des différents types de végétation qui pourra être faite par observations de terrains et/ou via l’utilisation d’outils satellitaires. De plus, malgré l’acquisition difficile de ces données due à l’hétérogénéité des écosystèmes dictée par des conditions orographiques, édaphiques et climatiques spécifiques54, leurs intégrations sous format géoréférencé permettra de répondre aux enjeux cartographiques pour le suivi des multiples formations végétales. Les facteurs de combustion et d’émission nécessitent aussi d’être mieux renseignés notamment au travers d’études relatives à la biomasse. Quoiqu’il en soit, les méthodologies choisies devront intégrer les spécificités propres à l’archipel, être applicables dans le temps et l’espace et être en adéquation avec les moyens qui peuvent être mobilisés de façon récurrente. A noter que l’ensemble de ces études permettront de servir à des aspects clés de sécurité publique et de la gestion des terres.  

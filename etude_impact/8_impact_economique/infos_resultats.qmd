@@ -1,0 +1,40 @@
+### Informations
+
+La compensation écologique des impacts environnementaux liés aux aménagements, ouvrages et travaux a été introduite à partir de 2009 dans la réglementation locale. En province Sud, des articles du code de l’environnement et du code miner encadrent les mesures de compensations environnementales. Depuis 2012, afin de standardiser le calcul des mesures compensatoires, la province Sud et la DIMENC ont conjointement développé un outil d’aide à la décision permettant de dimensionner les mesures compensatoires.  
+
+L’outil, appelé OCMC, pour Outil de Calcul des Mesures Compensatoires, est caractérisé par une approche « habitat naturel », et non « espèces ». En effet, les données en entrée représentent les types de milieux impactés par le projet d’aménagement. Les différents types de milieux naturels présents sur la parcelle de projet vont être identifiés, ainsi que leur état général de conservation avant-projet. Ces informations vont permettre à l’outil de calculer la taille minimale de la surface qu’il faudra réhabiliter pour apporter un gain environnemental proportionnel à l’impact environnemental engendré par le projet sur le milieu naturel.  
+
+Le calcul comprend le choix de critères permettant de caractériser la biodiversité présente sur la parcelle du projet. L’outil va ainsi calculer « un score écologique » faisant notamment état de la capacité de résilience naturelle du milieu, et de la présence ou non d’espèces endémiques sur le lieu du projet. L’intensité et le caractère réversible ou non de l’impact sur le milieu naturel, permettent de calculer un « score de perturbation ».  
+
+Afin de faciliter la prise de décision, des mesures de compensations écologiques sont proposées par l’outil. Par exemple, si le projet induit une perte de biodiversité sur une forêt sclérophylle, l’enrichissement de forêt sèche sera proposé, avec une possibilité de moduler le nombre de plants minimum à replanter par m² et ou le nombre d’espèces différentes à introduire. Une estimation du coût qu’elles nécessiteraient pour être appliquées est indiquée. 
+
+Une pondération entre les critères choisis est appliquée selon un niveau de gravité du facteur prédéfini dans l’architecture de l’OCMC. L’ensemble des étapes décrites vont aboutir à l’identification d’un « ratio » qui représente l’importance de la compensation à appliquer. Plus le ratio est élevé et plus le volume des mesures de compensation est conséquent. Les calculs aboutissent à l’identification de la superficie à réhabiliter en fonction du type de compensation écologique choisie. 
+
+Les différents critères de calcul du coût de la compensation sont disponibles en annexe. 
+
+Initialement utilisé dans le cadre de projets d’aménagement du territoire, l’OCMC peut également être utilisé pour estimer le préjudice financier lié aux surfaces brûlées. Bien qu’il soit conçu pour quantifier les impacts environnementaux à une échelle réduite, soit pour chaque incendie, il peut être utilisé de manière globale en prenant en compte l’ensemble des surfaces incendiées par type de milieux présents en Nouvelle-Calédonie et ce en émettant des hypothèses standard concernant la qualité des milieux concernés ou la nature des opérations de réparation à mettre en œuvre. Le MOS de 2008 a été utilisé pour déterminer les types de végétations incendiés en 2019 sur l’ensemble du territoire car les typologies de végétation s’approchent le plus de celles utilisées par l’outil, contrairement à celles du MOS 2014 sur l’ensemble du territoire. Malgré l’ancienneté de cette couche d’information, elle présente l’avantage de proposer une catégorisation des milieux naturels plus précise que le MOS de 2014.  
+
+Les classes du MOS n’étant pas toutes présentes dans les choix de milieux naturels proposés par l’outil, des équivalences ont été appliquées (Tableau A METTRE A JOUR). De plus, les zones brûlées possédants tous des niveaux d’impacts sur le milieu naturel différents, une approche visant à moyenner les paramètres utilisés pour caractériser le niveau d’impact global a été utilisée.
+
+| Classe du MOS                                       | Milieu dans l’outil                                    |
+|-----------------------------------------------------|--------------------------------------------------------|
+| Forêt sur substrat ultramafique                     | Forêt sur sol ultramafique (type forêt humide)         |
+| Forêt sur substrat volcano-sédimentaire             | Forêt sur sol volcano-sédimentaire (type forêt humide) |
+| Maquis dense para forestier                         | Maquis para forestier                                  |
+| Maquis ligno-herbacé                                | Maquis ligno-herbacé                                   |
+| Forêt sèche (couche CEN 2019)                       | Forêt sèche état moyen                                 |
+| Savane                                              | Savane à Niaoulis                                      |
+| Végétation éparse sur substrat volcano-sédimentaire | Formations herbacées                                   | 
+| Végétation éparse sur substrat ultramafique         | Formations herbacées                                   |
+
+
+### Résultats
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: repartition cout eco estime des zb par province
+
+figureName = f"Répartition du coût écologique estimé des zones brûlées (Sentinel 2) de {Annee} par province"
+#A FAIRE
+```

@@ -1,0 +1,59 @@
+#### Informations
+
+Les aires protégées provinciales terrestres correspondent aux zones terrestres de protection de l’environnement gérées par les provinces (Figure A METTRE A JOUR). Elles ont été initiées dans le but de préserver la biodiversité et les écosystèmes des provinces ainsi que les valeurs culturelles associées notamment en réglementant les activités et les accès à ces zones. Elles peuvent être de différentes natures ; réserve naturelle intégrale, réserve naturelle, réserve de nature sauvage, aire de gestion durable des ressources, aire de protection et de valorisation du patrimoine naturel et culturel ou encore de type parc provincial.
+
+Les données relatives à cet enjeu environnemental sont légèrement différentes de celles utilisées pour l’analyse spatiale de l’impact environnemental des incendies de 2017. En effet, en avril 2019 le parc de la Côte Oubliée a été officiellement considéré comme aire protégée provinciale. De ce fait les données ont été réactualisées afin d’intégrer cette information.
+
+#### Résultats
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab impact zb sur aires protegees provinciales terrestres
+
+table_province = tableau_statistiques(
+    data=data_aire_proteg,
+    level_them=None,
+    label_them=None,
+    groupby=['upper_libelle','libelle'],
+    annee=Annee,
+    type_zone='province',
+    columns=['upper_libelle','libelle','nb_indic','superficie_ha','indicateur_3'],
+    label_col=['Territoire concerné','AP concernée','Nombre de surfaces brûlées','Surface brûlée (ha)','Part de la superficie impactée par les surfaces brûlées'],
+    title= f"Répartition de l’impact des surfaces brûlées sur les aires protégées terrestres à l'échelle provinciale pour l’année {Annee}",
+    filtre='superficie_ha',
+    hauteurtab=500
+)
+#export_output(pie_chart,figureName)
+table_province
+
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: carte impact zb sur aires protegees terrestres
+figureName = "fig-carte-aire_protegee-zb"
+
+viz_map_nc = carte_impact_zb_bdenv(
+    data_carto=nc_,
+    data_feux=data_feux,
+    data_env=aire_protegee,
+    cadre=bb_,
+    color='#8B0000',
+    color_env='#40ac21',
+    title=f"Carte de l'impact des surfaces brûlées sur les aires protégées en {Annee}",
+    tolerance=2000,
+    textlegende='test',
+    nb_strat=1,
+    level_strate=None,
+    pos_legend=8000,
+    label_legend='Zones brûlées',
+    label_legend_env='Aires protégées',
+    texte_sources='Gouvernement de la Nouvelle-Calédonie / Province Sud / UN Environnement World n\ Conservation monitoring Centre (UNEP-WCMC)/ OEIL / Copernicus'
+
+)
+
+export_output(viz_map_nc,figureName)
+
+```

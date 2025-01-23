@@ -1,0 +1,85 @@
+#### Informations
+
+Les zones tampons terrestres (Figure A METTRE A JOUR) permettent de maintenir le bon état de conservation des zones marines inscrites au patrimoine mondial de l’UNESCO. Elles regroupent des écosystèmes riches qui possèdent un intérêt écologique et biologique, comme les forêts sèches situées sur le domaine de Gouaro-Deva. Les zones classées, quant à elle, ont obtenu ce statut par leur caractère naturel remarquable. Pour être labellisé, le patrimoine naturel doit contenir des formations physiques, biologiques et géologiques remarquables, ou encore des zones d’une valeur exceptionnelle du point de vue de la science, de la conservation ou de la beauté naturelle et des habitats d’espèces animales et végétales menacées ayant une valeur universelle exceptionnelle du point de vue de la science ou de la conservation.  
+
+#### Résultats
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab impact zb sur zones tampons UNESCO
+
+figureName = "fig-tab-echelon-nc-unesco"
+
+table_province = tableau_statistiques(
+    data=data_unesco,
+    level_them=None,
+    label_them=None,
+    groupby=['upper_libelle','nom_zone'],
+    annee=Annee,
+    type_zone='ZEE',
+    columns=['nom_zone','nb_indic','superficie_ha','indicateur_3'],
+    label_col=['Territoire concerné','Nombre de surfaces brûlées','Surface brûlée (ha)','Part de la superficie de la zone tampon UNESCO touchée par les surfaces brûlées'],
+    title= f"Répartition de l’impact des surfaces brûlées sur les zones tampons terrestres de l’UNESCO pour l’année {Annee}",
+    filtre='superficie_ha',
+    hauteurtab=500
+)
+#export_output(pie_chart,figureName)
+table_province
+
+```
+
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: carte impact zb sur zones tampons UNESCO
+figureName = "fig-carte-unesco-zb"
+
+viz_map_nc = carte_impact_zb_bdenv(
+    data_carto=commune,
+    data_feux=data_feux,
+    data_env=unesco,
+    cadre=bb_,
+    color='#8B0000',
+    color_env='#40ac21',
+    title=f"Carte de l'impact des surfaces brûlées sur les zones tampons UNESCO en {Annee}",
+    tolerance=2000,
+    textlegende='test',
+    nb_strat=1,
+    level_strate=None,
+    pos_legend=8000,
+    label_legend='Zones brûlées',
+    label_legend_env='Périmètres UNESCO',
+    texte_sources='IFRECOR / OEIL / Copernicus'
+
+)
+
+export_output(viz_map_nc,figureName)
+
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: hist comparaison zb sur zones tampons terrestre UNESCO
+
+import plotly.graph_objects as go
+
+figureName = "diag-zb-milieux-essentiels-PS"
+
+data = data_unesco_impact.read()
+data_filtered = data[(data['annee'] == Annee) & (data['upper_libelle'] == 'ZEE')]
+
+data_grouped = data_filtered.groupby('nom_zone').sum().reset_index()
+
+labels = data_grouped['nom_zone']
+values = data_grouped['superficie_ha']
+
+fig = go.Figure(data=[go.Pie(labels=labels, values=values, marker_colors=['#d62728','#ff7f0e'])])
+
+#export_output(pie_chart,figureName)
+
+fig
+
+```

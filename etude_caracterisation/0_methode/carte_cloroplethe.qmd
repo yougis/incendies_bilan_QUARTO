@@ -1,0 +1,162 @@
+
+```{python}
+#| echo: false
+#| output: true
+#| label: méthode carte choroplethe unite territoriale
+#| warning: false
+#| error: false
+
+# Palette de couleurs continue personnalisée (du jaune clair à l'orange foncé)
+colors = ['#FFECD2', '#FFD8A8', '#FFC57E', '#FFB255', '#FF9E2C', '#FF8A00', '#E67600', '#CC6200'] 
+custom_cmap = LinearSegmentedColormap.from_list("custom_cmap", colors, N=256)
+
+global_min = 0  # Exemple: définir à 0%
+global_max = 15  # Exemple: définir à 10%
+
+def format_pct_superficie(value):
+    # Remplacer cette implémentation par la logique de formatage appropriée
+    return f"{value:.2f}%"
+
+def carte_choroplethe(geodata, data, thematique, label_them, indicateur, annee, tolerance, title, custom_cmap, x, y, global_min, global_max, left_key, right_key, how,source):
+    # Charger les données géométriques et non géométriques
+    gdf = geodata.read().to_crs(3857)
+    data = data.read()
+
+    if thematique is None :
+        data_years = data[data['annee'] == annee]
+    else:
+        data_years = data[(data['annee'] == annee) & (data[label_them] == thematique)]
+
+    # Jointure des données sur les clés spécifiées
+    merged_data = gdf.merge(data_years, left_on=right_key, right_on=left_key, how=how)
+
+    # Créer les polygones pour les données jointes
+    grouped_data = gpd.GeoDataFrame(merged_data, geometry='geometry', crs="EPSG:3857")
+
+    # Simplifier les géométries pour généraliser le trait de côte
+    #grouped_data['geometry'] = grouped_data.geometry.simplify(tolerance, preserve_topology=True)
+
+    # Appliquer le formatage sur la colonne 'pct_superficie_indic'
+    grouped_data['pct_superficie_indic_formatted'] = grouped_data[indicateur].apply(format_pct_superficie)
+
+    if left_key==right_key:
+        upper='libelle'
+    else:
+        upper='upper_libelle'
+    overlay = hv.Polygons(grouped_data, vdims=[indicateur,'pct_superficie_indic_formatted',upper]).opts(
+        cmap=custom_cmap,  # Utiliser la palette de couleurs continue
+        line_color='white',
+        tools=[HoverTool(tooltips=[
+            ("Part superficie brûlées", "@pct_superficie_indic_formatted"), 
+            ("Dimension spatiale", "@"+upper)
+        ])],
+        colorbar=True,
+        colorbar_opts={
+            'title': "%",
+            'ticker': BasicTicker(desired_num_ticks=15),
+        #    'formatter': PrintfTickFormatter(format="%0.1f")
+        },
+        clim=(global_min, global_max)  # Définir la plage des valeurs pour l'échelle de couleur
+    )
+
+    # Annotations
+    annotation_sources = update_source(x, y, source)
+    annotation_realisation = update_realisation(x, y, 'OEIL')
+
+    # Créer la carte avec les tuiles de base et les données rasterisées
+    map_choropleth = tiled_basemap_dark.opts() * \
+        texte_echelle * \
+        echelle_barre * \
+        fleche_nord * \
+        annotation_sources * \
+        annotation_realisation * \
+        overlay
+
+    viz_map_choropleth = (map_choropleth).opts(
+        title=title,
+        toolbar=None,
+        width=700,
+        height=500
+    )
+
+    return viz_map_choropleth
+
+```
+
+```{python}
+#| echo: false
+#| output: true
+#| label: méthode2 carte choroplethe unite territoriale avec classe de valeurs
+
+#def format_pct_superficie(value):
+    #return f"{value:.2f}%"
+
+# Palette de couleurs continue personnalisée (du jaune clair à l'orange foncé)
+#colors = ['#FFECD2', '#FFD8A8', '#FFC57E', '#FFB255', '#FF9E2C', '#FF8A00', '#E67600', '#CC6200', '#B34E00', '#993900', '#802400', '#661000', '#4C0000', '#330000', '#190000', '#000000']
+
+#global_min = 0  # Exemple: définir à 0%
+#global_max = 10  # Exemple: définir à 10%
+
+# Ajuster la palette de couleurs en fonction de global_min et global_max
+# Ici, nous prenons les 10 premières valeurs de la palette pour correspondre à la plage de 0 à 10
+#adjusted_colors = colors[:10]
+
+#def carte_choroplethe(geodata, data, annee, tolerance, title, x, y, global_min, global_max, left_key='id_spatial', right_key='id_spatial', how='left'):
+    # Charger les données géométriques et non géométriques
+    #gdf = geodata.read().to_crs(3857)
+    #data = data.read()
+    #data_years = data[data['annee'] == annee]
+
+    # Jointure des données sur les clés spécifiées
+    #merged_data = gdf.merge(data_years, left_on=right_key, right_on=left_key, how=how)
+
+    # Créer les polygones pour les données jointes
+    #grouped_data = gpd.GeoDataFrame(merged_data, geometry='geometry', crs="EPSG:3857")
+
+    # Simplifier les géométries pour généraliser le trait de côte
+    #grouped_data['geometry'] = grouped_data.geometry.simplify(tolerance, preserve_topology=False)
+
+    # Appliquer le formatage sur la colonne 'pct_superficie_indic'
+    #grouped_data['pct_superficie_indic_formatted'] = grouped_data['pct_superficie_indic'].apply(format_pct_superficie)
+
+    # Créer les Polygons en utilisant 'pct_superficie_indic' pour la coloration et inclure 'dim' pour le survol
+    #overlay = hv.Polygons(grouped_data, vdims=['pct_superficie_indic', 'pct_superficie_indic_formatted', 'dim']).opts(
+        #cmap=adjusted_colors, 
+        #line_color='white',
+        #tools=[HoverTool(tooltips=[
+        #    ("Part superficie brûlées", "@pct_superficie_indic_formatted"), 
+        #    ("Dimension spatiale", "@dim")
+        #])],
+        #colorbar=True,
+        #colorbar_opts={
+        #    'title': "%",
+        #   'ticker': BasicTicker(desired_num_ticks=10),
+        #    'formatter': PrintfTickFormatter(format="%0.1f")
+        #},
+        #clim=(global_min, global_max)  # Définir la plage des valeurs pour l'échelle de couleur
+    #)
+
+    # Annotations
+    #annotation_sources = update_source(x, y, 'OEIL/COPERNICUS SENTINEL-2')
+    #annotation_realisation = update_realisation(x, y, 'OEIL')
+
+    # Créer la carte avec les tuiles de base et les données rasterisées
+    #map_choropleth = tiled_basemap_dark.opts() * \
+    #    texte_echelle * \
+    #    echelle_barre * \
+    #    fleche_nord * \
+    #    annotation_sources * \
+    #    annotation_realisation * \
+    #    overlay
+
+    #viz_map_choropleth = (map_choropleth).opts(
+    #    title=title,
+    #    toolbar=None,
+    #    width=700,
+    #    height=500
+    #)
+
+    #return viz_map_choropleth
+
+
+```

@@ -1,0 +1,76 @@
+```{python}
+#| echo: false
+#| output: true
+#| warning: false
+
+def hist_cumul(data, type_zone, level_tem, start_year, end_year, title,label_x, label_y):
+    # Charger et filtrer les données
+    data = data.read()
+
+    ordre_taille = {
+    '[0-10[': 5,
+    '[10-100[': 4,
+    '[100-500[': 3,
+    '[500-1000[': 2,
+    '>=1000': 1
+    }
+
+    if type_zone is None:
+        data_filtered = data[(data['annee'] >= start_year) & (data['annee'] <= end_year)]
+    else:
+        data_filtered = data[(data['annee'] >= start_year) & (data['annee'] <= end_year) & (data['level'] == type_zone)]    
+
+    if level_tem =='zb_id':
+        grouped_data = data_filtered.groupby(['taille','annee'])[level_tem].count().reset_index()
+
+        grouped_data['taille'] = pd.Categorical(grouped_data['taille'], categories=ordre_taille.keys(), ordered=True)
+
+        grouped_data = grouped_data.sort_values(['taille', 'annee'])    
+        bars = hv.Bars(grouped_data, kdims=['taille', 'annee'], vdims=[level_tem])
+
+        hover = HoverTool(tooltips=[
+            ("Année", "@annee"),
+            ("Somme", "@"+level_tem)
+        ])
+
+    else:
+        grouped_data = data_filtered.groupby([level_tem, 'annee'])['superficie_ha'].sum().reset_index()
+
+        total_superficie = grouped_data.groupby(level_tem)['superficie_ha'].sum().reset_index()
+        total_superficie = total_superficie.sort_values(by='superficie_ha', ascending=True)
+        grouped_data[level_tem] = pd.Categorical(grouped_data[level_tem], 
+        
+        categories=total_superficie[level_tem], ordered=True)
+
+        grouped_data = grouped_data.sort_values(by='annee')
+
+        grouped_data['superficie_indic_ha_formatted'] = grouped_data['superficie_ha'].apply(lambda x: f"{x:.2f}")
+    
+        # Créer un objet Bars en utilisant HoloViews
+        bars = hv.Bars(grouped_data, kdims=[level_tem, 'annee'], vdims=['superficie_ha', 'superficie_indic_ha_formatted'])
+
+        hover = HoverTool(tooltips=[
+            ("Année", "@annee"),
+            ("Superficie brûlées (ha)", "@superficie_indic_ha_formatted")
+        ])
+
+    palette = ['#620F46', '#9F0328', '#FB8E2C', '#EA6615', '#0F515F', '#DBB28B']
+    bars.opts(
+        opts.Bars(
+            stacked=True,
+            xlabel=label_x,
+            ylabel=label_y,
+            color=hv.Cycle(values=palette),
+            legend_position='right',
+            width=900,
+            height=500,
+            xrotation=45,
+            tools=[hover],
+            line_color='white',
+            invert_axes=True,
+            show_grid=True,
+        )
+    )
+
+    return bars
+```

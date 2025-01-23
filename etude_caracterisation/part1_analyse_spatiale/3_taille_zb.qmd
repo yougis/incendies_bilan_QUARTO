@@ -1,0 +1,116 @@
+#### Informations   
+
+L’étude de la classification du nombre de surfaces brûlées en fonction de leur taille respective permet de mettre en avant le degré d’intensité de ces évènements.
+
+#### Résultats   
+
+{{< include etude_caracterisation/0_methode/hist_cumul.qmd >}}
+
+```{python}
+#| echo: false
+#| output: true
+#| label: fig-hist-zb-par-classe-taille-annee
+
+figureName = "fig-hist-zb-par-classe-taille-annee"
+hist_cumul = hist_cumul(
+    data=data_feux,
+    start_year=Annee,
+    end_year=Annee,
+    type_zone=None,
+    level_tem='zb_id',
+    title=" ",
+    label_x= 'Classe de taille',
+    label_y= 'Nombre de zones brulées',
+)
+title= f"Répartition des zones brûlées par classes de taille en {Annee}"
+
+# export des figures en images pour les afficher dans le rapport 
+export_output(hist_cumul,figureName)
+```
+
+```{python}
+display(Markdown(f"[![{title}]({export_file_path}{figureName}.png){{#fig-hist-zb-par-classe-taille-annee}}]({export_file_path}{figureName}.html)"))
+```
+
+{{< include etude_caracterisation/0_methode/pie_chart.qmd >}}
+
+```{python}
+#| echo: false
+#| output: true
+#| label: fig-diag-part-zb-par-classe-taille-annee
+
+figureName = "fig-diag-part-zb-par-classe-taille-annee"
+pie_chart = pie_chart(
+    data=data_feux,
+    type_zone=None,
+    filter='taille',
+    start_year=Annee,
+    end_year=Annee,
+    title= " "
+)
+
+title= f"Part de la superficie incendiée en pourcentage selon la catégorie de taille des zones brûlées {Annee}"
+
+# export des figures en images pour les afficher dans le rapport 
+export_output_plotly(pie_chart,figureName)
+```
+
+```{python}
+display(Markdown(f"[![{title}]({export_file_path}{figureName}.png){{#fig-diag-part-zb-par-classe-taille-annee}}]({export_file_path}{figureName}.html)"))
+```
+
+{{< include etude_caracterisation/0_methode/hist_cumul.qmd >}}
+
+```{python}
+#| echo: false
+#| output: true
+#| label: fig-hist-nb-zb-par-classe-taille-nb
+figureName = "fig-hist-nb-zb-par-classe-taille-nb"
+hist_cumul = hist_cumul(
+    data=data_feux,
+    start_year=2017,
+    end_year=Annee,
+    type_zone=None,
+    level_tem='zb_id',
+    title= " ",
+    label_x= 'Classe de taille',
+    label_y= 'Nombre de zones brûlées',
+)
+
+title= f"Evolution du nombre de zones brûlées entre 2017 et {Annee} par catégorie de taille"
+
+# export des figures en images pour les afficher dans le rapport 
+export_output(hist_cumul,figureName)
+```
+
+```{python}
+display(Markdown(f"[![{title}]({export_file_path}{figureName}.png){{#fig-hist-nb-zb-par-classe-taille-nb}}]({export_file_path}{figureName}.html)"))
+```
+
+{{< include etude_caracterisation/0_methode/hist_cumul.qmd >}}
+
+```{python}
+#| echo: false
+#| output: true
+#| label: fig-hist-nb-zb-par-classe-taille-surf
+
+figureName = "fig-hist-nb-zb-par-classe-taille-surf"
+hist_cumul = hist_cumul(
+    data=data_feux,
+    start_year=2017,
+    end_year=Annee,
+    type_zone=None,
+    level_tem='taille',
+    title= " ",
+    label_x= 'Classe de taille',
+    label_y= 'Superficie brûlée (ha)'
+)
+title= f"Evolution de la superficie brûlée entre 2017 et {Annee} par catégorie de taille des zones brûlées"
+
+# export des figures en images pour les afficher dans le rapport 
+export_output(hist_cumul,figureName)
+```
+
+```{python}
+display(Markdown(f"[![{title}]({export_file_path}{figureName}.png){{#fig-hist-nb-zb-par-classe-taille-surf}}]({export_file_path}{figureName}.html)"))
+```

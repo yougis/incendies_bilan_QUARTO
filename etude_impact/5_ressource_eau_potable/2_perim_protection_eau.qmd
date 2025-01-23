@@ -1,0 +1,142 @@
+#### Informations
+
+Les périmètres de protections des eaux sont des zones réglementaires situées autour des sites de captage d’eau destinée à la consommation humaine, ayant pour but de protéger cette ressource des pollutions. Il existe trois périmètres de protections définis par des études : 
+
+Le **Périmètre de Protection Immédiate** (PPI) : situé à proximité directe du captage et interdit au public. Il a pour but d’éviter les pollutions à proximité immédiate du captage 
+
+Le **Périmètre de Protection Rapprochée** (PPR) : secteur plus élargi, où les activités pouvant induire une pollution sont soumises à prescription particulière 
+
+Le **Périmètre de Protection Éloignée** (PPE) : zone qui s’étend plus largement, elle peut correspondre à l’ensemble du bassin versant producteur d’eau potable, les activités peuvent y être réglementées. 
+
+Il est à noter que plus de 40% des captages d’eau ne disposent pas de périmètres de protection. En conséquence, les résultats relatifs à l’impact sur la ressource en eau sont potentiellement plus importants qu’indiqué. 
+
+Les données concernant les périmètres de protection des eaux sont sensiblement différentes par rapport à celles utilisées pour l’analyse spatiale de l’impact environnemental des incendies de 2017. De nouveaux périmètres de protection ayant fait l’objet d’un arrêté de délimitation, la base de données relative à cette information a subi une mise à jour. Ainsi, en 2017, la base de données contenait 578 polygones représentant les différents périmètres de protection des eaux pour un total de 393 251,4 hectares. Courant 2019, cette base de données comprenait 616 polygones pour un total de 399 214,8 hectares.
+
+#### Résultats
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: carte impact zb sur perimetre de protection des eaux
+figureName = "fig-carte-impact-sb-ppe"
+
+viz_map_nc = carte_impact_zb_bdenv(
+    data_carto=nc_,
+    data_feux=data_feux,
+    data_env=ppe_existants,
+    cadre=bb_,
+    color='#8B0000',
+    color_env='#2c7ac9',
+    title=f"Carte de l'impact des surfaces brûlées sur les périmètres de protection des eaux en {Annee}",
+    tolerance=2000,
+    textlegende='test',
+    nb_strat=1,
+    level_strate=None,
+    pos_legend=7000,
+    label_legend='Zones brûlées',
+    label_legend_env="Périmètres de protection des eaux",
+    texte_sources='Gouvernement de la Nouvelle-Calédonie / DAVAR/ SDE / MERE / OEIL / Copernicus'
+
+)
+
+export_output(viz_map_nc,figureName)
+
+```
+
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab impact zb sur perimetre de protection des eaux echelon territorial
+
+figureName = "fig-tab-stats-bv-province"
+table_province = tableau_statistiques(
+    data=data_ppe,
+    level_them=None,
+    label_them=None,
+    groupby=['upper_libelle','type_ppe'],
+    annee=Annee,
+    type_zone='ZEE',
+    columns=['upper_libelle','type_ppe','superficie_ha','nb_indic','nb_theme_indic'],
+    label_col=['Territoire concerné','Type de PPE','Surface brûlée (ha)','Nombre de surfaces brûlées','Nombre de périmètres impactés par les surfaces brûlées'],
+    title= f"Résultats des surfaces brûlées à l'échelon territorial pour les périmètres de protection des eaux pour l’année {Annee}",
+    filtre='superficie_ha',
+    hauteurtab=500
+)
+#export_output(pie_chart,figureName)
+table_province
+
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: diagramme superficie nouvellement impactee perimetre de protection des eaux
+
+import plotly.graph_objects as go
+
+figureName = "diag-zb-new-ppe"
+
+data = data_ppe_impact.read()
+data_filtered = data[(data['annee_1'] == 2017) & (data['annee_2'] == Annee) & (data['type_spatial'] == 'ZEE')]    
+
+labels = ['Nouvelle superficie impactée', 'Superficie déjà Impactée']
+values = [data_filtered['ratio_nouvel_impact'].sum(), data_filtered['ratio_deja_impact'].sum()]
+
+fig = go.Figure(data=[go.Pie(labels=labels, values=values,marker_colors=['#d62728','#ff7f0e'])])
+
+#export_output(pie_chart,figureName)
+
+fig
+
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab impact zb sur perimetre de protection des eaux echelon provincial
+
+figureName = "fig-tab-stats-bv-province"
+table_province = tableau_statistiques(
+    data=data_ppe,
+    level_them=None,
+    label_them=None,
+    groupby=['upper_libelle','type_ppe'],
+    annee=Annee,
+    type_zone='province',
+    columns=['upper_libelle','type_ppe','superficie_ha','nb_theme_indic'],
+    label_col=['Territoire concerné','Type de PPE','Surface brûlée (ha)','Nombre de surface brûlée impactant les périmètres de protection des eaux'],
+    title= f"Résultats des surfaces brûlées à l'échelon provincial pour les périmètres de protection des eaux pour l’année {Annee}",
+    filtre='superficie_ha',
+    hauteurtab=500
+)
+#export_output(pie_chart,figureName)
+table_province
+
+
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab impact zb sur perimetre de protection des eaux echelon communal
+
+figureName = "fig-tab-stats-bv-province"
+table_province = tableau_statistiques(
+    data=data_ppe,
+    level_them=None,
+    label_them=None,
+    groupby=['upper_libelle','type_ppe'],
+    annee=Annee,
+    type_zone='commune',
+    columns=['upper_libelle','type_ppe','nb_theme_indic','indicateur_3'],
+    label_col=['Territoire concerné','Type de PPE','Nombre de surface brûlée impactant les périmètres de protection des eaux','Part de la superficie impactée par les surfaces brûlées (%)'],
+    title= f"Résultats des surfaces brûlées à l'échelon communal pour les périmètres de protection des eaux pour l’année {Annee}",
+    filtre='superficie_ha',
+    hauteurtab=500
+)
+#export_output(pie_chart,figureName)
+table_province
+
+
+```

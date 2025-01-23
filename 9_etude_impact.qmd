@@ -1,0 +1,116 @@
+{{< include etude_impact\data.qmd >}}
+{{< include etude_impact\settings.qmd >}}
+{{< include etude_impact\0_methode\carte_proportionnelle.qmd >}}
+{{< include etude_impact\0_methode\carte_zb_bdenvironnement.qmd >}}
+{{< include etude_impact\0_methode\tab_stats.qmd >}}
+{{< include etude_impact\0_methode\carte_bdenvironnement.qmd >}}
+{{< include etude_impact\0_methode\hist_cumul.qmd >}}
+
+# Caractérisation des impacts environnementaux liées aux zones brûlées
+
+## Impact des zones brûlées sur la biodiversité
+ 
+{{< include etude_impact\1_biodiversites\contexte.qmd >}}
+
+## Impact des zones brûlées sur les milieux terrestres
+
+Cette partie s’intéresse à l’impact des surfaces brûlées sur la faune et la flore calédoniennes. De nombreuses sources d’informations ont été utilisées afin de caractériser au mieux les conséquences des incendies de l’année 2021 sur la richesse environnementale de Nouvelle-Calédonie.
+
+### Impacts des zones brûlées sur les strates de végétation
+
+{{< include etude_impact\2_milieux_terrestres\1_strates_vege.qmd >}}
+
+### Impacts des zones brûlées sur les forêts de la Province Nord 
+
+{{< include etude_impact\2_milieux_terrestres\2_foret_pr_nord.qmd >}}
+
+### Impacts des zones brûlées sur les forêts sèches
+
+{{< include etude_impact\2_milieux_terrestres\3_foret_seche.qmd >}}
+
+### Impacts des zones brûlées sur les mangroves
+
+{{< include etude_impact\2_milieux_terrestres\4_mangrove.qmd >}}
+
+### Impacts des zones brûlées sur les zones d’intérêts biologiques et écologiques situées en province Sud
+
+{{< include etude_impact\2_milieux_terrestres\5_interets_bio_eco_pr_sud.qmd >}}
+
+## Impacts des zones brûlées sur les espèces animales et végétales
+
+Plusieurs organismes (Endémia, l’IAC, la DDDT, etc) se sont efforcés de délimiter des périmètres de conservation des espèces animales et végétales, à savoir : des zones clés de biodiversité, des zones d’intérêts biologiques et écologiques, des zones de forts micro-endémisme végétal, des périmètres d’alerte sur la faune et la flore et des zones regroupant des espèces sensibles. Ces périmètres, bien que présentant pour certains des limites dans la précision des données, présentent l’intérêt de permettre d’évaluer l’impact potentiels des incendies, notamment sur les espèces micro-endémiques, rares et menacées.
+
+### Impacts des zones brûlées sur les zones clés de biodiversité
+
+{{< include etude_impact\3_especes_animales_vegetales\1_zones_cles_bio.qmd >}}
+
+### Impacts des zones brûlées sur les zones de fort micro-endémisme végétal
+
+{{< include etude_impact\3_especes_animales_vegetales\2_zones_fort_micro_end_vege.qmd >}}
+
+### Impacts des zones brûlées sur les périmètres d’alertes sur la faune et la flore menacées
+
+{{< include etude_impact\3_especes_animales_vegetales\3_perim_alertes_faune_flore.qmd >}}
+
+### Impacts des zones brûlées sur les espèces sensibles
+
+{{< include etude_impact\3_especes_animales_vegetales\4_especes_sensibles.qmd >}}
+
+## Impact des zones brûlées sur les périmètres protégés réglementairement ou labellisés
+
+Cette partie a pour but de mettre en exergue l’impact des zones brûlées de l’année 2020 sur les zones disposant d’une protection réglementaire ou bénéficiant d’un label international présentes en Nouvelle-Calédonie.
+
+### Impact des zones brûlées sur les zones tampons terrestres UNESCO 
+
+{{< include etude_impact\4_perimetres_proteges\1_zone_tampon_UNESCO.qmd >}}
+
+### Impact des surfaces brûlées sur les aires protégées provinciales terrestres
+
+{{< include etude_impact\4_perimetres_proteges\2_aires_protegees.qmd >}}
+
+### Impact des surfaces brûlées sur les périmètres des zones humides Ramsar 
+
+{{< include etude_impact\4_perimetres_proteges\3_perim_zones_humides.qmd >}}
+
+## Impact des zones brûlées sur la ressource en eau potable
+
+Cette partie s’attache à mettre en avant l’impact des surfaces brûlées sur les ressources en eaux présentes sur le territoire. La définition de ces impacts n’est encore que marginale, des études sont en cours de réalisation, avec pour but de mettre en exergue les effets secondaires du passage des incendies. 
+De nombreuses études ont montré que les incendies pouvaient avoir des incidences sur la qualité de la ressource en eau, ainsi que sur la morphologie du cours d’eau. 
+Lors de la combustion des végétaux, la biomasse brûlée libère des nutriments qui se déposent sur le sol. Les cendres sont composées de nutriments comme le calcium, le phosphore, le magnésium ou encore le potassium sous forme minérale en quantité supérieure à celles présentes dans l’humus (K.Jacquet et M.Cheylan, 2008). Lors d’un épisode pluvieux, si les nutriments ne sont pas drainés dans les couches plus profondes du sol, ils seront lessivés par les pluies et charriés vers le lit des rivières.
+
+De plus, le transport des sédiments par le ruissellement en lien avec l’érosion des sols implique une augmentation de la sédimentation des cours d’eau. Une forte concentration de sédiments en suspension peut altérer la qualité de l’eau en favorisant notamment la croissance de bactéries, elle peut également se répercuter sur les poissons, en modifiant la répartition des espèces et en les contaminant. D’après un rapport de l’Agence nationale de sécurité sanitaire de l’alimentation, de l’environnement et du travail[^31], la qualité de l’eau potable peut également être altérée si un surplus de sédiments et de nutriments est charrié par l’érosion jusqu’aux points d’approvisionnement en eau potable. Ce phénomène a été observé à l’île des Pins depuis 2016, où une concentration anormalement élevée de nickel a été retrouvée sur deux captages d’eau potable. Les incendies survenus à proximité ont été identifiés par le Gouvernement comme une cause probable de la détérioration de la qualité de l’eau. 
+
+D’autres études s’intéressent aux impacts indirects des incendies sur le lessivage des sols et sur les problématiques d’augmentation du ruissellement.  
+Lors de son passage, l’incendie consume la végétation et détruit le rôle protecteur qu’elle jouait pour les sols. Plus l’incendie reste longtemps au même endroit et plus il attaque en profondeur les couches du sol. Ainsi, les sols dénudés de végétation sont plus susceptibles d’être touchés par le lessivage lors d’épisodes pluvieux intenses. Selon K.Jacquet et M. Cheylan[^32], l’érosion qui découle des incendies peut également être expliquée par la formation d’une couche hydrophobe dans les sols, lors du passage d’un incendie. Cette couche aurait pour effet d’augmenter l’imperméabilité des sols. Cette imperméabilité, créée par la combustion des sols, ne se situe pas en surface, mais dans des couches plus profondes du sol. En effet, lors de la combustion de l’humus, la décomposition de la matière organique fraîche libèrerait des composants hydrophobes fluides qui seraient drainés en profondeur jusqu’à atteindre une température plus fraîche. En se mélangeant avec d’autres particules minérales présentes dans le sol, ils combleraient les espaces et formeraient ainsi une couche totalement imperméable.  
+
+Ainsi lors de forts épisodes pluvieux, l’infiltration de l’eau dans le sol serait stoppée par la strate hydrophobe, la saturation en eau provoquerait alors un ruissellement des parties supérieures à cette dernière. Ce phénomène pourrait expliquer la formation de ravines et de rigoles lors d’épisodes pluvieux intenses dans des secteurs incendiés dépourvus de végétation. 
+L’importante augmentation du ruissellement participerait à accroître le risque d’inondation à l’aval des bassins versants touchés par les incendies. Les tests de Stoof et al[^33] ont montré que les débits, et notamment les débits moyens quotidiens, avaient augmenté dans les bassins versants impactés par les incendies. De même, le coefficient de ruissellement serait également plus élevé. Les auteurs soulignent dans leur conclusion que c’est sûrement l’absence de végétation qui serait pour majorité responsable des changements subis par les bassins versants après des incendies. 
+Enfin, à l’échelle du bassin versant, un excès de sédiments peut avoir des conséquences sur toute l’unité hydrographique. Si le débit du cours d’eau est perturbé par une accumulation de sédiments en aval, l’amont va adapter la morphologie de son lit afin de retrouver un équilibre. De fait, les incendies peuvent provoquer des modifications de la morphologie des cours d’eau.
+
+[^31]:Effets sanitaires liés à la pollution générée par les feux de végétation à l’air libre, Avis de l’ANSES. Rapport d’expertise collective, Edition scientifique, 2012, 208p.
+[^32]:M.Cheylan, K.Jacquet. Synthèse des connaissances sur l'impact du feu en région méditerranéenne, Direction régionale de l’environnement Provence Alpes Côte d’Azur, 2008, 79p.
+[^33]: C. R. Stoof, R. W. Vervoort, J. Iwema, E. van den Elsen, A. J. D. Ferreira, and C. J. Ritsema. Hydrological response of a small catchment burned by experimental fire, Hydrol. Earth Syst. Sci., 16, 267–285, 2012, 19p.
+
+### Les bassins versants producteurs d’eau potable
+
+{{< include etude_impact\5_ressource_eau_potable\1_bv_producteurs_eau_potable.qmd >}}
+
+### Les périmètres de protections des eaux
+
+{{< include etude_impact\5_ressource_eau_potable\2_perim_protection_eau.qmd >}}
+
+## Impact des zones brûlées sur les surfaces agricoles
+
+{{< include etude_impact\6_ressources_agri\infos_resultats.qmd >}}
+
+## Impact des zones brûlées sur les émissions de gaz à effet de serre
+
+{{< include etude_impact\7_emmissions_GES\infos_resultats_limites.qmd >}}
+
+## Estimation des implications financières liées à la réparation du préjudice environnemental des zones brûlées
+
+{{< include etude_impact\8_impact_economique\infos_resultats.qmd >}}
+
+## Bilan sur l’impact environnemental des zones brûlées
+
+{{< include etude_impact\9_bilan\bilan.qmd >}}

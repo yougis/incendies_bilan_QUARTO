@@ -1,0 +1,493 @@
+#### Informations
+
+La forêt sèche est aussi appelée forêt sclérophylle en référence à certaines espèces portant des feuilles coriaces. Elle est représentée par une flore dense diversifiée avec plus de 400 espèces inventoriées dont 60% sont endémiques de la Nouvelle-Calédonie. Elle abrite également une faune importante. Cependant la forêt sèche a été très impactée par les activités humaines, si bien qu’aujourd’hui il ne reste plus que 2%, soit 175 km², de son aire initiale. La cartographie des forêts sèches utilisée dans le présent rapport comprend une zone tampon de 50 mètres, appelée zone de vigilance. Cette enveloppe représente la distance nécessaire au maintien de l’intégrité des noyaux de forêt sèche, ainsi que l’anticipation de leur évolution. 
+
+La forêt sèche se rencontre sur la côte Ouest de la Grande Terre, mais seulement sous forme de reliquats de quelques hectares, appelés patchs de forêt sèche, ses derniers sont déconnectés les uns des autres. Ces fragments sont entourés de zones dont le potentiel de restauration ou de préservation a été calculé afin de mettre en exergue des zones de corridors favorables à la reconstitution des forêts sèches. Les zones utilisées dans cette étude sont appelées connectivités moyennes, elles entourent les forêts sèches d’une bande large de 100 mètres.
+
+```{python}
+#| echo: false
+#| output: true
+#| warning: false
+#| label: carte repartition zones de vigilance et connectivites moyennes forets seches
+
+figureName = "fig-fs_NC"
+
+viz_map_nc = carte_impact_zb_bdenv(
+    data_carto=nc_,
+    data_feux=data_corridor_fs,
+    data_env=data_fs,
+    cadre=bb_,
+    color='#8B0000',
+    color_env='#9acd32',
+    title=f"Répartition des zones de vigilance et des connectivités moyennes liées aux forêts sèches",
+    tolerance=2000,
+    textlegende='test',
+    nb_strat=1,
+    level_strate=None,
+    pos_legend=8000,
+    label_legend='Zones de vigilance des forêts sèches',
+    label_legend_env='Strate arborée de la Province Nord',
+    texte_sources='CEN / OEIL / Copernicus'
+
+)
+
+export_output(viz_map_nc,figureName)
+
+```
+
+Il convient de préciser que la rareté de cet habitat implique que le moindre incendie pourrait entraîner des conséquences irréversibles sur la préservation des fragments de forêts sèches, des espèces endémiques pouvant être emportées par les flammes. En effet, Gomez et al[^23] soulignent que la forêt sèche représente l’écosystème sur lequel la perte en diversité serait la plus préoccupante en cas d’incendie.  
+Près de 75% de secteurs de forêts sèches sont inclus au sein de la strate arborée du MOS 2014, et le reste est en grande partie réparti dans la strate arbustive. 
+Elle se répartie à 53% sur le territoire de la Province Nord et à 47% sur celui de la Province Sud, et sur 17 communes présentées en Figure A METTRE A JOUR.
+
+[^23]: C. Gomez, M. Mangeas, T. Curt, T. Ibanez, J. Munzinger, et al. Wildfire risk for main vegetation units in a biodiversity hotspot: modeling approach in New Caledonia, South Pacific. Ecology and Evolution, Wiley Open Access, 2015, 5 (2), pp.377-390.
+
+#### Résultats sur les forêts sèches prioritaires
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab resultats echelon territorial forets seches
+
+figureName = "fig-tab-stats-fs-prioritaire-territorial"
+
+table_province = tableau_statistiques(
+    data=data_fs_prioritaire,
+    level_them=None,
+    label_them=None,
+    groupby='upper_libelle',
+    annee=Annee,
+    type_zone='ZEE',
+    columns=['upper_libelle','sup_total_theme','superficie_ha','nb_theme_indic','indicateur_3'],
+    label_col=['Territoire concerné','Superficie totale (ha)','Surface brûlée (ha)','Nombre de surfaces brûlées','Part de la superficie impactée par les surfaces brûlées (%)'],
+    title= f"Résultats à l'échelon territorial sur les forêts sèches prioritaires en {Annee}",
+    filtre='superficie_ha',
+    hauteurtab=100
+)
+#export_output(pie_chart,figureName)
+table_province
+
+```
+
+::: {#fig-tab-stats-fs-prioritaire-territorial}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-tab-stats-fs-prioritaire-territorial
+#| fig-cap: "Résultats à l'échelon territorial sur les forêts sèches prioritaires"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab resultats echelon provincial forets seches
+
+figureName = "fig-tab-stats-fs-prioritaire-province"
+
+table_province = tableau_statistiques(
+    data=data_fs_prioritaire,
+    level_them=None,
+    label_them=None,
+    groupby='upper_libelle',
+    annee=Annee,
+    type_zone='province',
+    columns=['upper_libelle','sup_total_theme','superficie_ha','nb_theme_indic','indicateur_3'],
+    label_col=['Territoire concerné','Superficie totale (ha)','Surface brûlée (ha)','Nombre de surfaces brûlées','Part de la superficie impactée par les surfaces brûlées (%)'],
+    title= f"Résultats à l'échelon provincial sur les forêts sèches prioritaires en {Annee}",
+    filtre='superficie_ha',
+    hauteurtab=100
+)
+#export_output(pie_chart,figureName)
+table_province
+
+```
+
+::: {#fig-tab-stats-fs-prioritaire-province}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-tab-stats-fs-prioritaire-province
+#| fig-cap: "Résultats à l'échelon provincial sur les forêts sèches prioritaires"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab resultats echelon communal forets seches
+
+figureName = "fig-tab-stats-fs-prioritaire-commune"
+
+table_province = tableau_statistiques(
+    data=data_fs_prioritaire,
+    level_them=None,
+    label_them=None,
+    groupby='upper_libelle',
+    annee=Annee,
+    type_zone='commune',
+    columns=['upper_libelle','sup_total_theme','superficie_ha','nb_theme_indic','indicateur_3'],
+    label_col=['Territoire concerné','Superficie totale (ha)','Surface brûlée (ha)','Nombre de surfaces brûlées','Part de la superficie impactée par les surfaces brûlées (%)'],
+    title= f"Résultats à l'échelon communal sur les forêts sèches prioritaires en {Annee}",
+    filtre='superficie_ha',
+    hauteurtab=100
+)
+#export_output(pie_chart,figureName)
+table_province
+
+```
+
+::: {#fig-tab-stats-fs-prioritaire-commune}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-tab-stats-fs-prioritaire-commune
+#| fig-cap: "Résultats à l'échelon communal sur les forêts sèches prioritaires"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::
+
+#### Résultats sur les zones de vigilance des forêts sèches
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab resultats echelon territorial zones vigilance forets seches
+
+figureName = "fig-tab-stats-fs-zone-vigilance-territorial"
+
+table_province = tableau_statistiques(
+    data=data_fs_zone_vigilance,
+    level_them=None,
+    label_them=None,
+    groupby='upper_libelle',
+    annee=Annee,
+    type_zone='ZEE',
+    columns=['upper_libelle','sup_total_theme','superficie_ha','nb_theme_indic','indicateur_3'],
+    label_col=['Territoire concerné','Superficie totale (ha)','Surface brûlée (ha)','Nombre de surfaces brûlées','Part de la superficie impactée par les surfaces brûlées (%)'],
+    title= f"Résultats à l'échelon territorial pour les zones de vigilance des forêts sèches en {Annee}",
+    filtre='superficie_ha',
+    hauteurtab=100
+)
+#export_output(pie_chart,figureName)
+table_province
+
+```
+
+::: {#fig-tab-stats-fs-zone-vigilance-territorial}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-tab-stats-fs-zone-vigilance-territorial
+#| fig-cap: "Résultats à l'échelon territorial pour les zones de vigilance des forêts sèches"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab resultats echelon provincial zones vigilance forets seches
+
+figureName = "fig-tab-stats-fs-zone-vigilance-province"
+
+table_province = tableau_statistiques(
+    data=data_fs_zone_vigilance,
+    level_them=None,
+    label_them=None,
+    groupby='upper_libelle',
+    annee=Annee,
+    type_zone='province',
+    columns=['upper_libelle','sup_total_theme','superficie_ha','nb_theme_indic','indicateur_3'],
+    label_col=['Territoire concerné','Superficie totale (ha)','Surface brûlée (ha)','Nombre de surfaces brûlées','Part de la superficie impactée par les surfaces brûlées (%)'],
+    title= f"Résultats à l'échelon provincial pour les zones de vigilance des forêts sèches en {Annee}",
+    filtre='superficie_ha',
+    hauteurtab=100
+)
+#export_output(pie_chart,figureName)
+table_province
+
+```
+
+::: {#fig-tab-stats-fs-zone-vigilance-province}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-tab-stats-fs-zone-vigilance-province
+#| fig-cap: "Résultats à l'échelon provincial pour les zones de vigilance des forêts sèches"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: diagramme part superficie nouvellement impactee zones vigilance forets seches
+
+import plotly.graph_objects as go
+
+figureName = "diag-zb-fs_vigilance"
+
+data = data_fs_zone_vigilance_impact.read()
+data_filtered = data[(data['annee_1'] == 2017) & (data['annee_2'] == Annee) & (data['type_spatial'] == 'ZEE')]    
+
+labels = ['Nouvelle superficie impactée', 'Superficie déjà Impactée']
+values = [data_filtered['ratio_nouvel_impact'].sum(), data_filtered['ratio_deja_impact'].sum()]
+
+fig = go.Figure(data=[go.Pie(labels=labels, values=values,marker_colors=['#d62728','#ff7f0e'])])
+#export_output(pie_chart,figureName)
+
+fig
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab resultats echelon communal zones vigilance forets seches
+
+figureName = "fig-tab-stats-fs-zone-vigilance-commune"
+
+table_province = tableau_statistiques(
+    data=data_fs_zone_vigilance,
+    level_them=None,
+    label_them=None,
+    groupby='upper_libelle',
+    annee=Annee,
+    type_zone='commune',
+    columns=['upper_libelle','sup_total_theme','superficie_ha','nb_theme_indic','indicateur_3'],
+    label_col=['Territoire concerné','Superficie totale (ha)','Surface brûlée (ha)','Nombre de surfaces brûlées','Part de la superficie impactée par les surfaces brûlées (%)'],
+    title= f"Résultats à l'échelon communal pour les zones de vigilance des forêts sèches en {Annee}",
+    filtre='superficie_ha',
+    hauteurtab=100
+)
+#export_output(pie_chart,figureName)
+table_province
+
+```
+
+::: {#fig-tab-stats-fs-zone-vigilance-commune}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-tab-stats-fs-zone-vigilance-commune
+#| fig-cap: "Résultats à l'échelon communal pour les zones de vigilance des forêts sèches"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::
+
+#### Résultats sur les connectivités moyenne distance
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab resultats echelon territorial connectivites moyenne distance
+
+figureName = "fig-tab-stats-fs-corridor-md-territorial"
+
+table_province = tableau_statistiques(
+    data=data_fs_corridor_md,
+    level_them=None,
+    label_them=None,
+    groupby='upper_libelle',
+    annee=Annee,
+    type_zone='ZEE',
+    columns=['upper_libelle','sup_total_theme','superficie_ha','nb_theme_indic','indicateur_3'],
+    label_col=['Territoire concerné','Superficie totale (ha)','Surface brûlée (ha)','Nombre de surfaces brûlées','Part de la superficie impactée par les surfaces brûlées (%)'],
+    title= f"Résultats à l'échelon du territoire pour les zones de connectivité moyenne distance des forêts sèches en {Annee}",
+    filtre='superficie_ha',
+    hauteurtab=100
+)
+#export_output(pie_chart,figureName)
+table_province
+
+```
+
+::: {#fig-tab-stats-fs-corridor-md-territorial}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-tab-stats-fs-corridor-md-territorial
+#| fig-cap: "Résultats à l'échelon territorial pour les zones de connectivité moyenne distance des forêts sèches"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab resultats echelon provincial connectivites moyenne distance
+
+figureName = "fig-tab-stats-fs-corridor-md-province"
+
+table_province = tableau_statistiques(
+    data=data_fs_corridor_md,
+    level_them=None,
+    label_them=None,
+    groupby='upper_libelle',
+    annee=Annee,
+    type_zone='province',
+    columns=['upper_libelle','sup_total_theme','superficie_ha','nb_theme_indic','indicateur_3'],
+    label_col=['Territoire concerné','Superficie totale (ha)','Surface brûlée (ha)','Nombre de surfaces brûlées','Part de la superficie impactée par les surfaces brûlées (%)'],
+    title= f"Résultats à l'échelon de la province pour les zones de connectivité moyenne distance des forêts sèches en {Annee}",
+    filtre='superficie_ha',
+    hauteurtab=100
+)
+#export_output(pie_chart,figureName)
+table_province
+
+```
+
+::: {#fig-tab-stats-fs-corridor-md-province}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-tab-stats-fs-corridor-md-province
+#| fig-cap: "Résultats à l'échelon provincial pour les zones de connectivité moyenne distance des forêts sèches"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tab resultats echelon communal connectivites moyenne distance
+
+figureName = "fig-tab-stats-fs-corridor-md-commune"
+
+table_province = tableau_statistiques(
+    data=data_fs_corridor_md,
+    level_them=None,
+    label_them=None,
+    groupby='upper_libelle',
+    annee=Annee,
+    type_zone='commune',
+    columns=['upper_libelle','sup_total_theme','superficie_ha','nb_theme_indic','indicateur_3'],
+    label_col=['Territoire concerné','Superficie totale (ha)','Surface brûlée (ha)','Nombre de surfaces brûlées','Part de la superficie impactée par les surfaces brûlées (%)'],
+    title= f"Résultats à l'échelon communal pour les zones de connectivité moyenne distance des forêts sèches en {Annee}",
+    filtre='superficie_ha',
+    hauteurtab=100
+)
+#export_output(pie_chart,figureName)
+table_province
+
+```
+
+::: {#fig-tab-stats-fs-corridor-md-commune}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-tab-stats-fs-corridor-md-commune
+#| fig-cap: "Résultats à l'échelon communal pour les zones de connectivité moyenne distance des forêts sèches"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: carte impact sb sur les connectivites moyenne distance forets
+
+figureName = "fig-carte-impact-sb-connectivites-moyenne-distance-fs"
+
+viz_map_nc = carte_impact_zb_bdenv(
+    data_carto=nc_,
+    data_feux=data_feux,
+    data_env=data_corridor_fs,
+    cadre=bb_,
+    color='#8B0000',
+    color_env='#49c10d',
+    title=f"Carte de l'impact des surfaces brûlées en {Annee} sur les connectivités moyenne distances des forêts sèches",
+    tolerance=2000,
+    textlegende='test',
+    nb_strat=1,
+    level_strate=None,
+    pos_legend=8000,
+    label_legend='Zones brûlées',
+    label_legend_env='Corrifdors moyenne distance des forêts sèches',
+    texte_sources='CEN / OEIL / Copernicus'
+
+)
+
+export_output(viz_map_nc,figureName)
+```
+
+::: {#fig-carte-impact-sb-connectivites-moyenne-distance-fs}
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-carte-impact-sb-connectivites-moyenne-distance-fs
+#| fig-cap: "Carte de l'impact des surfaces brûlées sur les connectivités moyenne distance des forêts"
+
+
+display(
+    Markdown(
+        f"[![]({export_file_path}{figureName}.png){{width=100%}}]({export_file_path}{figureName}.html)"
+        )
+)
+
+```
+:::

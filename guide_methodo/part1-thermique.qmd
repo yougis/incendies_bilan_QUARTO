@@ -1,0 +1,48 @@
+
+
+
+### Information sur les anomalies thermiques
+
+Les satellites possèdent des capteurs qui détectent des anomalies thermiques à la surface de la terre. Ces anomalies thermiques, aussi appelées points chauds, sont liées à un changement de température. La détection de ces dernières dépendra de l’intensité du phénomène mais également de sa taille.
+
+La détection des anomalies thermiques est notamment effectuée dans le cadre du programme Fire Information for Resource Management System (FIRMS) ^[Le lien suivant apporte plus de précision sur le programme FIRMS [https://firms.modaps.eosdis.nasa.gov/](https://firms.modaps.eosdis.nasa.gov/)] dans le but de fournir l’emplacement des feux actifs en temps quasi-réel aux gestionnaires des milieux. Ce programme a été créé par l’Université du Maryland grâce à des fonds de la NASA et de la Food and Agriculture Organization of the United States (FAO). Les informations des capteurs de trois satellites sont utilisées, à savoir Aqua MODIS, Terra MODIS et Suomi NPP VIIRS ^[ pour avoir plus d’informations sur les satellites de la NASA : [https://www.nasa.gov/](https://www.nasa.gov/)]. 
+
+
+### Le capteur MODIS des satellites Aqua et Terra
+
+La chronique de la base de données MODIS (Moderate Resolution Imaging Spectroradiometer) dont nous disposons permettra de réaliser une analyse temporelle des surfaces brûlées obtenues par le regroupement des points chauds d’un même évènement selon des critères spatio-temporels. Cette dernière commence à partir de 2001 car les données débutant le 2 novembre pour l’année 2000, il n’est pas pertinent de les inclure dans l’analyse temporelle.
+
+Les points d’anomalies thermiques détectés par le capteur MODIS des satellites Aqua et Terra sont représentés au centre du pixel lié à la source de l’anomalie thermique. À noter que la fréquence de mise à jour de ces données est quotidienne, elle se base sur la revisite des satellites. Les données débutent le 2 novembre 2000 qui correspondent à des surfaces potentielles d’incendies reposant sur la détection d’anomalies thermiques.
+
+La @fig-modis permet de visualiser l’emprise de détection effectuée par le MODIS concernant l’incendie de la Montagne des Sources daté de novembre 2019. 
+La faible résolution spatiale des produits MODIS, à savoir de 500 m à 1km, a conduit à la décision de ne pas prendre en compte ces données pour quantifier l’impact spatial des incendies.
+
+![Emprise des détections effectuées par le capteur MODIS pour l'incendie de la Montagne des Sources en novembre 2019 (Source : OEIL)](./ressources/guide_methodo/emprise_modis.jpg){#fig-modis}
+
+
+### Le capteur VIIRS du satellite SUOMI NPP
+
+Les surfaces brûlées issues du capteur VIIRS (VIsible/Infrared Imager Radiometer Suite) seront comparées aux données du satellite Sentinel 2 de manière à apprécier les différences concernant les statistiques des incendies à l’échelle de la Nouvelle-Calédonie. De plus, elles seront aussi exploitées pour contrôler et valider une partie des données Sentinel 2 afin de garantir la précision du nombre de surfaces brûlées. 
+
+Le satellite Suomi NPP (National Polar-orbiting Partnership) est équipé du capteur VIIRS qui permet lui aussi de détecter des anomalies thermiques. Ces points chauds, représentés sous forme de polygones, possèdent une résolution spatiale de 375 mètres. Les critères spatio-temporels pour créer des surfaces potentielles d’incendies à partir des points chauds reposent sur un éloignement maximal de 750 mètres, ainsi que sur un seuil temporel ne dépassant pas trois jours.  La fréquence de mise à jour de ces données est biquotidienne, elle se base sur la revisite du satellite.  Ainsi, les surfaces brûlées sont reconstituées par la réunion des points chauds d’un même évènement selon des critères spatio-temporels.
+
+La @fig-viirs permet de visualiser l’emprise de détection effectuée par le VIIRS concernant l’incendie de la Montagne des Sources daté de novembre 2019.
+
+![Emprise des détections effectuées par le capteur VIIRS pour l'incendie de la Montagne des Sources en novembre 2019 (Source : OEIL)](./ressources/guide_methodo/emprise_viirs.jpg){#fig-viirs}
+
+
+### Limites liées aux données issues du VIIRS et de MODIS
+
+Certaines situations impliquent que les capteurs des satellites ne vont pas détecter les anomalies thermiques. En effet, un incendie d’une faible dimension ou d’une trop faible intensité ne sera pas relevé par les capteurs. L’extinction de l’incendie avant le passage du satellite peut également induire qu’il ne sera pas détecté malgré le fait qu’il ait bien eu lieu. La détection des points d’anomalies thermiques est également freinée par la présence de nuages lors du passage du satellite. De même, la fumée générée par l’incendie peut également contraindre la détection. La présence d’une végétation possédant des feuillages épais pourrait avoir pour effet de cacher un incendie s’il est de faible intensité. 
+
+Enfin, les deux méthodes de détection des surfaces brûlées reposent sur des capteurs embarqués sur les satellites qui peuvent subir des problèmes techniques susceptibles d’affecter le dispositif de détection. 
+
+Ces données ne font pas l’objet d’une procédure de contrôle de la part de l’OEIL mais de nombreuses validations ont été opérées par le producteur de cette donnée. L’observatoire a mis en place une procédure permettant de supprimer les points chauds liés aux complexes industriels présents sur le territoire. La méthode de création des surfaces à partir des points chauds maximise leurs superficies, en lien avec la faible résolution spatiale des données.
+
+
+| Satellite / capteur | Résolution spatiale | Historique | Utilisation |
+| --- | --- | --- | --- |
+| Aqua et Terra (MODIS) | 1 km | Depuis 2001 | Analyse temporelle |
+| Suomi NPP (VIIRS) | 375 m | Depuis 2012 | Analyse spatiale et temporelle |
+| Sentinel 2 (MSI) | 10 m | Depuis 2017 | Caractérisation des incendies et leurs impacts sur l’environnement |
+: Caractéristiques des différents capteurs et leur utilisation {#tbl-capteurs1}

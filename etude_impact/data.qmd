@@ -1,0 +1,154 @@
+
+```{python}
+#| echo: false
+#| warning: false
+#| output: false
+#| label: loading data libraries and environment variables
+
+import os
+from dotenv import load_dotenv
+from intake import open_catalog
+import pandas as pd
+import numpy as np
+import geopandas as gpd
+from cartopy import crs
+
+
+load_dotenv()
+usr=os.getenv("DB_USER")
+pswd=os.getenv("DB_PWD")
+host=os.getenv("DB_HOST")
+port=os.getenv("DB_PORT")
+home=os.getenv("HOME_PATH")
+db_traitement=os.getenv("DB_WORKSPACE")
+db_ref=os.getenv("DB_REF")
+db_externe=os.getenv("DB_EXT")
+dwh_fact_strategy=os.getenv("DWH_FACT_STRATEGY")
+dwh_dim_strategy=os.getenv("DWH_DIM_STRATEGY")
+commun_path = os.getenv("COMMUN_PATH")
+project_dir = os.getenv("PROJECT_PATH")
+data_catalog_dir = os.getenv("DATA_CATALOG_DIR")
+data_output_dir = os.getenv("DATA_OUTPUT_DIR")
+sig_data_path = os.getenv("SIG_DATA_PATH")
+project_db_schema = os.getenv("PROJECT_DB_SCHEMA")
+
+
+```
+
+```{python}
+#| echo: false
+#| label: loading catalogs
+
+
+crsRgnc = crs.LambertConformal(central_longitude=166,
+                                standard_parallels=(-20.66666666666667, -22.33333333333333),
+                                central_latitude=-21.5,
+                                false_easting=400000,
+                                false_northing=300000,
+                                cutoff=0,
+                                globe=crs.Globe(ellipse='GRS80'))
+
+crs_proj4 = crsRgnc.proj4_init
+#crsMerca = crs.GOOGLE_MERCATOR
+
+# Données carto
+
+cat_data_carto = open_catalog(f'{data_catalog_dir}carto.yaml')
+
+nc_ = cat_data_carto.Grande_terre_et_iles
+
+province = cat_data_carto.province
+
+commune = cat_data_carto.commune
+
+aire_coutumiere = cat_data_carto.aire_coutumiere
+
+dfci = cat_data_carto.dfci_20km
+
+bb_ = cat_data_carto.bb_Grande_terre_et_iles
+
+bb_GT = cat_data_carto.bb_Grande_terre
+bb_PN = cat_data_carto.bb_PN
+bb_PS = cat_data_carto.bb_PS
+bb_GS = cat_data_carto.bb_GS
+
+# Données feux générale
+
+cat_data_feux = open_catalog(f'{data_catalog_dir}feux.yaml')
+cat_data_dtm = open_catalog(f'{data_catalog_dir}dtm_incendies.yaml')
+
+# Données feux/env dtm indicateur
+
+data_strate = cat_data_dtm.dtm_indic_zb_mos_formation_vegetale_2014_spe
+data_feux = cat_data_feux.sentinel_zones_brulees
+data_foret_pr_nord = cat_data_dtm.dtm_indic_zb_forets_province_nord_global
+data_fs_prioritaire = cat_data_dtm.dtm_indic_zb_foret_seche_prioritaire_global
+data_fs_zone_vigilance = cat_data_dtm.dtm_indic_zb_zones_vigilance_forets_seches_global
+data_fs_corridor_md = cat_data_dtm.dtm_indic_zb_corridor_moyenne_distance_fs_global
+data_mangrove = cat_data_dtm.dtm_indic_zb_mangrove_carnama_global
+data_milieu_nat_important_global = cat_data_dtm.dtm_indic_zb_milieu_nat_important_psud_global
+data_milieu_nat_important_spe = cat_data_dtm.dtm_indic_zb_milieu_nat_important_psud_spe
+data_milieu_nat_essentiel_global = cat_data_dtm.dtm_indic_zb_milieu_nat_essentiel_psud_global
+data_milieu_nat_essentiel_spe = cat_data_dtm.dtm_indic_zb_milieu_nat_essentiel_psud_spe 
+data_kba = cat_data_dtm.dtm_indic_zb_kba_spe
+data_microendemisme = cat_data_dtm.dtm_indic_zb_microendemisme_spe
+data_endemia_categorie = cat_data_dtm.dtm_indic_zb_perimetre_especes_endemia_spe_categorie
+data_endemia_taxon = cat_data_dtm.dtm_indic_zb_perimetre_especes_endemia_spe_taxon
+#data_endemia = cat_data_dtm.dtm_indic_zb_perimetre_especes_endemia_spe
+data_esp_sensibles = cat_data_dtm.dtm_indic_zb_especes_sensibles_province_sud_global
+data_aire_proteg = cat_data_dtm.dtm_indic_zb_aires_protegees_provinciales_spe
+data_unesco = cat_data_dtm.dtm_indic_zb_unesco_spe
+data_ramsar = cat_data_dtm.dtm_indic_zb_ramsar_global
+data_bv = cat_data_dtm.dtm_indic_zb_bv_producteurs_eau_potable_global
+data_bv_detail = cat_data_dtm.dtm_indic_zb_bv_producteurs_eau_potable_spe
+data_ppe = cat_data_dtm.dtm_indic_zb_perimetres_protection_eau_spe
+data_agricole = cat_data_dtm.dtm_indic_zb_surfaces_agricoles_spe
+
+# date brute
+data_foret_PN = cat_data_feux.forets_province_nord
+data_foret_strate_arboree = cat_data_feux.mos_arboree
+data_fs = cat_data_feux.zones_vigilance_forets_seches
+data_corridor_fs = cat_data_feux.corridor_moyenne_distance_foret_seche
+mangrove = cat_data_feux.mangrove
+milieu_nat_essentiel_psud = cat_data_feux.milieu_nat_essentiel_psud
+milieu_nat_important_psud = cat_data_feux.milieu_nat_important_psud
+kba = cat_data_feux.kba
+zone_fort_microendemisme_vegetal = cat_data_feux.zone_fort_microendemisme_vegetal
+espece_menacees=cat_data_feux.espece_menacees
+especes_sensibles=cat_data_feux.especes_sensibles
+milieu_PS=cat_data_feux.milieu_nat_psud
+
+unesco=cat_data_feux.unesco_emprises_nc
+aire_protegee=cat_data_feux.vue_aires_protegees_provinciales
+perimetre_ramsar=cat_data_feux.perimetre_ramsar
+bv=cat_data_feux.bassins_versants_producteurs_eau_potable
+ppe_existants=cat_data_feux.ppe_existants
+agriculture=cat_data_feux.vue_agriculture
+ges=cat_data_feux.mvue_dtm_agreg_byidspatial_ges_tot_fromvue
+
+# Données feux/env dtm deja brulée
+#data_strate_impact = cat_data_dtm.dtm_indic_zb_mos_formation_vegetale_2014_spe
+data_foret_pr_nord_impact = cat_data_dtm.dtm_zones_brulees_forets_province_nord_impact
+data_fs_prioritaire_impact = cat_data_dtm.dtm_zones_brulees_foret_seche_prioritaire_impact
+data_fs_zone_vigilance_impact = cat_data_dtm.dtm_zones_brulees_zones_vigilance_forets_seches_impact
+data_fs_corridor_md_impact = cat_data_dtm.dtm_zones_brulees_corridor_moyenne_distance_fs_impact
+data_mangrove_impact = cat_data_dtm.dtm_zones_brulees_mangrove_carnama_impact
+data_milieu_nat_important_impact = cat_data_dtm.dtm_zones_brulees_milieu_nat_important_psud_impact
+data_perimetre_especes_endemia_impact = cat_data_dtm.dtm_zones_brulees_perimetre_especes_endemia_impact
+data_bv_impact = cat_data_dtm.dtm_zones_brulees_bv_producteurs_eau_potable_impact
+data_ppe_impact = cat_data_dtm.dtm_zones_brulees_perimetres_protection_eau_impact
+data_agricole_impact = cat_data_dtm.dtm_zones_brulees_surfaces_agricoles_impact
+
+data_arboree_impact = cat_data_dtm.dtm_zones_brulees_mos_formation_vegetale_2014_arboree_impact
+data_arbustive_impact = cat_data_dtm.dtm_zones_brulees_mos_formation_vegetale_2014_arbustive_impact
+data_herbacee_impact = cat_data_dtm.dtm_zones_brulees_mos_formation_vegetale_2014_herbacee_impact
+
+data_milieu_nat_essentiel_impact = cat_data_dtm.dtm_zones_brulees_milieu_nat_essentiel_psud_impact
+ 
+kba_impact = cat_data_dtm.dtm_zones_brulees_kba_impact
+data_microendemisme_impact = cat_data_dtm.dtm_zones_brulees_microendemisme_impact
+data_endemia_impact = cat_data_dtm.dtm_zones_brulees_perimetre_especes_endemia_impact
+data_esp_sensibles_impact = cat_data_dtm.dtm_zones_brulees_especes_sensibles_province_sud_impact
+data_aire_proteg_impact = cat_data_dtm.dtm_zones_brulees_aires_protegees_provinciales_impact
+data_unesco_impact = cat_data_dtm.dtm_zones_brulees_unesco_impact
+```

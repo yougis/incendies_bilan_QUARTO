@@ -1,0 +1,18 @@
+---
+bibliography: ./references.bib
+---
+
+# Présentation de l'étude
+
+## Contexte {#sec-contexte}
+{{< include etude_/part1/contexte.qmd >}}
+
+## Périmètre spatial et temporel de l'étude 
+{{< include etude_/part1/perimetre-spatio-temporel.qmd >}}
+
+## Objectif
+{{< include etude_/part1/objectif.qmd >}}
+
+# Méthode de production des résultats
+    
+{{< include etude_/part2/methodo.qmd >}}  

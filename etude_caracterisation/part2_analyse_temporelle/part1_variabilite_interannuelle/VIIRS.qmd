@@ -1,0 +1,52 @@
+### Analyse temporelle 
+
+L’analyse temporelle des incendies qui suit a été produite à l’aide des données des satellites Terra et Aqua (MODIS) et du satellite SUOMI NPP (VIIRS). Les satellites Terra et Aqua disposent de la chronique de données la plus importante, à savoir 2001 à 2020, tandis que le satellite SUOMI NPP présente une chronique de données allant de 2012 à 2020. L’amplitude temporelle des données satellites Terra et Aqua permet donc d’avoir une vision diachronique plus intéressante des incendies sur le territoire calédonien. Toutefois, leurs résolutions spatiales allant de 500m à 1 km, il semble intéressant de compléter ces données avec celles du satellite SUOMI NPP qui fournit depuis 2012, des informations à une résolution spatiale de 375 mètres. Cela permettra d’avoir une vision plus complète de l’évolution des incendies et de rendre compte des disparités entre les deux jeux de données. 
+
+#### Variabilité interannuelle des départs de feux 
+
+##### Informations 
+
+De manière générale, le déclenchement des incendies est influencé par la conjonction d’une multitude de paramètres. Le type de végétation, par son degré d’inflammabilité, impliquera une combustion plus ou moins rapide et intense. La topographie, en fonction du degré de la pente du terrain et de l’exposition aux vents, influencera la propagation de l’incendie. La météo, quant à elle, conditionnera fortement le risque d’incendie dans la mesure où la température et la pluviométrie détermineront l’humidité relative de l’atmosphère ainsi que le stress hydrique de la végétation. Enfin, la présence de l’homme et des activités qu’il a développées, ajoutent un degré de sensibilité supplémentaire au risque d’incendie.  
+
+La prévision du risque de feux de brousses est complexe, chaque jour elle est différente. Ainsi, le nombre d’incendies dépendra de la conjonction de ces divers facteurs 
+
+La Figure 29 met en avant le nombre total de surfaces brûlées en Nouvelle-Calédonie par année. Les données représentées sont issues de la chronique temporelle sur les incendies du satellite MODIS entre 2001 et 2020 ainsi que du capteur VIIRS du satellite SUOMI NPP entre 2012 et 2019. 
+
+##### Résulats 
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: histogramme feux par capteur
+
+figureName = "fig-histo-feux-annee_snpp_modis"
+
+modis=data_viirs_modis.read()
+snpp=data_viirs_snpp.read()
+
+modis = modis.groupby('annee').size().reset_index(name='Nombre d\'incendies')
+snpp = snpp.groupby('annee').size().reset_index(name='Nombre d\'incendies')
+
+modis['Source'] = 'MODIS'
+snpp['Source'] = 'SNPP'
+
+df_concat = pd.concat([modis, snpp])
+plot = df_concat.hvplot.bar(
+    x='annee', 
+    y='Nombre d\'incendies', 
+    by='Source', 
+    stacked=False, 
+    width=1000, 
+    height=400, 
+    legend='top_left', 
+    color='Source', 
+    cmap=['#E65C00','#FFA500'],
+    title=f"Comparaison du cumul annuel du nombre d’incendies du satellite MODIS entre 2001 et {Annee} \n et du satellite SUOMI NPP entre 2012 et {Annee} pour la Nouvelle-Calédonie",
+    xlabel='Année'
+).opts(multi_level=False)
+export_output(plot,figureName)
+
+plot
+```
+
+Pour rappel, les capteurs de MODIS détectent peu d’incendies contrairement au capteur VIIRS de SUOMI NPP. Cette dissemblance dans les données est observable sur la Figure 29 avec une proportion moyenne d’écart entre les détections VIIRS et MODIS de 75%. On peut aussi souligner la très forte variabilité du nombre de surfaces brûlées détectées par MODIS depuis 2001. 
